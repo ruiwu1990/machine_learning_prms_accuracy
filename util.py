@@ -31,6 +31,17 @@ def get_time(input_file):
 	prms_fp.close()
 	return time_data
 
+def get_all_input(data_file,param_file,data_len):
+	'''
+	this function get all the params into a csv file
+	as long as the params len equals data_len
+	'''
+	prms_data_fp = netCDF4.Dataset(data_file,'r')
+	prms_param_fp = netCDF4.Dataset(param_file,'r')
+	prms_data_fp.close()
+	prms_param_fp.close()
+
+
 def output_csv(input_file):
 	'''
 	output time, observed data, and predicted data, delta error (observed - predicted)
@@ -45,5 +56,86 @@ def output_csv(input_file):
 		fp.write(','.join([str(time_list[count]),str(predicted_list[count]),str(observed_list[count]),str(observed_list[count]-predicted_list[count])])+'\n')
 	fp.close()
 
+
+
+
+
 input_file = 'stat.nc'
+data_file = 'LC.data.nc'
+param_file = 'LC.param.nc'
+# hard coded here
+data_len = 2922
 output_csv(input_file)
+
+# spark part starts here
+
+# linear regression
+from pyspark.mllib.regression import LabeledPoint, LinearRegressionWithSGD, LinearRegressionModel
+def parsePoint(line):
+	'''
+	The function is inspired from 
+	http://spark.apache.org/docs/latest/mllib-linear-methods.html
+	'''
+	values = [float(x) for x in line.strip().split(',')]
+	return LabeledPoint(values[0],values[1:])
+
+data = sc.textFile(filename)
+parsedData = data.map(parsePoint)
+
+model = LinearRegressionWithSGD.train(parsedData, iterations=100, step=0.00000001)
+
+valuesAndPreds = parsedData.map(lambda p: (p.label, model.predict(p.features)))
+MSE = valuesAndPreds \
+    .map(lambda (v, p): (v - p)**2) \
+    .reduce(lambda x, y: x + y) / valuesAndPreds.count()
+print("Mean Squared Error = " + str(MSE))
+
+
+# decision tree regression
+from pyspark.ml import Pipeline
+from pyspark.ml.regression import DecisionTreeRegressor
+from pyspark.ml.feature import VectorIndexer
+from pyspark.ml.evaluation import RegressionEvaluator
+
+def parsePoint(line):
+	'''
+	The function is inspired from 
+	http://spark.apache.org/docs/latest/mllib-linear-methods.html
+	'''
+	values = [float(x) for x in line.strip().split(',')]
+	return LabeledPoint(values[0],values[1:])
+
+raw_data = sc.textFile(filename)
+data = raw_data.map(parsePoint)
+
+featureIndexer =\
+    VectorIndexer(inputCol="features", outputCol="indexedFeatures", maxCategories=4).fit(data)
+
+# Split the data into training and test sets (30% held out for testing)
+(trainingData, testData) = data.randomSplit([0.7, 0.3])
+
+# Train a DecisionTree model.
+dt = DecisionTreeRegressor(featuresCol="indexedFeatures")
+
+# Chain indexer and tree in a Pipeline
+pipeline = Pipeline(stages=[featureIndexer, dt])
+
+# Train model.  This also runs the indexer.
+model = pipeline.fit(trainingData)
+
+# Make predictions.
+predictions = model.transform(testData)
+
+# Select example rows to display.
+predictions.select("prediction", "label", "features").show(5)
+
+# Select (prediction, true label) and compute test error
+evaluator = RegressionEvaluator(
+    labelCol="label", predictionCol="prediction", metricName="rmse")
+rmse = evaluator.evaluate(predictions)
+print("Root Mean Squared Error (RMSE) on test data = %g" % rmse)
+
+treeModel = model.stages[1]
+# summary only
+print(treeModel)
+# spark part ends here
