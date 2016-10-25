@@ -67,6 +67,52 @@ param_file = 'LC.param.nc'
 data_len = 2922
 output_csv(input_file)
 
+# the following part convert csv into libsvm
+# the function is basically 
+# from https://github.com/zygmuntz/phraug/blob/master/csv2libsvm.py
+import sys
+import csv
+from collections import defaultdict
+
+def construct_line( label, line ):
+	new_line = []
+	if float( label ) == 0.0:
+		label = "0"
+	new_line.append( label )
+
+	for i, item in enumerate( line ):
+		if item == '' or float( item ) == 0.0:
+			continue
+		new_item = "%s:%s" % ( i + 1, item )
+		new_line.append( new_item )
+	new_line = " ".join( new_line )
+	new_line += "\n"
+	return new_line
+
+# ---
+
+def convert_csv_into_libsvm(input_file,output_file,label_index=0,skip_headers=True):
+	'''
+	the function converts csv into libsvm
+	'''
+	i = open( input_file, 'rb' )
+	o = open( output_file, 'wb' )
+	reader = csv.reader( i )
+
+	if skip_headers:
+		headers = reader.next()
+
+	for line in reader:
+		if label_index == -1:
+			label = '1'
+		else:
+			label = line.pop( label_index )
+
+		new_line = construct_line( label, line )
+		o.write( new_line )
+#
+
+
 # spark part starts here
 
 # linear regression
@@ -139,3 +185,8 @@ treeModel = model.stages[1]
 # summary only
 print(treeModel)
 # spark part ends here
+
+
+# this is how to print content in RDD
+# from __future__ import print_function
+# data.foreach(print)
