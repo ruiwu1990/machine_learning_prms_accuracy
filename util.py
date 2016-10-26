@@ -191,5 +191,8 @@ print(treeModel)
 # from __future__ import print_function
 # data.foreach(print)
 
-def parsePoint(labeledData):
-    return (labeledData.label, labeledData.features[1], labeledData.features[2], 1.0)
+# # this is how to print column in the dataFrame
+# testData.rdd.map(lambda r: r.label).collect()
+
+# def parsePoint(labeledData):
+#     return (labeledData.label, labeledData.features[1], labeledData.features[2], 1.0)
