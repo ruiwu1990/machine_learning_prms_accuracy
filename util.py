@@ -190,3 +190,6 @@ print(treeModel)
 # this is how to print content in RDD
 # from __future__ import print_function
 # data.foreach(print)
+
+def parsePoint(labeledData):
+    return (labeledData.label, labeledData.features[1], labeledData.features[2], 1.0)
