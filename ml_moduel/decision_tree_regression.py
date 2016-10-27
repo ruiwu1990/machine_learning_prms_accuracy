@@ -8,7 +8,7 @@ from pyspark.ml.feature import VectorIndexer
 from pyspark.ml.evaluation import RegressionEvaluator
 
 # Load the data stored in LIBSVM format as a DataFrame.
-filename = 'test.libsvm'
+filename = 'static/data/test.libsvm'
 data = spark.read.format("libsvm").load(filename)
 
 # Automatically identify categorical features, and index them.
