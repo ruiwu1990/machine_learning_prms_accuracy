@@ -6,9 +6,11 @@ from pyspark.ml import Pipeline
 from pyspark.ml.regression import DecisionTreeRegressor
 from pyspark.ml.feature import VectorIndexer
 from pyspark.ml.evaluation import RegressionEvaluator
+import sys
 
 # Load the data stored in LIBSVM format as a DataFrame.
-filename = 'static/data/test.libsvm'
+# filename = 'static/data/test.libsvm'
+filename = sys.argv[1]
 data = spark.read.format("libsvm").load(filename)
 
 # Automatically identify categorical features, and index them.
@@ -38,7 +40,9 @@ predictions = model.transform(testData)
 evaluator = RegressionEvaluator(
     labelCol="label", predictionCol="prediction", metricName="rmse")
 rmse = evaluator.evaluate(predictions)
-print("Root Mean Squared Error (RMSE) on test data = %g" % rmse)
+
+sys.stdout("Root Mean Squared Error (RMSE) on test data = " + str(rmse))
+# print("Root Mean Squared Error (RMSE) on test data = %g" % rmse)
 
 # treeModel = model.stages[1]
 # # summary only
