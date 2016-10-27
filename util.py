@@ -138,9 +138,10 @@ def exec_decision_tree_regression(filename):
 	command = ['spark-submit',exec_file_loc,filename]
 	# execute the model
 	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
-        process = subprocess.Popen(
-            command, stdout=process_out, stderr=err_out, cwd=app_path)
-        
-    # this waits the process finishes
-    process.wait()
-    return True
+		process = subprocess.Popen(
+			command, stdout=process_out, stderr=err_out, cwd=app_path)
+
+	# this waits the process finishes
+	process.wait()
+	return True
+	
