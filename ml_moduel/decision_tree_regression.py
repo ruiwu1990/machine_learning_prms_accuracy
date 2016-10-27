@@ -32,7 +32,7 @@ model = pipeline.fit(trainingData)
 predictions = model.transform(testData)
 
 # Select example rows to display.
-predictions.select("prediction", "label", "features").show(5)
+# predictions.select("prediction", "label", "features").show(5)
 
 # Select (prediction, true label) and compute test error
 evaluator = RegressionEvaluator(
