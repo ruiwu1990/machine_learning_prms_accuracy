@@ -12,7 +12,7 @@ def parsePoint(line):
 	values = [float(x) for x in line.strip().split(',')]
 	return LabeledPoint(values[0],values[1:])
 
-filename = 'test.csv'
+filename = 'static/data/test.csv'
 
 data = sc.textFile(filename)
 parsedData = data.map(parsePoint)
