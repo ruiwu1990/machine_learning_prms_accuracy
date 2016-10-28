@@ -22,16 +22,17 @@ def decision_tree_upload():
 	file_full_path = data_folder + '/original_file.csv'
 
 	training_file.save(file_full_path)
-
-	return
-	# return render_template('decision_tree_regression.html')
+	# test only, should be in restful api
+	util.get_delta_e_decision_tree(file_full_path)
+	# return
+	return render_template('decision_tree_regression.html')
 
 @app.route('/decision_tree_result')
 def decision_tree_result():
 	return render_template('decision_tree_regression.html')
 
 @app.route('/api/decision_tree_data',methods=['GET'])
-def decision_tree_result():
+def decision_tree_data():
 	'''
 	this restful api return the json file contains
 	original_p_list,improved_p_list,o_list
