@@ -72,7 +72,7 @@ def delta_error_file(filename, e_filename):
 	# remove observed and predicted col
 	del pd_df[observed_name]
 	del pd_df[predicted_name]
-	pd_df.to_csv(e_filename)
+	pd_df.to_csv(e_filename,index=False)
 
 def get_delta_e_decision_tree(filename):
 	'''
@@ -131,14 +131,12 @@ def exec_decision_tree_regression(filename):
 	predicted delta error col
 	'''
 	# get the libsvm file
-	# test
-	print 'jose is panda:'+filename
-	output_file = app_path + '/static/data/delta_e.libsvm'
+	output_file = app_path + '/static/data/delta_error.libsvm'
 	convert_csv_into_libsvm(filename,output_file)
 	log_path = app_path + '/decision_tree_log.txt'
 	err_log_path = app_path + '/decision_tree_err_log.txt'
 	exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
-	command = ['spark-submit',exec_file_loc,filename]
+	command = ['spark-submit',exec_file_loc,output_file]
 	# execute the model
 	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
 		process = subprocess.Popen(
