@@ -22,8 +22,8 @@ def decision_tree_upload():
 	file_full_path = data_folder + '/original_file.csv'
 
 	training_file.save(file_full_path)
-	# test only, should be in restful api
-	util.get_delta_e_decision_tree(file_full_path)
+	# # test only, should be in restful api
+	# util.get_delta_e_decision_tree(file_full_path)
 	# return
 	return render_template('decision_tree_regression_result.html')
 

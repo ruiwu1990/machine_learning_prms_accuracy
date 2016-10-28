@@ -102,7 +102,7 @@ def get_delta_e_decision_tree(filename):
 	print "the original rmse is:" + str(original_rmse)
 	print "the improved rmse is:" + str(improved_rmse)
 
-	return json.dumps({'original_p_list':original_p_list,'improved_p_list':improved_p_list,'o_list':o_list})
+	return json.dumps({'accuracy_info':result_accuracy,'original_p_list':original_p_list,'improved_p_list':improved_p_list,'o_list':o_list})
 	
 
 # the following construct_line and convert_csv_into_libsvm
