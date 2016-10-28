@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+
 {% block title %}Decision Tree Regression{% endblock %}
 
 {% block content %}
@@ -11,14 +12,14 @@
 <!-- upload files -->
 <div id='upload_file_id'>
 	<h4>Please upload training csv for decision tree regression</h4>
-            <form action="/decision_tree/upload" method="post" enctype="multipart/form-data">
+            <form action="/decision_tree/upload" method="get" enctype="multipart/form-data">
                 <p>
                     <label for="upload_file_id" >Decision Tree Training Data
                         <input type="file" name="training_file" id='upload_file_id' > 
                     </label>
                 </p>
                 <p>
-                    <input type="submit" value="Upload" class="btn btn-primary">
+                    <input type="submit" id='submit_id' value="Upload" class="btn btn-primary">
                 </p>
 
             </form>
