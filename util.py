@@ -77,13 +77,13 @@ def get_delta_e_decision_tree(filename):
 	'''
 	# create delta error file
 	delta_error_filename = app_path + '/static/data/delta_error.csv'
-	delta_error_file(filename,delta_error_filename)
-	observed_name, predicted_name = exec_decision_tree_regression(delta_error_filename)
+	observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
+	exec_decision_tree_regression(delta_error_filename)
 	# results are stored here
 	result_file = app_path + '/decision_tree_result.txt'
 	fp = open(result_file, 'r')
-	result_accuracy = f.readline()
-	predicted_delta_e = f.readline().strip().split(',')
+	result_accuracy = fp.readline()
+	predicted_delta_e = [float(i) for i in fp.readline().strip().split(',')]
 	fp.close()
 	# get the [predicted_name , observed_name] as p_o_list
 	p_o_list = get_predict_observed(filename,predicted_name,observed_name)

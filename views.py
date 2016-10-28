@@ -23,12 +23,9 @@ def decision_tree_upload():
 
 	training_file.save(file_full_path)
 
-	# generate a file with the first column is delta error
-	# delta_error_filename = 'delta_error.csv'
-	# util.delta_error_file(file_full_path,delta_error_filename)
 	util.get_delta_e_decision_tree(file_full_path)
 	
-	return render_template('decision_tree_regression.html')
+	return render_template('decision_tree_regression_result.html')
 
 if __name__ == '__main__':
     app.debug = True
