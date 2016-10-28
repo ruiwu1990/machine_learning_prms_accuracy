@@ -32,12 +32,6 @@ def add_delta_error_prediced(e_list,p_o_list):
 	for count in range(list_len):
 		p_o_list[count][0] = p_o_list[count][0] + e_list[count]
 
-# separate p_o_list into 2 list
-'''
-temp=zip(*[(a,b) for a,b in p_o_list])
-p_list = list(temp[0])
-o_list = list(temp[1])
-'''
 
 
 def get_root_mean_squared_error(list1,list2):
@@ -73,6 +67,7 @@ def delta_error_file(filename, e_filename):
 	del pd_df[observed_name]
 	del pd_df[predicted_name]
 	pd_df.to_csv(e_filename,index=False)
+	return observed_name, predicted_name
 
 def get_delta_e_decision_tree(filename):
 	'''
@@ -83,7 +78,30 @@ def get_delta_e_decision_tree(filename):
 	# create delta error file
 	delta_error_filename = app_path + '/static/data/delta_error.csv'
 	delta_error_file(filename,delta_error_filename)
-	exec_decision_tree_regression(delta_error_filename)
+	observed_name, predicted_name = exec_decision_tree_regression(delta_error_filename)
+	# results are stored here
+	result_file = app_path + '/decision_tree_result.txt'
+	fp = open(result_file, 'r')
+	result_accuracy = f.readline()
+	predicted_delta_e = f.readline().strip().split(',')
+	fp.close()
+	# get the [predicted_name , observed_name] as p_o_list
+	p_o_list = get_predict_observed(filename,predicted_name,observed_name)
+	temp=zip(*[(a,b) for a,b in p_o_list])
+	original_p_list = list(temp[0])
+	o_list = list(temp[1])
+	# add delta_e into model predicted values
+	add_delta_error_prediced(predicted_delta_e,p_o_list)
+	temp=zip(*[(a,b) for a,b in p_o_list])
+	improved_p_list = list(temp[0])
+
+	original_rmse = get_root_mean_squared_error(original_p_list,o_list)
+	improved_rmse = get_root_mean_squared_error(improved_p_list,o_list)
+
+	print "the original rmse is:" + str(original_rmse)
+	print "the improved rmse is:" + str(improved_rmse)
+
+	return []
 
 # the following construct_line and convert_csv_into_libsvm
 # convert csv into libsvm
