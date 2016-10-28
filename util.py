@@ -3,6 +3,7 @@ import math
 import subprocess
 import sys
 import csv
+import os
 from collections import defaultdict
 
 app_path = os.path.dirname(os.path.abspath(__file__))
@@ -67,7 +68,7 @@ def delta_error_file(filename, e_filename):
 	observed_name = list(pd_df.columns.values)[0]
 	# second col predicted
 	predicted_name = list(pd_df.columns.values)[1]
-	pd_df.insert(0,'delta_e',pd_df[observed_name].sub(a[predicted_name]))
+	pd_df.insert(0,'delta_e',pd_df[observed_name].sub(pd_df[predicted_name]))
 	# remove observed and predicted col
 	del pd_df[observed_name]
 	del pd_df[predicted_name]
@@ -80,7 +81,7 @@ def get_delta_e_decision_tree(filename):
 	observed, model predicted data
 	'''
 	# create delta error file
-	delta_error_filename = app_path + 'static/data/delta_error.csv'
+	delta_error_filename = app_path + '/static/data/delta_error.csv'
 	delta_error_file(filename,delta_error_filename)
 	exec_decision_tree_regression(delta_error_filename)
 
@@ -130,9 +131,11 @@ def exec_decision_tree_regression(filename):
 	predicted delta error col
 	'''
 	# get the libsvm file
-	output_file = app_path + 'static/data/delta_e.libsvm'
+	# test
+	print 'jose is panda:'+filename
+	output_file = app_path + '/static/data/delta_e.libsvm'
 	convert_csv_into_libsvm(filename,output_file)
-	log_path = app_path + + '/decision_tree_log.txt'
+	log_path = app_path + '/decision_tree_log.txt'
 	err_log_path = app_path + '/decision_tree_err_log.txt'
 	exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
 	command = ['spark-submit',exec_file_loc,filename]
@@ -144,4 +147,4 @@ def exec_decision_tree_regression(filename):
 	# this waits the process finishes
 	process.wait()
 	return True
-	
+

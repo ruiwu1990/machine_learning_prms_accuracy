@@ -8,10 +8,16 @@ from pyspark.ml.feature import VectorIndexer
 from pyspark.ml.evaluation import RegressionEvaluator
 import sys
 
+from pyspark.sql import SQLContext
+from pyspark import SparkContext
+
+sc = SparkContext()
+sqlContext = SQLContext(sc)
+
 # Load the data stored in LIBSVM format as a DataFrame.
 # filename = 'static/data/test.libsvm'
 filename = sys.argv[1]
-data = spark.read.format("libsvm").load(filename)
+data = sqlContext.read.format("libsvm").load(filename)
 
 # Automatically identify categorical features, and index them.
 # We specify maxCategories so features with > 4 distinct values are treated as continuous.
