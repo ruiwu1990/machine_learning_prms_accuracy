@@ -35,6 +35,8 @@ def decision_tree_data():
 	original_p_list,improved_p_list,o_list
 	'''
 	# this should go to config file
+	print 'working on getting data'
+	data_folder = app_path + '/static/data'
 	file_full_path = data_folder + '/original_file.csv'
 	return util.get_delta_e_decision_tree(file_full_path)
 
