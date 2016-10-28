@@ -52,6 +52,13 @@ rmse = evaluator.evaluate(predictions)
 # write the results into the file
 fp = open(sys.argv[2],'w')
 fp.write("Root Mean Squared Error (RMSE) on test data = %g" % rmse)
+
+# TODO, this part should be separated from this file
+# the normal thing should be using the created model to predict inputs results
+predictions = model.transform(data)
+pd_df = predictions.toPandas()
+fp.write(','.join(pd_df['prediction'].tolist()))
+
 fp.close()
 
 # treeModel = model.stages[1]
