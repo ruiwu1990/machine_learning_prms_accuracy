@@ -15,7 +15,7 @@ def index():
 def decision_tree():
 	return render_template('decision_tree_regression.html')
 
-@app.route('/decision_tree/upload',methods=['GET'])
+@app.route('/decision_tree/upload',methods=['POST'])
 def decision_tree_upload():
 	training_file = request.files['training_file']
 	data_folder = app_path + '/static/data'
@@ -23,11 +23,12 @@ def decision_tree_upload():
 
 	training_file.save(file_full_path)
 
-	return render_template('decision_tree_regression.html')
+	return
+	# return render_template('decision_tree_regression.html')
 
-# @app.route('/decision_tree_result')
-# def decision_tree_result():
-# 	return render_template('decision_tree_regression.html')
+@app.route('/decision_tree_result')
+def decision_tree_result():
+	return render_template('decision_tree_regression.html')
 
 @app.route('/api/decision_tree_data',methods=['GET'])
 def decision_tree_result():
