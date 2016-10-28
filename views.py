@@ -25,11 +25,8 @@ def decision_tree_upload():
 	# test only, should be in restful api
 	util.get_delta_e_decision_tree(file_full_path)
 	# return
-	return render_template('decision_tree_regression.html')
+	return render_template('decision_tree_regression_result.html')
 
-@app.route('/decision_tree_result')
-def decision_tree_result():
-	return render_template('decision_tree_regression.html')
 
 @app.route('/api/decision_tree_data',methods=['GET'])
 def decision_tree_data():
