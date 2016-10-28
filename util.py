@@ -136,7 +136,8 @@ def exec_decision_tree_regression(filename):
 	log_path = app_path + '/decision_tree_log.txt'
 	err_log_path = app_path + '/decision_tree_err_log.txt'
 	exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
-	command = ['spark-submit',exec_file_loc,output_file]
+	result_file = app_path + '/decision_tree_result.txt'
+	command = ['spark-submit',exec_file_loc,output_file,result_file]
 	# execute the model
 	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
 		process = subprocess.Popen(

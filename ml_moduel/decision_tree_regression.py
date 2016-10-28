@@ -47,8 +47,12 @@ evaluator = RegressionEvaluator(
     labelCol="label", predictionCol="prediction", metricName="rmse")
 rmse = evaluator.evaluate(predictions)
 
-sys.stdout("Root Mean Squared Error (RMSE) on test data = " + str(rmse))
 # print("Root Mean Squared Error (RMSE) on test data = %g" % rmse)
+
+# write the results into the file
+fp = open(sys.argv[2],'w')
+fp.write("Root Mean Squared Error (RMSE) on test data = %g" % rmse)
+fp.close()
 
 # treeModel = model.stages[1]
 # # summary only
