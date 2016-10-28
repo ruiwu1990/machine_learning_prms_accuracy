@@ -6,7 +6,7 @@ $(document).ready(function(){
 		    url: '/api/decision_tree_data',
 		    success: function (data) {
 		      var received_json = JSON.parse(data);
-		      $('#result_info_id').text(received_json['accuracy_info']);
+		      $('#result_info_id').text(received_json['accuracy_info']+';<br/>'+received_json['original_error']+';<br/>'+received_json['improved_error']);
 		      original_p_list = received_json['original_p_list'];
 		      improved_p_list = received_json['improved_p_list'];
 		      o_list = received_json['o_list'];

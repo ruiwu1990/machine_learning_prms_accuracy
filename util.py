@@ -99,10 +99,10 @@ def get_delta_e_decision_tree(filename):
 	original_rmse = get_root_mean_squared_error(original_p_list,o_list)
 	improved_rmse = get_root_mean_squared_error(improved_p_list,o_list)
 
-	print "the original rmse is:" + str(original_rmse)
-	print "the improved rmse is:" + str(improved_rmse)
+	original_error = "the original rmse is:" + str(original_rmse)
+	improved_error = "the improved rmse is:" + str(improved_rmse)
 
-	return json.dumps({'accuracy_info':result_accuracy,'original_p_list':original_p_list,'improved_p_list':improved_p_list,'o_list':o_list})
+	return json.dumps({'accuracy_info':result_accuracy,'original_p_list':original_p_list,'improved_p_list':improved_p_list,'o_list':o_list,'original_error':original_error,'improved_error':improved_error})
 	
 
 # the following construct_line and convert_csv_into_libsvm
