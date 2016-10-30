@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+
+{% block title %}Gradient Boosted Tree Regression{% endblock %}
+
+{% block content %}
+<div id='introduction_id'>
+	<p>Here are some basic introduction about decision tree from <a href="https://en.wikipedia.org/wiki/Decision_tree_learning"></a>Wikipedia</p>
+	<p>Decision Tree can be used to do classification and data regression. For current version, we only focus on data regression</p>
+</div>
+
+<!-- upload files -->
+<div id='upload_file_id'>
+	<h4>Please upload training csv for Gradient Boosted Tree regression</h4>
+            <form action="/gb_tree/upload" method="post" enctype="multipart/form-data">
+                <p>
+                    <label for="upload_file_id" >Gradient Boosted Tree Regression Training Data
+                        <input type="file" name="training_file" id='upload_file_id' > 
+                    </label>
+                </p>
+                <p>
+                    <input type="submit" id='submit_id' value="Upload" class="btn btn-primary">
+                </p>
+
+            </form>
+</div>
+
+<!-- get general error rate -->
+<div id='general_error_id'>
+	
+</div>
+{% endblock %}

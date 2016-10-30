@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block extrajs %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="/static/js/gb_tree_result.js"></script>
+{% endblock %}
+
+{% block title %}Gradient Boosted Tree Regression Result{% endblock %}
+
+{% block content %}
+<div id='vis'>
+	<p>Click the button to get the result report</p>
+	<p id='button_paragraph_id'>
+		<button id="get_error_result_id_GBT" class="btn btn-default" >
+            Get Error Report and Line Chart
+        </button>
+        <!-- <button id="get_line_chart_id" class="btn btn-default" >
+            Get Line Chart
+        </button> -->
+	</p>
+	<p id='result_info_id_GBT'></p>
+	<p id='line_chart_id_GBT'></p>
+</div>
+{% endblock %}
