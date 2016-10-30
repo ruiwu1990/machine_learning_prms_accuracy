@@ -22,6 +22,17 @@ def get_predict_observed(filename,predicted_name,observed_name):
 	observed_list = observed.tolist()
 	return [list(a) for a in zip(predicted_list, observed_list)]
 
+def get_real_delta_error(filename,predicted_name,observed_name):
+	'''
+	the function returns the real delta error
+	'''
+	csv_file = pd.read_csv(filename)
+	predicted = csv_file[predicted_name]
+	observed = csv_file[observed_name]
+	predicted_list = predicted.tolist()
+	observed_list = observed.tolist()
+	return [observed_list_i - predicted_list_i for observed_list_i, predicted_list_i in zip(observed_list, predicted_list)]
+
 def add_delta_error_prediced(e_list,p_o_list):
 	'''
 	This function add error into predicted value
@@ -250,38 +261,48 @@ def get_delta_e_decision_tree(filename):
 	temp=zip(*[(a,b) for a,b in p_o_list])
 	original_p_list = list(temp[0])
 	o_list = list(temp[1])
+
+	real_delta_error = get_real_delta_error(filename,predicted_name,observed_name)
 	# add delta_e into model predicted values
 	add_delta_error_prediced(predicted_delta_e,p_o_list)
 	temp=zip(*[(a,b) for a,b in p_o_list])
 	improved_p_list = list(temp[0])
 
-	original_rmse = get_root_mean_squared_error(original_p_list,o_list)
-	improved_rmse = get_root_mean_squared_error(improved_p_list,o_list)
-
 	original_pbias = get_pbias(original_p_list,o_list)
 	improved_pbias = get_pbias(improved_p_list,o_list)
+	delta_error_pbias = get_pbias(predicted_delta_e,real_delta_error)
 
 	original_cd = get_coeficient_determination(original_p_list,o_list)
 	improved_cd = get_coeficient_determination(improved_p_list,o_list)
+	delta_error_cd = get_coeficient_determination(predicted_delta_e,real_delta_error)
 
 	original_nse = get_nse(original_p_list,o_list)
 	improved_nse = get_nse(improved_p_list,o_list)
+	delta_error_nse = get_nse(predicted_delta_e,real_delta_error)
 
-	original_error = "the original rmse is:" + str(original_rmse)
-	improved_error = "the improved rmse is:" + str(improved_rmse)
+	original_rmse = get_root_mean_squared_error(original_p_list,o_list)
+	improved_rmse = get_root_mean_squared_error(improved_p_list,o_list)
+	delta_error_rmse = get_root_mean_squared_error(predicted_delta_e,real_delta_error)
 
-	return json.dumps({'original_pbias':original_pbias, \
-					   'improved_pbias':improved_pbias, \
-					   'original_cd':original_cd, \
-					   'improved_cd':improved_cd, \
-					   'original_nse':original_nse, \
-					   'improved_nse':improved_nse, \
-					   # 'accuracy_info':result_accuracy, \
-					   'original_p_list':original_p_list,\
+	original_rmse_error = "the original rmse is:" + str(original_rmse)
+	improved_rmse_error = "the improved rmse is:" + str(improved_rmse)
+
+	return json.dumps({'original_p_list':original_p_list,\
 					   'improved_p_list':improved_p_list,\
 					   'o_list':o_list,\
-					   'original_error':original_error,\
-					   'improved_error':improved_error})
+					   'original_pbias':original_pbias, \
+					   'improved_pbias':improved_pbias, \
+					   'delta_error_pbias':delta_error_pbias,\
+					   'original_cd':original_cd, \
+					   'improved_cd':improved_cd, \
+					   'delta_error_cd':delta_error_cd,\
+					   'original_nse':original_nse, \
+					   'improved_nse':improved_nse, \
+					   'delta_error_nse':delta_error_nse,\
+					   'accuracy_info':result_accuracy,\
+					   'original_rmse':original_rmse,\
+					   'improved_rmse':improved_rmse,\
+					   'delta_error_rmse':delta_error_rmse})
 	
 
 # the following construct_line and convert_csv_into_libsvm
