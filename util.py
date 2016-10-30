@@ -45,6 +45,61 @@ def get_root_mean_squared_error(list1,list2):
 	avg_sum_diff = sum_diff/list_len
 	return math.sqrt(avg_sum_diff)
 
+def get_pbias(list1, list2):
+	'''
+	percent bias
+	list1 is model simulated value
+	list2 is observed data
+	'''
+	if len(list1) != len(list2):
+		raise Exception('two lists have different lengths')
+	list_len = len(list1)
+	sum_diff = 0
+	sum_original = 0
+	for count in range(list_len):
+		sum_diff = sum_diff + (list1[count]-list2[count])
+		sum_original = sum_original + list2[count]
+	result = sum_diff/sum_original
+	return result*100
+
+def get_coeficient_determination(list1,list2):
+	'''
+	list1 is model simulated value
+	list2 is observed data
+	'''
+	if len(list1) != len(list2):
+		raise Exception('two lists have different lengths')
+	list_len = len(list1)
+	mean_list1 = reduce(lambda x, y: x + y, list1) / len(list1)
+	mean_list2 = reduce(lambda x, y: x + y, list2) / len(list2)
+	sum_diff = 0
+	sum_diff_o_s = 0
+	sum_diff_p_s = 0
+	for count in range(list_len):
+		sum_diff = sum_diff + (list1[count]-mean_list1)*(list2[count]-mean_list2)
+		sum_diff_o_s = sum_diff_o_s + (list2[count]-mean_list2)**2
+		sum_diff_p_s = sum_diff_p_s + (list1[count]-mean_list1)**2
+	result = (sum_diff/(pow(sum_diff_o_s,0.5)*pow(sum_diff_p_s,0.5)))**2
+	return result
+
+def get_nse(list1,list2):
+	'''
+	Nash-Sutcliffe efficiency
+	list1 is model simulated value
+	list2 is observed data
+	'''
+	if len(list1) != len(list2):
+		raise Exception('two lists have different lengths')
+	list_len = len(list1)
+	sum_diff_power = 0
+	sum_diff_o_power = 0
+	
+	for count in range(list_len):
+		sum_diff_power = sum_diff_power + (list1[count]-list2[count])**2
+		sum_diff_o_power = sum_diff_o_power + (list2[count]-mean_list2)**2
+	result = sum_diff_power/sum_diff_o_power
+	return 1 - result
+
 def get_delta_error_col(spark_df,e_col_name):
 	'''
 	this function get the delta error col
@@ -203,10 +258,30 @@ def get_delta_e_decision_tree(filename):
 	original_rmse = get_root_mean_squared_error(original_p_list,o_list)
 	improved_rmse = get_root_mean_squared_error(improved_p_list,o_list)
 
+	original_pbias = get_pbias(original_p_list,o_list)
+	improved_pbias = get_pbias(improved_p_list,o_list)
+
+	original_cd = get_coeficient_determination(original_p_list,o_list)
+	improved_cd = get_coeficient_determination(improved_p_list,o_list)
+
+	original_nse = get_nse(original_p_list,o_list)
+	improved_nse = get_nse(improved_p_list,o_list)
+
 	original_error = "the original rmse is:" + str(original_rmse)
 	improved_error = "the improved rmse is:" + str(improved_rmse)
 
-	return json.dumps({'accuracy_info':result_accuracy,'original_p_list':original_p_list,'improved_p_list':improved_p_list,'o_list':o_list,'original_error':original_error,'improved_error':improved_error})
+	return json.dumps({'original_pbias':original_pbias, \
+					   'improved_pbias':improved_pbias, \
+					   'original_cd':original_cd, \
+					   'improved_cd':improved_cd, \
+					   'original_nse':original_nse, \
+					   'improved_nse':improved_nse, \
+					   # 'accuracy_info':result_accuracy, \
+					   'original_p_list':original_p_list,\
+					   'improved_p_list':improved_p_list,\
+					   'o_list':o_list,\
+					   'original_error':original_error,\
+					   'improved_error':improved_error})
 	
 
 # the following construct_line and convert_csv_into_libsvm
