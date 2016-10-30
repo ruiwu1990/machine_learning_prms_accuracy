@@ -136,76 +136,57 @@ def delta_error_file(filename, e_filename):
 	pd_df.to_csv(e_filename,index=False)
 	return observed_name, predicted_name
 
-def get_delta_e_GBT(filename):
+
+
+def exec_regression(filename, regression_technique):
 	'''
-	this function train the GLR
-	model and return the three columns list, predicted error,
-	observed, model predicted data
+	this function run decision tree regression
+	, output the results in a log file, and return the 
+	predicted delta error col
 	'''
-	# create delta error file
-	delta_error_filename = app_path + '/static/data/delta_error.csv'
-	observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
-	exec_GBT_regression(delta_error_filename)
-	# results are stored here
-	result_file = app_path + '/gbt_result.txt'
-	fp = open(result_file, 'r')
-	result_accuracy = fp.readline()
-	predicted_delta_e = [float(i) for i in fp.readline().strip().split(',')]
-	fp.close()
-	# get the [predicted_name , observed_name] as p_o_list
-	p_o_list = get_predict_observed(filename,predicted_name,observed_name)
-	temp=zip(*[(a,b) for a,b in p_o_list])
-	original_p_list = list(temp[0])
-	o_list = list(temp[1])
-	# add delta_e into model predicted values
-	add_delta_error_prediced(predicted_delta_e,p_o_list)
-	temp=zip(*[(a,b) for a,b in p_o_list])
-	improved_p_list = list(temp[0])
+	# get the libsvm file
+	output_file = app_path + '/static/data/delta_error.libsvm'
+	convert_csv_into_libsvm(filename,output_file)
 
-	original_rmse = get_root_mean_squared_error(original_p_list,o_list)
-	improved_rmse = get_root_mean_squared_error(improved_p_list,o_list)
+	if regression_technique =='rf':
+		log_path = app_path + '/rf_log.txt'
+		err_log_path = app_path + '/rf_err_log.txt'
+		exec_file_loc = app_path + '/ml_moduel/random_forest_regression.py'
+		result_file = app_path + '/rf_result.txt'
 
-	original_error = "the original rmse is:" + str(original_rmse)
-	improved_error = "the improved rmse is:" + str(improved_rmse)
+	elif regression_technique =='decision_tree':
+		log_path = app_path + '/decision_tree_log.txt'
+		err_log_path = app_path + '/decision_tree_err_log.txt'
+		exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
+		result_file = app_path + '/decision_tree_result.txt'
 
-	return json.dumps({'accuracy_info':result_accuracy,'original_p_list':original_p_list,'improved_p_list':improved_p_list,'o_list':o_list,'original_error':original_error,'improved_error':improved_error})
+	elif regression_technique =='glr':
+		log_path = app_path + '/glr_log.txt'
+		err_log_path = app_path + '/glr_err_log.txt'
+		exec_file_loc = app_path + '/ml_moduel/generalized_linear_regression.py'
+		result_file = app_path + '/glr_result.txt'
 
-def get_delta_e_GLR(filename):
-	'''
-	this function train the GLR
-	model and return the three columns list, predicted error,
-	observed, model predicted data
-	'''
-	# create delta error file
-	delta_error_filename = app_path + '/static/data/delta_error.csv'
-	observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
-	exec_GLR_regression(delta_error_filename)
-	# results are stored here
-	result_file = app_path + '/glr_result.txt'
-	fp = open(result_file, 'r')
-	result_accuracy = fp.readline()
-	predicted_delta_e = [float(i) for i in fp.readline().strip().split(',')]
-	fp.close()
-	# get the [predicted_name , observed_name] as p_o_list
-	p_o_list = get_predict_observed(filename,predicted_name,observed_name)
-	temp=zip(*[(a,b) for a,b in p_o_list])
-	original_p_list = list(temp[0])
-	o_list = list(temp[1])
-	# add delta_e into model predicted values
-	add_delta_error_prediced(predicted_delta_e,p_o_list)
-	temp=zip(*[(a,b) for a,b in p_o_list])
-	improved_p_list = list(temp[0])
-
-	original_rmse = get_root_mean_squared_error(original_p_list,o_list)
-	improved_rmse = get_root_mean_squared_error(improved_p_list,o_list)
-
-	original_error = "the original rmse is:" + str(original_rmse)
-	improved_error = "the improved rmse is:" + str(improved_rmse)
-
-	return json.dumps({'accuracy_info':result_accuracy,'original_p_list':original_p_list,'improved_p_list':improved_p_list,'o_list':o_list,'original_error':original_error,'improved_error':improved_error})
+	elif regression_technique =='gb_tree':
+		log_path = app_path + '/gbt_log.txt'
+		err_log_path = app_path + '/gbt_err_log.txt'
+		exec_file_loc = app_path + '/ml_moduel/gradient_boosted_regression.py'
+		result_file = app_path + '/gbt_result.txt'
+		
 
 
-def get_delta_e_RF(filename):
+	command = ['spark-submit',exec_file_loc,output_file,result_file]
+	# execute the model
+	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
+		process = subprocess.Popen(
+			command, stdout=process_out, stderr=err_out, cwd=app_path)
+
+	# this waits the process finishes
+	process.wait()
+	return True
+
+
+
+def get_delta_e(filename, regression_technique):
 	'''
 	this function train the decision tree regression
 	model and return the three columns list, predicted error,
@@ -214,44 +195,18 @@ def get_delta_e_RF(filename):
 	# create delta error file
 	delta_error_filename = app_path + '/static/data/delta_error.csv'
 	observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
-	exec_RF_regression(delta_error_filename)
+	exec_regression(delta_error_filename, regression_technique = regression_technique)
 	# results are stored here
-	result_file = app_path + '/rf_result.txt'
-	fp = open(result_file, 'r')
-	result_accuracy = fp.readline()
-	predicted_delta_e = [float(i) for i in fp.readline().strip().split(',')]
-	fp.close()
-	# get the [predicted_name , observed_name] as p_o_list
-	p_o_list = get_predict_observed(filename,predicted_name,observed_name)
-	temp=zip(*[(a,b) for a,b in p_o_list])
-	original_p_list = list(temp[0])
-	o_list = list(temp[1])
-	# add delta_e into model predicted values
-	add_delta_error_prediced(predicted_delta_e,p_o_list)
-	temp=zip(*[(a,b) for a,b in p_o_list])
-	improved_p_list = list(temp[0])
 
-	original_rmse = get_root_mean_squared_error(original_p_list,o_list)
-	improved_rmse = get_root_mean_squared_error(improved_p_list,o_list)
+	if regression_technique =='rf':
+		result_file = app_path + '/rf_result.txt'
+	elif regression_technique =='decision_tree':
+		result_file = app_path + '/decision_tree_result.txt'
+	elif regression_technique =='glr':
+		result_file = app_path + '/glr_result.txt'
+	elif regression_technique =='gb_tree':
+		result_file = app_path + '/gbt_result.txt'
 
-	original_error = "the original rmse is:" + str(original_rmse)
-	improved_error = "the improved rmse is:" + str(improved_rmse)
-
-	return json.dumps({'accuracy_info':result_accuracy,'original_p_list':original_p_list,'improved_p_list':improved_p_list,'o_list':o_list,'original_error':original_error,'improved_error':improved_error})
-	
-
-def get_delta_e_decision_tree(filename):
-	'''
-	this function train the decision tree regression
-	model and return the three columns list, predicted error,
-	observed, model predicted data
-	'''
-	# create delta error file
-	delta_error_filename = app_path + '/static/data/delta_error.csv'
-	observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
-	exec_decision_tree_regression(delta_error_filename)
-	# results are stored here
-	result_file = app_path + '/decision_tree_result.txt'
 	fp = open(result_file, 'r')
 	result_accuracy = fp.readline()
 	predicted_delta_e = [float(i) for i in fp.readline().strip().split(',')]
@@ -268,25 +223,25 @@ def get_delta_e_decision_tree(filename):
 	temp=zip(*[(a,b) for a,b in p_o_list])
 	improved_p_list = list(temp[0])
 
-	original_pbias = get_pbias(original_p_list,o_list)
-	improved_pbias = get_pbias(improved_p_list,o_list)
-	delta_error_pbias = get_pbias(predicted_delta_e,real_delta_error)
-
-	original_cd = get_coeficient_determination(original_p_list,o_list)
-	improved_cd = get_coeficient_determination(improved_p_list,o_list)
-	delta_error_cd = get_coeficient_determination(predicted_delta_e,real_delta_error)
-
-	original_nse = get_nse(original_p_list,o_list)
-	improved_nse = get_nse(improved_p_list,o_list)
+	original_pbias = get_pbias(original_p_list,o_list)		
+	improved_pbias = get_pbias(improved_p_list,o_list)		
+	delta_error_pbias = get_pbias(predicted_delta_e,real_delta_error)		
+			
+	original_cd = get_coeficient_determination(original_p_list,o_list)		
+	improved_cd = get_coeficient_determination(improved_p_list,o_list)		
+	delta_error_cd = get_coeficient_determination(predicted_delta_e,real_delta_error)		
+			
+	original_nse = get_nse(original_p_list,o_list)		
+	improved_nse = get_nse(improved_p_list,o_list)		
 	delta_error_nse = get_nse(predicted_delta_e,real_delta_error)
+
 
 	original_rmse = get_root_mean_squared_error(original_p_list,o_list)
 	improved_rmse = get_root_mean_squared_error(improved_p_list,o_list)
 	delta_error_rmse = get_root_mean_squared_error(predicted_delta_e,real_delta_error)
 
-	original_rmse_error = "the original rmse is:" + str(original_rmse)
-	improved_rmse_error = "the improved rmse is:" + str(improved_rmse)
-
+	original_error = "the original rmse is:" + str(original_rmse)
+	improved_error = "the improved rmse is:" + str(improved_rmse)
 	return json.dumps({'original_p_list':original_p_list,\
 					   'improved_p_list':improved_p_list,\
 					   'o_list':o_list,\
@@ -303,6 +258,235 @@ def get_delta_e_decision_tree(filename):
 					   'original_rmse':original_rmse,\
 					   'improved_rmse':improved_rmse,\
 					   'delta_error_rmse':delta_error_rmse})
+
+# def get_delta_e_GBT(filename):
+# 	'''
+# 	this function train the GLR
+# 	model and return the three columns list, predicted error,
+# 	observed, model predicted data
+# 	'''
+# 	# create delta error file
+# 	delta_error_filename = app_path + '/static/data/delta_error.csv'
+# 	observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
+# 	exec_GBT_regression(delta_error_filename)
+# 	# results are stored here
+# 	result_file = app_path + '/gbt_result.txt'
+# 	fp = open(result_file, 'r')
+# 	result_accuracy = fp.readline()
+# 	predicted_delta_e = [float(i) for i in fp.readline().strip().split(',')]
+# 	fp.close()
+# 	# get the [predicted_name , observed_name] as p_o_list
+# 	p_o_list = get_predict_observed(filename,predicted_name,observed_name)
+# 	temp=zip(*[(a,b) for a,b in p_o_list])
+# 	original_p_list = list(temp[0])
+# 	o_list = list(temp[1])
+# 	# add delta_e into model predicted values
+# 	add_delta_error_prediced(predicted_delta_e,p_o_list)
+# 	temp=zip(*[(a,b) for a,b in p_o_list])
+# 	improved_p_list = list(temp[0])
+
+# 	original_rmse = get_root_mean_squared_error(original_p_list,o_list)
+# 	improved_rmse = get_root_mean_squared_error(improved_p_list,o_list)
+
+# 	original_error = "the original rmse is:" + str(original_rmse)
+# 	improved_error = "the improved rmse is:" + str(improved_rmse)
+
+# 	return json.dumps({'accuracy_info':result_accuracy,'original_p_list':original_p_list,'improved_p_list':improved_p_list,'o_list':o_list,'original_error':original_error,'improved_error':improved_error})
+
+
+# def get_delta_e_GLR(filename):
+# 	'''
+# 	this function train the decision tree regression
+# 	model and return the three columns list, predicted error,
+# 	observed, model predicted data
+# 	'''
+# 	# create delta error file
+# 	delta_error_filename = app_path + '/static/data/delta_error.csv'
+# 	observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
+# 	exec_RF_regression(delta_error_filename)
+# 	# results are stored here
+# 	result_file = app_path + '/glr_result.txt'
+# 	fp = open(result_file, 'r')
+# 	result_accuracy = fp.readline()
+# 	predicted_delta_e = [float(i) for i in fp.readline().strip().split(',')]
+# 	fp.close()
+# 	# get the [predicted_name , observed_name] as p_o_list
+# 	p_o_list = get_predict_observed(filename,predicted_name,observed_name)
+# 	temp=zip(*[(a,b) for a,b in p_o_list])
+# 	original_p_list = list(temp[0])
+# 	o_list = list(temp[1])
+
+# 	real_delta_error = get_real_delta_error(filename,predicted_name,observed_name)
+# 	# add delta_e into model predicted values
+# 	add_delta_error_prediced(predicted_delta_e,p_o_list)
+# 	temp=zip(*[(a,b) for a,b in p_o_list])
+# 	improved_p_list = list(temp[0])
+
+# 	original_pbias = get_pbias(original_p_list,o_list)		
+# 	improved_pbias = get_pbias(improved_p_list,o_list)		
+# 	delta_error_pbias = get_pbias(predicted_delta_e,real_delta_error)		
+			
+# 	original_cd = get_coeficient_determination(original_p_list,o_list)		
+# 	improved_cd = get_coeficient_determination(improved_p_list,o_list)		
+# 	delta_error_cd = get_coeficient_determination(predicted_delta_e,real_delta_error)		
+			
+# 	original_nse = get_nse(original_p_list,o_list)		
+# 	improved_nse = get_nse(improved_p_list,o_list)		
+# 	delta_error_nse = get_nse(predicted_delta_e,real_delta_error)
+
+
+# 	original_rmse = get_root_mean_squared_error(original_p_list,o_list)
+# 	improved_rmse = get_root_mean_squared_error(improved_p_list,o_list)
+# 	delta_error_rmse = get_root_mean_squared_error(predicted_delta_e,real_delta_error)
+
+# 	original_error = "the original rmse is:" + str(original_rmse)
+# 	improved_error = "the improved rmse is:" + str(improved_rmse)
+# 	return json.dumps({'original_p_list':original_p_list,\
+# 					   'improved_p_list':improved_p_list,\
+# 					   'o_list':o_list,\
+# 					   'original_pbias':original_pbias, \
+# 					   'improved_pbias':improved_pbias, \
+# 					   'delta_error_pbias':delta_error_pbias,\
+# 					   'original_cd':original_cd, \
+# 					   'improved_cd':improved_cd, \
+# 					   'delta_error_cd':delta_error_cd,\
+# 					   'original_nse':original_nse, \
+# 					   'improved_nse':improved_nse, \
+# 					   'delta_error_nse':delta_error_nse,\
+# 					   'accuracy_info':result_accuracy,\
+# 					   'original_rmse':original_rmse,\
+# 					   'improved_rmse':improved_rmse,\
+# 					   'delta_error_rmse':delta_error_rmse})
+
+
+# def get_delta_e_RF(filename):
+# 	'''
+# 	this function train the decision tree regression
+# 	model and return the three columns list, predicted error,
+# 	observed, model predicted data
+# 	'''
+# 	# create delta error file
+# 	delta_error_filename = app_path + '/static/data/delta_error.csv'
+# 	observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
+# 	exec_RF_regression(delta_error_filename)
+# 	# results are stored here
+# 	result_file = app_path + '/rf_result.txt'
+# 	fp = open(result_file, 'r')
+# 	result_accuracy = fp.readline()
+# 	predicted_delta_e = [float(i) for i in fp.readline().strip().split(',')]
+# 	fp.close()
+# 	# get the [predicted_name , observed_name] as p_o_list
+# 	p_o_list = get_predict_observed(filename,predicted_name,observed_name)
+# 	temp=zip(*[(a,b) for a,b in p_o_list])
+# 	original_p_list = list(temp[0])
+# 	o_list = list(temp[1])
+
+# 	real_delta_error = get_real_delta_error(filename,predicted_name,observed_name)
+# 	# add delta_e into model predicted values
+# 	add_delta_error_prediced(predicted_delta_e,p_o_list)
+# 	temp=zip(*[(a,b) for a,b in p_o_list])
+# 	improved_p_list = list(temp[0])
+
+# 	original_pbias = get_pbias(original_p_list,o_list)		
+# 	improved_pbias = get_pbias(improved_p_list,o_list)		
+# 	delta_error_pbias = get_pbias(predicted_delta_e,real_delta_error)		
+			
+# 	original_cd = get_coeficient_determination(original_p_list,o_list)		
+# 	improved_cd = get_coeficient_determination(improved_p_list,o_list)		
+# 	delta_error_cd = get_coeficient_determination(predicted_delta_e,real_delta_error)		
+			
+# 	original_nse = get_nse(original_p_list,o_list)		
+# 	improved_nse = get_nse(improved_p_list,o_list)		
+# 	delta_error_nse = get_nse(predicted_delta_e,real_delta_error)
+
+
+# 	original_rmse = get_root_mean_squared_error(original_p_list,o_list)
+# 	improved_rmse = get_root_mean_squared_error(improved_p_list,o_list)
+# 	delta_error_rmse = get_root_mean_squared_error(predicted_delta_e,real_delta_error)
+
+# 	original_error = "the original rmse is:" + str(original_rmse)
+# 	improved_error = "the improved rmse is:" + str(improved_rmse)
+# 	return json.dumps({'original_p_list':original_p_list,\
+# 					   'improved_p_list':improved_p_list,\
+# 					   'o_list':o_list,\
+# 					   'original_pbias':original_pbias, \
+# 					   'improved_pbias':improved_pbias, \
+# 					   'delta_error_pbias':delta_error_pbias,\
+# 					   'original_cd':original_cd, \
+# 					   'improved_cd':improved_cd, \
+# 					   'delta_error_cd':delta_error_cd,\
+# 					   'original_nse':original_nse, \
+# 					   'improved_nse':improved_nse, \
+# 					   'delta_error_nse':delta_error_nse,\
+# 					   'accuracy_info':result_accuracy,\
+# 					   'original_rmse':original_rmse,\
+# 					   'improved_rmse':improved_rmse,\
+# 					   'delta_error_rmse':delta_error_rmse})
+	
+
+# def get_delta_e_decision_tree(filename):
+# 	'''
+# 	this function train the decision tree regression
+# 	model and return the three columns list, predicted error,
+# 	observed, model predicted data
+# 	'''
+# 	# create delta error file
+# 	delta_error_filename = app_path + '/static/data/delta_error.csv'
+# 	observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
+# 	exec_decision_tree_regression(delta_error_filename)
+# 	# results are stored here
+# 	result_file = app_path + '/decision_tree_result.txt'
+# 	fp = open(result_file, 'r')
+# 	result_accuracy = fp.readline()
+# 	predicted_delta_e = [float(i) for i in fp.readline().strip().split(',')]
+# 	fp.close()
+# 	# get the [predicted_name , observed_name] as p_o_list
+# 	p_o_list = get_predict_observed(filename,predicted_name,observed_name)
+# 	temp=zip(*[(a,b) for a,b in p_o_list])
+# 	original_p_list = list(temp[0])
+# 	o_list = list(temp[1])
+
+# 	real_delta_error = get_real_delta_error(filename,predicted_name,observed_name)
+# 	# add delta_e into model predicted values
+# 	add_delta_error_prediced(predicted_delta_e,p_o_list)
+# 	temp=zip(*[(a,b) for a,b in p_o_list])
+# 	improved_p_list = list(temp[0])
+
+# 	original_pbias = get_pbias(original_p_list,o_list)
+# 	improved_pbias = get_pbias(improved_p_list,o_list)
+# 	delta_error_pbias = get_pbias(predicted_delta_e,real_delta_error)
+
+# 	original_cd = get_coeficient_determination(original_p_list,o_list)
+# 	improved_cd = get_coeficient_determination(improved_p_list,o_list)
+# 	delta_error_cd = get_coeficient_determination(predicted_delta_e,real_delta_error)
+
+# 	original_nse = get_nse(original_p_list,o_list)
+# 	improved_nse = get_nse(improved_p_list,o_list)
+# 	delta_error_nse = get_nse(predicted_delta_e,real_delta_error)
+
+# 	original_rmse = get_root_mean_squared_error(original_p_list,o_list)
+# 	improved_rmse = get_root_mean_squared_error(improved_p_list,o_list)
+# 	delta_error_rmse = get_root_mean_squared_error(predicted_delta_e,real_delta_error)
+
+# 	original_rmse_error = "the original rmse is:" + str(original_rmse)
+# 	improved_rmse_error = "the improved rmse is:" + str(improved_rmse)
+
+# 	return json.dumps({'original_p_list':original_p_list,\
+# 					   'improved_p_list':improved_p_list,\
+# 					   'o_list':o_list,\
+# 					   'original_pbias':original_pbias, \
+# 					   'improved_pbias':improved_pbias, \
+# 					   'delta_error_pbias':delta_error_pbias,\
+# 					   'original_cd':original_cd, \
+# 					   'improved_cd':improved_cd, \
+# 					   'delta_error_cd':delta_error_cd,\
+# 					   'original_nse':original_nse, \
+# 					   'improved_nse':improved_nse, \
+# 					   'delta_error_nse':delta_error_nse,\
+# 					   'accuracy_info':result_accuracy,\
+# 					   'original_rmse':original_rmse,\
+# 					   'improved_rmse':improved_rmse,\
+# 					   'delta_error_rmse':delta_error_rmse})
 	
 
 # the following construct_line and convert_csv_into_libsvm
@@ -344,96 +528,96 @@ def convert_csv_into_libsvm(input_file,output_file,label_index=0,skip_headers=Tr
 		new_line = construct_line( label, line )
 		o.write( new_line )
 
-def exec_RF_regression(filename):
-	'''
-	this function run decision tree regression
-	, output the results in a log file, and return the 
-	predicted delta error col
-	'''
-	# get the libsvm file
-	output_file = app_path + '/static/data/delta_error.libsvm'
-	convert_csv_into_libsvm(filename,output_file)
-	log_path = app_path + '/rf_log.txt'
-	err_log_path = app_path + '/rf_err_log.txt'
-	exec_file_loc = app_path + '/ml_moduel/random_forest_regression.py'
-	result_file = app_path + '/rf_result.txt'
-	command = ['spark-submit',exec_file_loc,output_file,result_file]
-	# execute the model
-	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
-		process = subprocess.Popen(
-			command, stdout=process_out, stderr=err_out, cwd=app_path)
+# def exec_RF_regression(filename):
+# 	'''
+# 	this function run decision tree regression
+# 	, output the results in a log file, and return the 
+# 	predicted delta error col
+# 	'''
+# 	# get the libsvm file
+# 	output_file = app_path + '/static/data/delta_error.libsvm'
+# 	convert_csv_into_libsvm(filename,output_file)
+# 	log_path = app_path + '/rf_log.txt'
+# 	err_log_path = app_path + '/rf_err_log.txt'
+# 	exec_file_loc = app_path + '/ml_moduel/random_forest_regression.py'
+# 	result_file = app_path + '/rf_result.txt'
+# 	command = ['spark-submit',exec_file_loc,output_file,result_file]
+# 	# execute the model
+# 	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
+# 		process = subprocess.Popen(
+# 			command, stdout=process_out, stderr=err_out, cwd=app_path)
 
-	# this waits the process finishes
-	process.wait()
-	return True
+# 	# this waits the process finishes
+# 	process.wait()
+# 	return True
 
-def exec_GBT_regression(filename):
-	'''
-	this function run decision tree regression
-	, output the results in a log file, and return the 
-	predicted delta error col
-	'''
-	# get the libsvm file
-	output_file = app_path + '/static/data/delta_error.libsvm'
-	convert_csv_into_libsvm(filename,output_file)
-	log_path = app_path + '/gbt_log.txt'
-	err_log_path = app_path + '/gbt_err_log.txt'
-	exec_file_loc = app_path + '/ml_moduel/gradient_boosted_regression.py'
-	result_file = app_path + '/gbt_result.txt'
-	command = ['spark-submit',exec_file_loc,output_file,result_file]
-	# execute the model
-	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
-		process = subprocess.Popen(
-			command, stdout=process_out, stderr=err_out, cwd=app_path)
+# def exec_GBT_regression(filename):
+# 	'''
+# 	this function run decision tree regression
+# 	, output the results in a log file, and return the 
+# 	predicted delta error col
+# 	'''
+# 	# get the libsvm file
+# 	output_file = app_path + '/static/data/delta_error.libsvm'
+# 	convert_csv_into_libsvm(filename,output_file)
+# 	log_path = app_path + '/gbt_log.txt'
+# 	err_log_path = app_path + '/gbt_err_log.txt'
+# 	exec_file_loc = app_path + '/ml_moduel/gradient_boosted_regression.py'
+# 	result_file = app_path + '/gbt_result.txt'
+# 	command = ['spark-submit',exec_file_loc,output_file,result_file]
+# 	# execute the model
+# 	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
+# 		process = subprocess.Popen(
+# 			command, stdout=process_out, stderr=err_out, cwd=app_path)
 
-	# this waits the process finishes
-	process.wait()
-	return True
+# 	# this waits the process finishes
+# 	process.wait()
+# 	return True
 
-def exec_GLR_regression(filename):
-	'''
-	this function run decision tree regression
-	, output the results in a log file, and return the 
-	predicted delta error col
-	'''
-	# get the libsvm file
-	output_file = app_path + '/static/data/delta_error.libsvm'
-	convert_csv_into_libsvm(filename,output_file)
-	log_path = app_path + '/glr_log.txt'
-	err_log_path = app_path + '/glr_err_log.txt'
-	exec_file_loc = app_path + '/ml_moduel/generalized_linear_regression.py'
-	result_file = app_path + '/glr_result.txt'
-	command = ['spark-submit',exec_file_loc,output_file,result_file]
-	# execute the model
-	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
-		process = subprocess.Popen(
-			command, stdout=process_out, stderr=err_out, cwd=app_path)
+# def exec_GLR_regression(filename):
+# 	'''
+# 	this function run decision tree regression
+# 	, output the results in a log file, and return the 
+# 	predicted delta error col
+# 	'''
+# 	# get the libsvm file
+# 	output_file = app_path + '/static/data/delta_error.libsvm'
+# 	convert_csv_into_libsvm(filename,output_file)
+# 	log_path = app_path + '/glr_log.txt'
+# 	err_log_path = app_path + '/glr_err_log.txt'
+# 	exec_file_loc = app_path + '/ml_moduel/generalized_linear_regression.py'
+# 	result_file = app_path + '/glr_result.txt'
+# 	command = ['spark-submit',exec_file_loc,output_file,result_file]
+# 	# execute the model
+# 	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
+# 		process = subprocess.Popen(
+# 			command, stdout=process_out, stderr=err_out, cwd=app_path)
 
-	# this waits the process finishes
-	process.wait()
-	return True
+# 	# this waits the process finishes
+# 	process.wait()
+# 	return True
 
 
-def exec_decision_tree_regression(filename):
-	'''
-	this function run decision tree regression
-	, output the results in a log file, and return the 
-	predicted delta error col
-	'''
-	# get the libsvm file
-	output_file = app_path + '/static/data/delta_error.libsvm'
-	convert_csv_into_libsvm(filename,output_file)
-	log_path = app_path + '/decision_tree_log.txt'
-	err_log_path = app_path + '/decision_tree_err_log.txt'
-	exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
-	result_file = app_path + '/decision_tree_result.txt'
-	command = ['spark-submit',exec_file_loc,output_file,result_file]
-	# execute the model
-	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
-		process = subprocess.Popen(
-			command, stdout=process_out, stderr=err_out, cwd=app_path)
+# def exec_decision_tree_regression(filename):
+# 	'''
+# 	this function run decision tree regression
+# 	, output the results in a log file, and return the 
+# 	predicted delta error col
+# 	'''
+# 	# get the libsvm file
+# 	output_file = app_path + '/static/data/delta_error.libsvm'
+# 	convert_csv_into_libsvm(filename,output_file)
+# 	log_path = app_path + '/decision_tree_log.txt'
+# 	err_log_path = app_path + '/decision_tree_err_log.txt'
+# 	exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
+# 	result_file = app_path + '/decision_tree_result.txt'
+# 	command = ['spark-submit',exec_file_loc,output_file,result_file]
+# 	# execute the model
+# 	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
+# 		process = subprocess.Popen(
+# 			command, stdout=process_out, stderr=err_out, cwd=app_path)
 
-	# this waits the process finishes
-	process.wait()
-	return True
+# 	# this waits the process finishes
+# 	process.wait()
+# 	return True
 

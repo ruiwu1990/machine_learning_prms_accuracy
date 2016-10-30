@@ -6,18 +6,19 @@ $(document).ready(function(){
 		    url: '/api/decision_tree_data',
 		    success: function (data) {
 		      var received_json = JSON.parse(data);
-		      $('#result_info_id').text('the original rmse is:'+received_json['original_rmse']+'<br>'+
-		      							'the improved rmse is:'+received_json['improved_rmse']+'<br>'+
-		      							'the delta error rmse is:'+received_json['delta_error_rmse']+'<br>'+
-		      							'the original pbias is:'+received_json['original_pbias']+'<br>'+
-		      							'the improved pbias is:'+received_json['improved_pbias']+'<br>'+
-		      							'the delta error pbias is:'+received_json['delta_error_pbias']+'<br>'+
-		      							'the original cd is:'+received_json['original_cd']+'<br>'+
-		      							'the improved cd is:'+received_json['improved_cd']+'<br>'+
-		      							'the delta error cd is:'+received_json['delta_error_cd']+'<br>'+
-		      							'the original nse is:'+received_json['original_nse']+'<br>'+
-		      							'the improved nse is:'+received_json['improved_nse']+'<br>'+
-		      							'the delta error nse is:'+received_json['delta_error_nse']+'<br>');
+		       $('#result_info_id').html('<div style="margin-left: 60px;">The original rmse is: <span style="color:blue;font-weight: bold;">'+received_json['original_rmse']+'</span><br>'+
+		      							'The improved rmse is: <span style="color:blue;font-weight: bold;">'+received_json['improved_rmse']+'</span><br>'+
+		      							'The delta error rmse is : <span style="color:blue;font-weight: bold;">'+received_json['delta_error_rmse']+'</span><br>'+
+		      							'The original pbias is : <span style="color:blue;font-weight: bold;">'+received_json['original_pbias']+'</span><br>'+
+		      							'The improved pbias is : <span style="color:blue;font-weight: bold;">'+received_json['improved_pbias']+'</span><br>'+
+		      							'The delta error pbias is: <span style="color:blue;font-weight: bold;">'+received_json['delta_error_pbias']+'</span><br>'+
+		      							'The original cd is: <span style="color:blue;font-weight: bold;">'+received_json['original_cd']+'</span><br>'+
+		      							'The improved cd is: <span style="color:blue;font-weight: bold;">'+received_json['improved_cd']+'</span><br>'+
+		      							'The delta error cd is: <span style="color:blue;font-weight: bold;">'+received_json['delta_error_cd']+'</span><br>'+
+		      							'The original nse is: <span style="color:blue;font-weight: bold;">'+received_json['original_nse']+'</span><br>'+
+		      							'The improved nse is: <span style="color:blue;font-weight: bold;">'+received_json['improved_nse']+'</span><br>'+
+		      							'The delta error nse is: <span style="color:blue;font-weight: bold;">'+received_json['delta_error_nse']+'</span><br></div><br>'); 
+		     
 		      original_p_list = received_json['original_p_list'];
 		      improved_p_list = received_json['improved_p_list'];
 		      o_list = received_json['o_list'];

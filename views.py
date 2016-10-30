@@ -83,7 +83,7 @@ def rf_regression_data():
 	print 'working on getting data'
 	data_folder = app_path + '/static/data'
 	file_full_path = data_folder + '/original_file.csv'
-	return util.get_delta_e_RF(file_full_path)
+	return util.get_delta_e(file_full_path, regression_technique = "rf")
 
 @app.route('/api/decision_tree_data',methods=['GET'])
 def decision_tree_data():
@@ -95,7 +95,7 @@ def decision_tree_data():
 	print 'working on getting data'
 	data_folder = app_path + '/static/data'
 	file_full_path = data_folder + '/original_file.csv'
-	return util.get_delta_e_decision_tree(file_full_path)
+	return util.get_delta_e(file_full_path, regression_technique = "decision_tree")
 
 @app.route('/api/generalizedLR_data',methods=['GET'])
 def generalizedLR_data():
@@ -107,7 +107,7 @@ def generalizedLR_data():
 	print 'working on getting data'
 	data_folder = app_path + '/static/data'
 	file_full_path = data_folder + '/original_file.csv'
-	return util.get_delta_e_GLR(file_full_path)
+	return util.get_delta_e(file_full_path, regression_technique = "glr")
 
 @app.route('/api/gb_tree_data',methods=['GET'])
 def gb_tree_data():
@@ -119,7 +119,7 @@ def gb_tree_data():
 	print 'working on getting data'
 	data_folder = app_path + '/static/data'
 	file_full_path = data_folder + '/original_file.csv'
-	return util.get_delta_e_GBT(file_full_path)
+	return util.get_delta_e(file_full_path, regression_technique = "gb_tree")
 
 if __name__ == '__main__':
     app.debug = True
