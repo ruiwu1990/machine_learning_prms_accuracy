@@ -104,7 +104,7 @@ def get_nse(list1,list2):
 	list_len = len(list1)
 	sum_diff_power = 0
 	sum_diff_o_power = 0
-	
+	mean_list2 = reduce(lambda x, y: x + y, list2) / len(list2)
 	for count in range(list_len):
 		sum_diff_power = sum_diff_power + (list1[count]-list2[count])**2
 		sum_diff_o_power = sum_diff_o_power + (list2[count]-mean_list2)**2
