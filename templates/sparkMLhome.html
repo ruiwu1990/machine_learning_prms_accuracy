@@ -1,0 +1,91 @@
+
+{% extends "basee.html" %}
+{% block title %}Decision Tree Regression{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <!-- THIS JS IS USED TO TAKE SCREENSHOT -->
+   <!--  <script type="text/javascript" src='/static/bower_components/html2canvas/build/html2canvas.min.js' type='text/javascript'></script> -->
+    <!-- THIS JS IS an AWESOME COLOR LIB -->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!--     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.5.4/bootstrap-slider.js"></script> --> 
+    <script type="text/javascript" src="/static/js/seams.js"></script>
+    <script type="text/javascript" src="http://www.eyecon.ro/bootstrap-slider/js/bootstrap-slider.js"></script>
+
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="/static/js/gb_tree_result.js"></script>
+{% endblock %}
+
+
+{% block link %}
+{{ super() }}
+
+<link rel="stylesheet" href="www.eyecon.ro/bootstrap-slider/css/bootstrap.css">
+<link rel="stylesheet" href="http://www.eyecon.ro/bootstrap-slider/css/slider.css"> 
+<!--     <script>
+  $( function() {
+    $( "#slider" ).bootstrapSlider();
+
+  } );
+  </script> -->
+<style>
+p {
+    margin: 35px 0;
+}
+p#main-blurb {
+    padding: 5px;
+    font-size: 1.6em;
+    /*background-color:#555;*/
+    color: black;
+    text-align: justify;
+}
+.alert-success {
+    color: #31708F;
+    background-color: #edd3dd;
+    border-color: #BCE8F1;
+    padding: 2px;
+}
+
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<br><br><br><br><br><br><br><br><br>
+<div class = "panel panel-primary">
+   <div class = "panel-heading">
+      <h3 class = "panel-title">HOME</h3>
+   </div>
+   
+   <div class = "panel-body">
+    <div id='vis'>
+  <p>Model accuracy is one of the most important properties of a model. Even two or three percentages of accuracy could mean millions of dollars or the difference between life and death. Machine learning is commonly used to build accurate models, and many tools, such as Weka, exist for such purposes. However, when the dataset is huge or when the modeling task varies greatly from domain to domain, traditional tools are limited and different machine learning models are needed to be chosen for different problems. Big data and associated computational challenges can present obstacles to building accurate models. There are popular libraries that facilitate big data machine learning problems, such as the Apache Spark Machine Learning library. However, it requires the user to be able to program and use the offered API to obtain accurate results. In this paper, we propose a general way to improve the accuracy of a model without exploring model theory. In theory, the method should work for any arbitrary model with sufficient output. The basic idea is to predict the differences (delta) between the observed values and the model predicted values. We also created a user-friendly web-based system that leverages Apache Spark to process large data and build such a model. The Precipitation Runoff Modeling System, a physical hydrology model, was used to test our system. We were able to improve the original model’s error in terms of multiple statistical metrics using four out of five different machine learning models that we applied. The framework operates on model output alone, therefore it offers a potentially robust solution to improving the accuracy of any arbitrary model given sufficient output.</p>
+
+  <p>Our system can be trained using four different machine learning techniques. They are Generalized Linear Regression, Gradient Boosted Tress Regression, Random Forest Regression and Decision Tree Regression. To improve predictions made from a computer simulated model, please upload the data file and choose any of the ML technique. Please note that, the input data file should contain the observed data in the first column and their model’s predicted values in the second column. The remaining columns in the data file can come in any order and will be used as feature set to train the system. </p>
+
+  <p>Click "ML Regression Methods" to proceed. Thank you!</p>
+
+</div>
+
+
+
+
+  </div>
+   </div>
+   <br><br><br><br><br><br><br><br><br>
+</div>
+<br><br> 
+
+
+
+
+
+
+
+{% endblock %}
+
+
+

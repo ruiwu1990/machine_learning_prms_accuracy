@@ -1,0 +1,308 @@
+17/03/26 20:39:49 INFO spark.SparkContext: Running Spark version 2.0.1
+17/03/26 20:39:50 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/03/26 20:39:50 INFO spark.SecurityManager: Changing view acls to: root
+17/03/26 20:39:50 INFO spark.SecurityManager: Changing modify acls to: root
+17/03/26 20:39:50 INFO spark.SecurityManager: Changing view acls groups to: 
+17/03/26 20:39:50 INFO spark.SecurityManager: Changing modify acls groups to: 
+17/03/26 20:39:50 INFO spark.SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(root); groups with view permissions: Set(); users  with modify permissions: Set(root); groups with modify permissions: Set()
+17/03/26 20:39:51 INFO util.Utils: Successfully started service 'sparkDriver' on port 37354.
+17/03/26 20:39:51 INFO spark.SparkEnv: Registering MapOutputTracker
+17/03/26 20:39:51 INFO spark.SparkEnv: Registering BlockManagerMaster
+17/03/26 20:39:51 INFO storage.DiskBlockManager: Created local directory at /tmp/blockmgr-5d802eb3-6425-40d9-be3a-881cacf7d3eb
+17/03/26 20:39:51 INFO memory.MemoryStore: MemoryStore started with capacity 413.9 MB
+17/03/26 20:39:51 INFO spark.SparkEnv: Registering OutputCommitCoordinator
+17/03/26 20:39:51 INFO util.log: Logging initialized @3284ms
+17/03/26 20:39:51 INFO server.Server: jetty-9.2.z-SNAPSHOT
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@3de60a4a{/jobs,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@70812804{/jobs/json,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@13793cf7{/jobs/job,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@68047359{/jobs/job/json,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@65bd8049{/stages,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@1c0555f2{/stages/json,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@46c15c01{/stages/stage,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@d94613b{/stages/stage/json,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@4221708{/stages/pool,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@323e78bb{/stages/pool/json,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@7ed31ba9{/storage,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@50e030f1{/storage/json,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@446ee7b2{/storage/rdd,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@5d4a424{/storage/rdd/json,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@633ce964{/environment,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@328a3a4a{/environment/json,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@16a08de{/executors,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@21bf7953{/executors/json,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@254cc3c9{/executors/threadDump,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@46f7e540{/executors/threadDump/json,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@178a39b8{/static,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@4d25affb{/,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@eb46f1d{/api,null,AVAILABLE}
+17/03/26 20:39:51 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@7790566e{/stages/stage/kill,null,AVAILABLE}
+17/03/26 20:39:51 INFO server.ServerConnector: Started ServerConnector@1bb4504c{HTTP/1.1}{0.0.0.0:4040}
+17/03/26 20:39:51 INFO server.Server: Started @3468ms
+17/03/26 20:39:51 INFO util.Utils: Successfully started service 'SparkUI' on port 4040.
+17/03/26 20:39:51 INFO ui.SparkUI: Bound SparkUI to 0.0.0.0, and started at http://172.17.0.4:4040
+17/03/26 20:39:51 INFO spark.SparkContext: Added file file:/regtool/ml_moduel/generalized_linear_regression.py at file:/regtool/ml_moduel/generalized_linear_regression.py with timestamp 1490560791997
+17/03/26 20:39:52 INFO util.Utils: Copying /regtool/ml_moduel/generalized_linear_regression.py to /tmp/spark-b845a118-0797-47b1-954c-ed47f34c3131/userFiles-8c15b5ca-41e7-4e09-8da9-34c53c587c5f/generalized_linear_regression.py
+17/03/26 20:39:52 INFO executor.Executor: Starting executor ID driver on host localhost
+17/03/26 20:39:52 INFO util.Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 44449.
+17/03/26 20:39:52 INFO netty.NettyBlockTransferService: Server created on 172.17.0.4:44449
+17/03/26 20:39:52 INFO storage.BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 172.17.0.4, 44449)
+17/03/26 20:39:52 INFO storage.BlockManagerMasterEndpoint: Registering block manager 172.17.0.4:44449 with 413.9 MB RAM, BlockManagerId(driver, 172.17.0.4, 44449)
+17/03/26 20:39:52 INFO storage.BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 172.17.0.4, 44449)
+17/03/26 20:39:52 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@576265c8{/metrics/json,null,AVAILABLE}
+17/03/26 20:39:52 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@1760be90{/SQL,null,AVAILABLE}
+17/03/26 20:39:52 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@27458b5d{/SQL/json,null,AVAILABLE}
+17/03/26 20:39:52 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@4befebb1{/SQL/execution,null,AVAILABLE}
+17/03/26 20:39:52 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@76a3c5fd{/SQL/execution/json,null,AVAILABLE}
+17/03/26 20:39:52 INFO handler.ContextHandler: Started o.s.j.s.ServletContextHandler@36b3b16d{/static/sql,null,AVAILABLE}
+17/03/26 20:39:52 INFO internal.SharedState: Warehouse path is '/regtool/spark-warehouse'.
+17/03/26 20:39:53 INFO memory.MemoryStore: Block broadcast_0 stored as values in memory (estimated size 232.0 KB, free 413.7 MB)
+17/03/26 20:39:53 INFO memory.MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 22.6 KB, free 413.7 MB)
+17/03/26 20:39:53 INFO storage.BlockManagerInfo: Added broadcast_0_piece0 in memory on 172.17.0.4:44449 (size: 22.6 KB, free: 413.9 MB)
+17/03/26 20:39:53 INFO spark.SparkContext: Created broadcast 0 from textFile at MLUtils.scala:99
+17/03/26 20:39:54 INFO mapred.FileInputFormat: Total input paths to process : 1
+17/03/26 20:39:54 INFO spark.SparkContext: Starting job: reduce at MLUtils.scala:92
+17/03/26 20:39:54 INFO scheduler.DAGScheduler: Got job 0 (reduce at MLUtils.scala:92) with 1 output partitions
+17/03/26 20:39:54 INFO scheduler.DAGScheduler: Final stage: ResultStage 0 (reduce at MLUtils.scala:92)
+17/03/26 20:39:54 INFO scheduler.DAGScheduler: Parents of final stage: List()
+17/03/26 20:39:54 INFO scheduler.DAGScheduler: Missing parents: List()
+17/03/26 20:39:54 INFO scheduler.DAGScheduler: Submitting ResultStage 0 (MapPartitionsRDD[5] at map at MLUtils.scala:90), which has no missing parents
+17/03/26 20:39:54 INFO memory.MemoryStore: Block broadcast_1 stored as values in memory (estimated size 3.8 KB, free 413.7 MB)
+17/03/26 20:39:54 INFO memory.MemoryStore: Block broadcast_1_piece0 stored as bytes in memory (estimated size 2.2 KB, free 413.7 MB)
+17/03/26 20:39:54 INFO storage.BlockManagerInfo: Added broadcast_1_piece0 in memory on 172.17.0.4:44449 (size: 2.2 KB, free: 413.9 MB)
+17/03/26 20:39:54 INFO spark.SparkContext: Created broadcast 1 from broadcast at DAGScheduler.scala:1012
+17/03/26 20:39:54 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ResultStage 0 (MapPartitionsRDD[5] at map at MLUtils.scala:90)
+17/03/26 20:39:54 INFO scheduler.TaskSchedulerImpl: Adding task set 0.0 with 1 tasks
+17/03/26 20:39:54 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0, localhost, partition 0, PROCESS_LOCAL, 5489 bytes)
+17/03/26 20:39:54 INFO executor.Executor: Running task 0.0 in stage 0.0 (TID 0)
+17/03/26 20:39:54 INFO executor.Executor: Fetching file:/regtool/ml_moduel/generalized_linear_regression.py with timestamp 1490560791997
+17/03/26 20:39:54 INFO util.Utils: /regtool/ml_moduel/generalized_linear_regression.py has been previously copied to /tmp/spark-b845a118-0797-47b1-954c-ed47f34c3131/userFiles-8c15b5ca-41e7-4e09-8da9-34c53c587c5f/generalized_linear_regression.py
+17/03/26 20:39:54 INFO rdd.HadoopRDD: Input split: file:/regtool/static/data/delta_error.libsvm:0+174636
+17/03/26 20:39:54 INFO Configuration.deprecation: mapred.tip.id is deprecated. Instead, use mapreduce.task.id
+17/03/26 20:39:54 INFO Configuration.deprecation: mapred.task.id is deprecated. Instead, use mapreduce.task.attempt.id
+17/03/26 20:39:54 INFO Configuration.deprecation: mapred.task.is.map is deprecated. Instead, use mapreduce.task.ismap
+17/03/26 20:39:54 INFO Configuration.deprecation: mapred.task.partition is deprecated. Instead, use mapreduce.task.partition
+17/03/26 20:39:54 INFO Configuration.deprecation: mapred.job.id is deprecated. Instead, use mapreduce.job.id
+17/03/26 20:39:54 INFO executor.Executor: Finished task 0.0 in stage 0.0 (TID 0). 1192 bytes result sent to driver
+17/03/26 20:39:54 INFO scheduler.DAGScheduler: ResultStage 0 (reduce at MLUtils.scala:92) finished in 0.641 s
+17/03/26 20:39:54 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 0.0 (TID 0) in 616 ms on localhost (1/1)
+17/03/26 20:39:54 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool 
+17/03/26 20:39:54 INFO scheduler.DAGScheduler: Job 0 finished: reduce at MLUtils.scala:92, took 0.878243 s
+17/03/26 20:39:57 INFO storage.BlockManagerInfo: Removed broadcast_1_piece0 on 172.17.0.4:44449 in memory (size: 2.2 KB, free: 413.9 MB)
+17/03/26 20:39:57 INFO storage.BlockManagerInfo: Removed broadcast_0_piece0 on 172.17.0.4:44449 in memory (size: 22.6 KB, free: 413.9 MB)
+17/03/26 20:39:57 INFO datasources.FileSourceStrategy: Pruning directories with: 
+17/03/26 20:39:57 INFO datasources.FileSourceStrategy: Post-Scan Filters: 
+17/03/26 20:39:57 INFO datasources.FileSourceStrategy: Pruned Data Schema: struct<features: vector>
+17/03/26 20:39:57 INFO datasources.FileSourceStrategy: Pushed Filters: 
+17/03/26 20:39:57 INFO memory.MemoryStore: Block broadcast_2 stored as values in memory (estimated size 264.6 KB, free 413.7 MB)
+17/03/26 20:39:57 INFO memory.MemoryStore: Block broadcast_2_piece0 stored as bytes in memory (estimated size 23.1 KB, free 413.6 MB)
+17/03/26 20:39:57 INFO storage.BlockManagerInfo: Added broadcast_2_piece0 in memory on 172.17.0.4:44449 (size: 23.1 KB, free: 413.9 MB)
+17/03/26 20:39:57 INFO spark.SparkContext: Created broadcast 2 from broadcast at LibSVMRelation.scala:161
+17/03/26 20:39:57 INFO datasources.FileSourceStrategy: Planning scan with bin packing, max size: 4368940 bytes, open cost is considered as scanning 4194304 bytes.
+17/03/26 20:39:58 INFO codegen.CodeGenerator: Code generated in 354.854035 ms
+17/03/26 20:39:58 INFO spark.SparkContext: Starting job: first at GeneralizedLinearRegression.scala:247
+17/03/26 20:39:58 INFO scheduler.DAGScheduler: Got job 1 (first at GeneralizedLinearRegression.scala:247) with 1 output partitions
+17/03/26 20:39:58 INFO scheduler.DAGScheduler: Final stage: ResultStage 1 (first at GeneralizedLinearRegression.scala:247)
+17/03/26 20:39:58 INFO scheduler.DAGScheduler: Parents of final stage: List()
+17/03/26 20:39:58 INFO scheduler.DAGScheduler: Missing parents: List()
+17/03/26 20:39:58 INFO scheduler.DAGScheduler: Submitting ResultStage 1 (MapPartitionsRDD[8] at first at GeneralizedLinearRegression.scala:247), which has no missing parents
+17/03/26 20:39:58 INFO memory.MemoryStore: Block broadcast_3 stored as values in memory (estimated size 6.9 KB, free 413.6 MB)
+17/03/26 20:39:58 INFO memory.MemoryStore: Block broadcast_3_piece0 stored as bytes in memory (estimated size 3.9 KB, free 413.6 MB)
+17/03/26 20:39:58 INFO storage.BlockManagerInfo: Added broadcast_3_piece0 in memory on 172.17.0.4:44449 (size: 3.9 KB, free: 413.9 MB)
+17/03/26 20:39:58 INFO spark.SparkContext: Created broadcast 3 from broadcast at DAGScheduler.scala:1012
+17/03/26 20:39:58 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ResultStage 1 (MapPartitionsRDD[8] at first at GeneralizedLinearRegression.scala:247)
+17/03/26 20:39:58 INFO scheduler.TaskSchedulerImpl: Adding task set 1.0 with 1 tasks
+17/03/26 20:39:58 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 1.0 (TID 1, localhost, partition 0, PROCESS_LOCAL, 5941 bytes)
+17/03/26 20:39:58 INFO executor.Executor: Running task 0.0 in stage 1.0 (TID 1)
+17/03/26 20:39:58 INFO datasources.FileScanRDD: Reading File path: file:///regtool/static/data/delta_error.libsvm, range: 0-174636, partition values: [empty row]
+17/03/26 20:39:58 INFO codegen.CodeGenerator: Code generated in 60.845009 ms
+17/03/26 20:39:58 INFO codegen.CodeGenerator: Code generated in 45.621772 ms
+17/03/26 20:39:58 INFO codegen.CodeGenerator: Code generated in 86.161553 ms
+17/03/26 20:39:58 INFO executor.Executor: Finished task 0.0 in stage 1.0 (TID 1). 1485 bytes result sent to driver
+17/03/26 20:39:58 INFO scheduler.DAGScheduler: ResultStage 1 (first at GeneralizedLinearRegression.scala:247) finished in 0.363 s
+17/03/26 20:39:58 INFO scheduler.DAGScheduler: Job 1 finished: first at GeneralizedLinearRegression.scala:247, took 0.465452 s
+17/03/26 20:39:58 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 1.0 (TID 1) in 368 ms on localhost (1/1)
+17/03/26 20:39:58 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 1.0, whose tasks have all completed, from pool 
+17/03/26 20:39:58 INFO codegen.CodeGenerator: Code generated in 19.916365 ms
+17/03/26 20:39:59 INFO datasources.FileSourceStrategy: Pruning directories with: 
+17/03/26 20:39:59 INFO datasources.FileSourceStrategy: Post-Scan Filters: 
+17/03/26 20:39:59 INFO datasources.FileSourceStrategy: Pruned Data Schema: struct<label: double, features: vector>
+17/03/26 20:39:59 INFO datasources.FileSourceStrategy: Pushed Filters: 
+17/03/26 20:39:59 INFO memory.MemoryStore: Block broadcast_4 stored as values in memory (estimated size 264.6 KB, free 413.4 MB)
+17/03/26 20:39:59 INFO memory.MemoryStore: Block broadcast_4_piece0 stored as bytes in memory (estimated size 23.1 KB, free 413.4 MB)
+17/03/26 20:39:59 INFO storage.BlockManagerInfo: Added broadcast_4_piece0 in memory on 172.17.0.4:44449 (size: 23.1 KB, free: 413.9 MB)
+17/03/26 20:39:59 INFO spark.SparkContext: Created broadcast 4 from broadcast at LibSVMRelation.scala:161
+17/03/26 20:39:59 INFO datasources.FileSourceStrategy: Planning scan with bin packing, max size: 4368940 bytes, open cost is considered as scanning 4194304 bytes.
+17/03/26 20:39:59 INFO codegen.CodeGenerator: Code generated in 42.115418 ms
+17/03/26 20:39:59 INFO spark.SparkContext: Starting job: treeAggregate at WeightedLeastSquares.scala:81
+17/03/26 20:39:59 INFO scheduler.DAGScheduler: Got job 2 (treeAggregate at WeightedLeastSquares.scala:81) with 1 output partitions
+17/03/26 20:39:59 INFO scheduler.DAGScheduler: Final stage: ResultStage 2 (treeAggregate at WeightedLeastSquares.scala:81)
+17/03/26 20:39:59 INFO scheduler.DAGScheduler: Parents of final stage: List()
+17/03/26 20:39:59 INFO scheduler.DAGScheduler: Missing parents: List()
+17/03/26 20:39:59 INFO scheduler.DAGScheduler: Submitting ResultStage 2 (MapPartitionsRDD[14] at treeAggregate at WeightedLeastSquares.scala:81), which has no missing parents
+17/03/26 20:39:59 INFO memory.MemoryStore: Block broadcast_5 stored as values in memory (estimated size 16.7 KB, free 413.3 MB)
+17/03/26 20:39:59 INFO memory.MemoryStore: Block broadcast_5_piece0 stored as bytes in memory (estimated size 7.5 KB, free 413.3 MB)
+17/03/26 20:39:59 INFO storage.BlockManagerInfo: Added broadcast_5_piece0 in memory on 172.17.0.4:44449 (size: 7.5 KB, free: 413.9 MB)
+17/03/26 20:39:59 INFO spark.SparkContext: Created broadcast 5 from broadcast at DAGScheduler.scala:1012
+17/03/26 20:39:59 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ResultStage 2 (MapPartitionsRDD[14] at treeAggregate at WeightedLeastSquares.scala:81)
+17/03/26 20:39:59 INFO scheduler.TaskSchedulerImpl: Adding task set 2.0 with 1 tasks
+17/03/26 20:39:59 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 2.0 (TID 2, localhost, partition 0, PROCESS_LOCAL, 6003 bytes)
+17/03/26 20:39:59 INFO executor.Executor: Running task 0.0 in stage 2.0 (TID 2)
+17/03/26 20:39:59 INFO codegen.CodeGenerator: Code generated in 26.159527 ms
+17/03/26 20:39:59 INFO datasources.FileScanRDD: Reading File path: file:///regtool/static/data/delta_error.libsvm, range: 0-174636, partition values: [empty row]
+17/03/26 20:39:59 INFO codegen.CodeGenerator: Code generated in 31.198167 ms
+17/03/26 20:39:59 INFO executor.Executor: Finished task 0.0 in stage 2.0 (TID 2). 2146 bytes result sent to driver
+17/03/26 20:39:59 INFO scheduler.DAGScheduler: ResultStage 2 (treeAggregate at WeightedLeastSquares.scala:81) finished in 0.514 s
+17/03/26 20:39:59 INFO scheduler.DAGScheduler: Job 2 finished: treeAggregate at WeightedLeastSquares.scala:81, took 0.548626 s
+17/03/26 20:39:59 INFO optim.WeightedLeastSquares: Number of instances: 3653.
+17/03/26 20:39:59 WARN netlib.BLAS: Failed to load implementation from: com.github.fommil.netlib.NativeSystemBLAS
+17/03/26 20:39:59 WARN netlib.BLAS: Failed to load implementation from: com.github.fommil.netlib.NativeRefBLAS
+17/03/26 20:39:59 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 2.0 (TID 2) in 527 ms on localhost (1/1)
+17/03/26 20:39:59 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 2.0, whose tasks have all completed, from pool 
+17/03/26 20:39:59 WARN netlib.LAPACK: Failed to load implementation from: com.github.fommil.netlib.NativeSystemLAPACK
+17/03/26 20:39:59 WARN netlib.LAPACK: Failed to load implementation from: com.github.fommil.netlib.NativeRefLAPACK
+17/03/26 20:40:00 INFO storage.BlockManagerInfo: Removed broadcast_5_piece0 on 172.17.0.4:44449 in memory (size: 7.5 KB, free: 413.9 MB)
+17/03/26 20:40:01 INFO datasources.FileSourceStrategy: Pruning directories with: 
+17/03/26 20:40:01 INFO datasources.FileSourceStrategy: Post-Scan Filters: 
+17/03/26 20:40:01 INFO datasources.FileSourceStrategy: Pruned Data Schema: struct<label: double, features: vector>
+17/03/26 20:40:01 INFO datasources.FileSourceStrategy: Pushed Filters: 
+17/03/26 20:40:01 INFO memory.MemoryStore: Block broadcast_6 stored as values in memory (estimated size 264.6 KB, free 413.1 MB)
+17/03/26 20:40:01 INFO memory.MemoryStore: Block broadcast_6_piece0 stored as bytes in memory (estimated size 23.1 KB, free 413.1 MB)
+17/03/26 20:40:01 INFO storage.BlockManagerInfo: Added broadcast_6_piece0 in memory on 172.17.0.4:44449 (size: 23.1 KB, free: 413.9 MB)
+17/03/26 20:40:01 INFO spark.SparkContext: Created broadcast 6 from broadcast at LibSVMRelation.scala:161
+17/03/26 20:40:01 INFO datasources.FileSourceStrategy: Planning scan with bin packing, max size: 4368940 bytes, open cost is considered as scanning 4194304 bytes.
+17/03/26 20:40:01 INFO codegen.CodeGenerator: Code generated in 78.549944 ms
+17/03/26 20:40:01 INFO spark.SparkContext: Starting job: showString at NativeMethodAccessorImpl.java:-2
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: Got job 3 (showString at NativeMethodAccessorImpl.java:-2) with 1 output partitions
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: Final stage: ResultStage 3 (showString at NativeMethodAccessorImpl.java:-2)
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: Parents of final stage: List()
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: Missing parents: List()
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: Submitting ResultStage 3 (MapPartitionsRDD[17] at showString at NativeMethodAccessorImpl.java:-2), which has no missing parents
+17/03/26 20:40:01 INFO memory.MemoryStore: Block broadcast_7 stored as values in memory (estimated size 22.3 KB, free 413.1 MB)
+17/03/26 20:40:01 INFO memory.MemoryStore: Block broadcast_7_piece0 stored as bytes in memory (estimated size 10.0 KB, free 413.0 MB)
+17/03/26 20:40:01 INFO storage.BlockManagerInfo: Added broadcast_7_piece0 in memory on 172.17.0.4:44449 (size: 10.0 KB, free: 413.8 MB)
+17/03/26 20:40:01 INFO spark.SparkContext: Created broadcast 7 from broadcast at DAGScheduler.scala:1012
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ResultStage 3 (MapPartitionsRDD[17] at showString at NativeMethodAccessorImpl.java:-2)
+17/03/26 20:40:01 INFO scheduler.TaskSchedulerImpl: Adding task set 3.0 with 1 tasks
+17/03/26 20:40:01 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 3.0 (TID 3, localhost, partition 0, PROCESS_LOCAL, 5941 bytes)
+17/03/26 20:40:01 INFO executor.Executor: Running task 0.0 in stage 3.0 (TID 3)
+17/03/26 20:40:01 INFO datasources.FileScanRDD: Reading File path: file:///regtool/static/data/delta_error.libsvm, range: 0-174636, partition values: [empty row]
+17/03/26 20:40:01 INFO executor.Executor: Finished task 0.0 in stage 3.0 (TID 3). 1464 bytes result sent to driver
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: ResultStage 3 (showString at NativeMethodAccessorImpl.java:-2) finished in 0.040 s
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: Job 3 finished: showString at NativeMethodAccessorImpl.java:-2, took 0.062420 s
+17/03/26 20:40:01 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 3.0 (TID 3) in 48 ms on localhost (1/1)
+17/03/26 20:40:01 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 3.0, whose tasks have all completed, from pool 
+17/03/26 20:40:01 INFO codegen.CodeGenerator: Code generated in 10.542491 ms
+17/03/26 20:40:01 INFO storage.BlockManagerInfo: Removed broadcast_7_piece0 on 172.17.0.4:44449 in memory (size: 10.0 KB, free: 413.9 MB)
+17/03/26 20:40:01 INFO datasources.FileSourceStrategy: Pruning directories with: 
+17/03/26 20:40:01 INFO datasources.FileSourceStrategy: Post-Scan Filters: 
+17/03/26 20:40:01 INFO datasources.FileSourceStrategy: Pruned Data Schema: struct<label: double, features: vector>
+17/03/26 20:40:01 INFO datasources.FileSourceStrategy: Pushed Filters: 
+17/03/26 20:40:01 INFO memory.MemoryStore: Block broadcast_8 stored as values in memory (estimated size 264.6 KB, free 412.8 MB)
+17/03/26 20:40:01 INFO memory.MemoryStore: Block broadcast_8_piece0 stored as bytes in memory (estimated size 23.1 KB, free 412.8 MB)
+17/03/26 20:40:01 INFO storage.BlockManagerInfo: Added broadcast_8_piece0 in memory on 172.17.0.4:44449 (size: 23.1 KB, free: 413.8 MB)
+17/03/26 20:40:01 INFO spark.SparkContext: Created broadcast 8 from broadcast at LibSVMRelation.scala:161
+17/03/26 20:40:01 INFO datasources.FileSourceStrategy: Planning scan with bin packing, max size: 4368940 bytes, open cost is considered as scanning 4194304 bytes.
+17/03/26 20:40:01 INFO codegen.CodeGenerator: Code generated in 45.306068 ms
+17/03/26 20:40:01 INFO spark.SparkContext: Starting job: aggregate at RegressionMetrics.scala:57
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: Got job 4 (aggregate at RegressionMetrics.scala:57) with 1 output partitions
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: Final stage: ResultStage 4 (aggregate at RegressionMetrics.scala:57)
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: Parents of final stage: List()
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: Missing parents: List()
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: Submitting ResultStage 4 (MapPartitionsRDD[23] at map at RegressionMetrics.scala:55), which has no missing parents
+17/03/26 20:40:01 INFO memory.MemoryStore: Block broadcast_9 stored as values in memory (estimated size 23.1 KB, free 412.8 MB)
+17/03/26 20:40:01 INFO memory.MemoryStore: Block broadcast_9_piece0 stored as bytes in memory (estimated size 11.0 KB, free 412.8 MB)
+17/03/26 20:40:01 INFO storage.BlockManagerInfo: Added broadcast_9_piece0 in memory on 172.17.0.4:44449 (size: 11.0 KB, free: 413.8 MB)
+17/03/26 20:40:01 INFO spark.SparkContext: Created broadcast 9 from broadcast at DAGScheduler.scala:1012
+17/03/26 20:40:01 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ResultStage 4 (MapPartitionsRDD[23] at map at RegressionMetrics.scala:55)
+17/03/26 20:40:01 INFO scheduler.TaskSchedulerImpl: Adding task set 4.0 with 1 tasks
+17/03/26 20:40:01 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 4.0 (TID 4, localhost, partition 0, PROCESS_LOCAL, 5999 bytes)
+17/03/26 20:40:01 INFO executor.Executor: Running task 0.0 in stage 4.0 (TID 4)
+17/03/26 20:40:01 INFO codegen.CodeGenerator: Code generated in 13.350231 ms
+17/03/26 20:40:01 INFO datasources.FileScanRDD: Reading File path: file:///regtool/static/data/delta_error.libsvm, range: 0-174636, partition values: [empty row]
+17/03/26 20:40:02 INFO executor.Executor: Finished task 0.0 in stage 4.0 (TID 4). 1844 bytes result sent to driver
+17/03/26 20:40:02 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 4.0 (TID 4) in 291 ms on localhost (1/1)
+17/03/26 20:40:02 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 4.0, whose tasks have all completed, from pool 
+17/03/26 20:40:02 INFO scheduler.DAGScheduler: ResultStage 4 (aggregate at RegressionMetrics.scala:57) finished in 0.283 s
+17/03/26 20:40:02 INFO scheduler.DAGScheduler: Job 4 finished: aggregate at RegressionMetrics.scala:57, took 0.301892 s
+17/03/26 20:40:02 INFO storage.BlockManagerInfo: Removed broadcast_8_piece0 on 172.17.0.4:44449 in memory (size: 23.1 KB, free: 413.8 MB)
+17/03/26 20:40:02 INFO spark.ContextCleaner: Cleaned accumulator 183
+17/03/26 20:40:02 INFO storage.BlockManagerInfo: Removed broadcast_9_piece0 on 172.17.0.4:44449 in memory (size: 11.0 KB, free: 413.9 MB)
+17/03/26 20:40:02 INFO spark.ContextCleaner: Cleaned accumulator 184
+17/03/26 20:40:02 INFO datasources.FileSourceStrategy: Pruning directories with: 
+17/03/26 20:40:02 INFO datasources.FileSourceStrategy: Post-Scan Filters: 
+17/03/26 20:40:02 INFO datasources.FileSourceStrategy: Pruned Data Schema: struct<label: double, features: vector>
+17/03/26 20:40:02 INFO datasources.FileSourceStrategy: Pushed Filters: 
+17/03/26 20:40:02 INFO memory.MemoryStore: Block broadcast_10 stored as values in memory (estimated size 264.6 KB, free 412.8 MB)
+17/03/26 20:40:02 INFO spark.ContextCleaner: Cleaned accumulator 138
+17/03/26 20:40:02 INFO spark.ContextCleaner: Cleaned accumulator 137
+17/03/26 20:40:02 INFO storage.BlockManagerInfo: Removed broadcast_6_piece0 on 172.17.0.4:44449 in memory (size: 23.1 KB, free: 413.9 MB)
+17/03/26 20:40:02 INFO spark.ContextCleaner: Cleaned accumulator 92
+17/03/26 20:40:02 INFO spark.ContextCleaner: Cleaned accumulator 91
+17/03/26 20:40:02 INFO storage.BlockManagerInfo: Removed broadcast_4_piece0 on 172.17.0.4:44449 in memory (size: 23.1 KB, free: 413.9 MB)
+17/03/26 20:40:02 INFO storage.BlockManagerInfo: Removed broadcast_3_piece0 on 172.17.0.4:44449 in memory (size: 3.9 KB, free: 413.9 MB)
+17/03/26 20:40:02 INFO spark.ContextCleaner: Cleaned accumulator 46
+17/03/26 20:40:02 INFO spark.ContextCleaner: Cleaned accumulator 45
+17/03/26 20:40:02 INFO storage.BlockManagerInfo: Removed broadcast_2_piece0 on 172.17.0.4:44449 in memory (size: 23.1 KB, free: 413.9 MB)
+17/03/26 20:40:02 INFO memory.MemoryStore: Block broadcast_10_piece0 stored as bytes in memory (estimated size 23.1 KB, free 413.6 MB)
+17/03/26 20:40:02 INFO storage.BlockManagerInfo: Added broadcast_10_piece0 in memory on 172.17.0.4:44449 (size: 23.1 KB, free: 413.9 MB)
+17/03/26 20:40:02 INFO spark.SparkContext: Created broadcast 10 from toPandas at /regtool/ml_moduel/generalized_linear_regression.py:54
+17/03/26 20:40:02 INFO datasources.FileSourceStrategy: Planning scan with bin packing, max size: 4368940 bytes, open cost is considered as scanning 4194304 bytes.
+17/03/26 20:40:02 INFO codegen.CodeGenerator: Code generated in 57.759608 ms
+17/03/26 20:40:02 INFO spark.SparkContext: Starting job: toPandas at /regtool/ml_moduel/generalized_linear_regression.py:54
+17/03/26 20:40:02 INFO scheduler.DAGScheduler: Got job 5 (toPandas at /regtool/ml_moduel/generalized_linear_regression.py:54) with 1 output partitions
+17/03/26 20:40:02 INFO scheduler.DAGScheduler: Final stage: ResultStage 5 (toPandas at /regtool/ml_moduel/generalized_linear_regression.py:54)
+17/03/26 20:40:02 INFO scheduler.DAGScheduler: Parents of final stage: List()
+17/03/26 20:40:02 INFO scheduler.DAGScheduler: Missing parents: List()
+17/03/26 20:40:02 INFO scheduler.DAGScheduler: Submitting ResultStage 5 (MapPartitionsRDD[26] at toPandas at /regtool/ml_moduel/generalized_linear_regression.py:54), which has no missing parents
+17/03/26 20:40:02 INFO memory.MemoryStore: Block broadcast_11 stored as values in memory (estimated size 24.2 KB, free 413.6 MB)
+17/03/26 20:40:02 INFO memory.MemoryStore: Block broadcast_11_piece0 stored as bytes in memory (estimated size 10.8 KB, free 413.6 MB)
+17/03/26 20:40:02 INFO storage.BlockManagerInfo: Added broadcast_11_piece0 in memory on 172.17.0.4:44449 (size: 10.8 KB, free: 413.9 MB)
+17/03/26 20:40:02 INFO spark.SparkContext: Created broadcast 11 from broadcast at DAGScheduler.scala:1012
+17/03/26 20:40:02 INFO scheduler.DAGScheduler: Submitting 1 missing tasks from ResultStage 5 (MapPartitionsRDD[26] at toPandas at /regtool/ml_moduel/generalized_linear_regression.py:54)
+17/03/26 20:40:02 INFO scheduler.TaskSchedulerImpl: Adding task set 5.0 with 1 tasks
+17/03/26 20:40:02 INFO scheduler.TaskSetManager: Starting task 0.0 in stage 5.0 (TID 5, localhost, partition 0, PROCESS_LOCAL, 6112 bytes)
+17/03/26 20:40:02 INFO executor.Executor: Running task 0.0 in stage 5.0 (TID 5)
+17/03/26 20:40:02 INFO datasources.FileScanRDD: Reading File path: file:///regtool/static/data/delta_error.libsvm, range: 0-174636, partition values: [empty row]
+17/03/26 20:40:03 INFO executor.Executor: Finished task 0.0 in stage 5.0 (TID 5). 156716 bytes result sent to driver
+17/03/26 20:40:03 INFO scheduler.TaskSetManager: Finished task 0.0 in stage 5.0 (TID 5) in 141 ms on localhost (1/1)
+17/03/26 20:40:03 INFO scheduler.TaskSchedulerImpl: Removed TaskSet 5.0, whose tasks have all completed, from pool 
+17/03/26 20:40:03 INFO scheduler.DAGScheduler: ResultStage 5 (toPandas at /regtool/ml_moduel/generalized_linear_regression.py:54) finished in 0.135 s
+17/03/26 20:40:03 INFO scheduler.DAGScheduler: Job 5 finished: toPandas at /regtool/ml_moduel/generalized_linear_regression.py:54, took 0.152032 s
+17/03/26 20:40:03 INFO storage.BlockManagerInfo: Removed broadcast_11_piece0 on 172.17.0.4:44449 in memory (size: 10.8 KB, free: 413.9 MB)
+17/03/26 20:40:04 INFO spark.SparkContext: Invoking stop() from shutdown hook
+17/03/26 20:40:04 INFO server.ServerConnector: Stopped ServerConnector@1bb4504c{HTTP/1.1}{0.0.0.0:4040}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@7790566e{/stages/stage/kill,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@eb46f1d{/api,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@4d25affb{/,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@178a39b8{/static,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@46f7e540{/executors/threadDump/json,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@254cc3c9{/executors/threadDump,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@21bf7953{/executors/json,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@16a08de{/executors,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@328a3a4a{/environment/json,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@633ce964{/environment,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@5d4a424{/storage/rdd/json,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@446ee7b2{/storage/rdd,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@50e030f1{/storage/json,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@7ed31ba9{/storage,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@323e78bb{/stages/pool/json,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@4221708{/stages/pool,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@d94613b{/stages/stage/json,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@46c15c01{/stages/stage,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@1c0555f2{/stages/json,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@65bd8049{/stages,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@68047359{/jobs/job/json,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@13793cf7{/jobs/job,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@70812804{/jobs/json,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO handler.ContextHandler: Stopped o.s.j.s.ServletContextHandler@3de60a4a{/jobs,null,UNAVAILABLE}
+17/03/26 20:40:04 INFO ui.SparkUI: Stopped Spark web UI at http://172.17.0.4:4040
+17/03/26 20:40:04 INFO spark.MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+17/03/26 20:40:04 INFO memory.MemoryStore: MemoryStore cleared
+17/03/26 20:40:04 INFO storage.BlockManager: BlockManager stopped
+17/03/26 20:40:04 INFO storage.BlockManagerMaster: BlockManagerMaster stopped
+17/03/26 20:40:04 INFO scheduler.OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+17/03/26 20:40:04 INFO spark.SparkContext: Successfully stopped SparkContext
+17/03/26 20:40:04 INFO util.ShutdownHookManager: Shutdown hook called
+17/03/26 20:40:04 INFO util.ShutdownHookManager: Deleting directory /tmp/spark-b845a118-0797-47b1-954c-ed47f34c3131
+17/03/26 20:40:04 INFO util.ShutdownHookManager: Deleting directory /tmp/spark-b845a118-0797-47b1-954c-ed47f34c3131/pyspark-27ba4903-f13c-45e8-96e1-4442d0e38c3b
