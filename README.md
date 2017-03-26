@@ -5,18 +5,7 @@ Here are the ML techniques used from Spark Tool:
 ```
 http://spark.apache.org/docs/latest/mllib-classification-regression.html
 ```
-#Quick Start
-Here is the command to install the requirements
-```
-sudo pip install requirements.txt
-```
-Here is the command to set up and run the program
-```
-python views.py -h 134.197.20.79 -p 5000 --threaded
-```
-134.197.20.79 should be replaced with your machine ip address. The command is to set up a server with your machine
-
-
+# Quick Start:
 This tool is completely dockerized. Now you can deploy this tool on any machine which is configured with a docker engine.
 To deploy the tool, use the below docker command.
 ```
@@ -29,6 +18,23 @@ docker run -v /home/docker/machine_learning_prms_accuracy:/regtool --name <conta
 In the above command, "/home/docker/machine_learning_prms_accuracy" is the location of the tool's repository in container's host machine. Replace it with your repository location. 
 
 Thank you !!! 
+
+
+
+# To work without docker setup:
+
+Here is the command to install the requirements
+```
+sudo pip install requirements.txt
+```
+Here is the command to set up and run the program
+```
+python views.py -h 134.197.20.79 -p 5000 --threaded
+```
+134.197.20.79 should be replaced with your machine ip address. The command is to set up a server with your machine
+
+
+
 
 
 
