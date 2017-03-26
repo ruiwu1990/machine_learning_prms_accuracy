@@ -9,10 +9,10 @@ app_path = os.path.dirname(os.path.abspath(__file__))
 
 @app.route('/')
 def index():
-	return render_template('index.html')
+	return render_template('sparkMLhome.html')
 
 @app.route('/sparkMLhome')
-def survey():
+def sparkMLhome():
 	return render_template('sparkMLhome.html')
 
 @app.route('/decision_tree_regression')
