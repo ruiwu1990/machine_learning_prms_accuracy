@@ -19,6 +19,35 @@ In the above command, "/home/docker/machine_learning_prms_accuracy" is the locat
 
 Thank you !!! 
 
+![Alt text](static/mluploadpage.png?raw=true "Title")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # To work without docker setup:
