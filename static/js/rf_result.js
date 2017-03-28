@@ -6,18 +6,22 @@ $(document).ready(function(){
 		    url: '/api/rf_regression_data',
 		    success: function (data) {
 		      var received_json = JSON.parse(data);
-		      $('#result_info_id_RF').html('<div style="margin-left: 60px;">The original rmse is: <span style="color:blue;font-weight: bold;">'+received_json['original_rmse']+'</span><br>'+
-		      							'The improved rmse is: <span style="color:blue;font-weight: bold;">'+received_json['improved_rmse']+'</span><br>'+
-		      							'The delta error rmse is : <span style="color:blue;font-weight: bold;">'+received_json['delta_error_rmse']+'</span><br>'+
-		      							'The original pbias is : <span style="color:blue;font-weight: bold;">'+received_json['original_pbias']+'</span><br>'+
-		      							'The improved pbias is : <span style="color:blue;font-weight: bold;">'+received_json['improved_pbias']+'</span><br>'+
-		      							'The delta error pbias is: <span style="color:blue;font-weight: bold;">'+received_json['delta_error_pbias']+'</span><br>'+
-		      							'The original cd is: <span style="color:blue;font-weight: bold;">'+received_json['original_cd']+'</span><br>'+
-		      							'The improved cd is: <span style="color:blue;font-weight: bold;">'+received_json['improved_cd']+'</span><br>'+
-		      							'The delta error cd is: <span style="color:blue;font-weight: bold;">'+received_json['delta_error_cd']+'</span><br>'+
-		      							'The original nse is: <span style="color:blue;font-weight: bold;">'+received_json['original_nse']+'</span><br>'+
-		      							'The improved nse is: <span style="color:blue;font-weight: bold;">'+received_json['improved_nse']+'</span><br>'+
-		      							'The delta error nse is: <span style="color:blue;font-weight: bold;">'+received_json['delta_error_nse']+'</span><br></div><br>'); 
+		      $('#result_info_id_RF').html('<div style="margin-left: 60px;">Please find below our report on the model evaluation statistics.<br><br>'+
+				    '<table class="table"><tbody>'+
+					    '<tr><td class="col-md-2">Original RMSE</td><td>'+received_json['original_rmse']+'</td></tr>'+
+						'<tr><td>Improved RMSE</td><td>'+ received_json['improved_rmse'] +'</td></tr>'+
+				   		'<tr> <td>&Delta;<sub>error</sub> RMSE</td><td>'+ received_json['delta_error_rmse'] +'</td></tr></tbody>'+
+				   		'<tr><td class="col-md-2">Original PBIAS</td><td>'+received_json['original_pbias']+'</td></tr>'+
+						'<tr><td>Improved PBIAS</td><td>'+ received_json['improved_pbias'] +'</td></tr>'+
+				   		'<tr> <td>&Delta;<sub>error</sub> PBIAS</td><td>'+ received_json['delta_error_pbias']+'</td></tr></tbody>'+
+				   		'<tr><td class="col-md-2">Original CD</td><td>'+received_json['original_cd']+'</td></tr>'+
+						'<tr><td>Improved CD</td><td>'+ received_json['improved_cd'] +'</td></tr>'+
+				   		'<tr> <td>&Delta;<sub>error</sub> CD</td><td>'+ received_json['delta_error_cd'] +'</td></tr></tbody>'+
+				   		'<tr><td class="col-md-2">Original NSE</td><td>'+received_json['original_nse']+'</td></tr>'+
+						'<tr><td>Improved NSE</td><td>'+ received_json['improved_nse'] +'</td></tr>'+
+				   		'<tr> <td>&Delta;<sub>error</sub> NSE</td><td>'+ received_json['delta_error_nse'] +'</td></tr></tbody>'+
+				    '</table>');
+
 
 		      original_p_list = received_json['original_p_list'];
 		      improved_p_list = received_json['improved_p_list'];
@@ -29,7 +33,7 @@ $(document).ready(function(){
 	// these functions should be moved into decision tree vis js
 	function draw_line_chart(o_p_list,i_p_list,o_list){
 		// prepare dataset
-		var data_array = [['index','original_p_list','improved_p_list','o_list']];
+		var data_array = [['index','model_predictions','improved_model_predictions','observed values']];
 		for(var i=0; i< o_p_list.length; i++){
 			data_array.push([i,o_p_list[i],i_p_list[i],o_list[i]]);	
 		}
@@ -41,7 +45,7 @@ $(document).ready(function(){
 		function drawChart() {
 	        var data = google.visualization.arrayToDataTable(data_array);
 			var options = {
-	          title: 'Predication VS Obervation',
+	          title: 'Model Predictions VS Improved Model Predictions VS Obervations',
 	          curveType: 'function',
 	          legend: { position: 'bottom' }
 	        };
