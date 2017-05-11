@@ -6,9 +6,19 @@ http://spark.apache.org/docs/latest/mllib-classification-regression.html
 ```
 
 #Quick Start
+First create a virtual environment
+```
+mkvirtualenv -p python2.7 dev
+```
+
+If you have created the virtual environment, then use this commend to enter it
+```
+virtualenv dev && source dev/bin/activate
+```
+
 Here is the command to install the requirements
 ```
-sudo pip install requirements.txt
+pip install -r requirements.txt
 ```
 Here is the command to set up and run the program
 ```
