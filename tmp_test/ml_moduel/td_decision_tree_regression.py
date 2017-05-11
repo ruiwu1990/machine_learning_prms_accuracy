@@ -10,6 +10,7 @@ import sys
 
 from pyspark.sql import SQLContext
 from pyspark import SparkContext
+import math
 
 sc = SparkContext()
 sqlContext = SQLContext(sc)
@@ -60,33 +61,25 @@ for count in range(test_len):
 	# print out hint info
 	print "current processing: "+str(count+1)+"; "+str(test_len-count-1)+" rows left."
 
+# print get_root_mean_squared_error(predictions_list,ground_truth_list)
 
-# Make predictions.
-# predictions = model.transform(testData)
 
-# Select example rows to display.
-# predictions.select("prediction", "label", "features").show(5)
+def get_root_mean_squared_error(list1,list2):
+	if len(list1) != len(list2):
+		raise Exception('two lists have different lengths')
+	list_len = len(list1)
+	sum_diff = 0
+	for count in range(list_len):
+		sum_diff = sum_diff + (list1[count]-list2[count])**2
+	avg_sum_diff = sum_diff/list_len
+	return math.sqrt(avg_sum_diff)
 
-# Select (prediction, true label) and compute test error
-# evaluator = RegressionEvaluator(
-#     labelCol="label", predictionCol="prediction", metricName="rmse")
-# rmse = evaluator.evaluate(predictions)
 
-# print("Root Mean Squared Error (RMSE) on test data = %g" % rmse)
 
-# write the results into the file
-# fp = open(sys.argv[2],'w')
-# fp.write("Root Mean Squared Error (RMSE) on test data = %g" % rmse)
-# fp.write('\n')
-
-# TODO, this part should be separated from this file
-# the normal thing should be using the created model to predict inputs results
-predictions = model.transform(data)
-pd_df = predictions.toPandas()
-fp.write(','.join([str(i) for i in pd_df['prediction'].tolist()]))
-
+# print sys.argv[1]
+# print sys.argv[2]
+# print sys.argv[3]
+# print sys.argv[4]
+fp = open(sys.argv[2],'a')
+fp.write(str(get_root_mean_squared_error(predictions_list,ground_truth_list))+'\n')
 fp.close()
-
-# treeModel = model.stages[1]
-# # summary only
-# print(treeModel)

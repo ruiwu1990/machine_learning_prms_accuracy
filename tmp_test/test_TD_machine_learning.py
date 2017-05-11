@@ -1,6 +1,8 @@
 '''
 This file use machine learning to find the direction
 and use modified TD to improve model accuracy
+I may need to change the timeout configuration by using this:
+/cse/home/rwu/Desktop/hadoop/spark_installation/spark-2.1.0/bin/pyspark --conf spark.executor.heartbeatInterval=10000000 --conf spark.network.timeout=10000000
 '''
 import pandas as pd
 import math
@@ -13,6 +15,8 @@ import json
 
 app_path = os.path.dirname(os.path.abspath('__file__'))
 spark_submit_location = '/cse/home/rwu/Desktop/hadoop/spark_installation/spark-2.1.0/bin/spark-submit'
+spark_config1 = '--conf spark.executor.heartbeatInterval=10000000'
+spark_config2 = '--conf spark.network.timeout=10000000'
 # this will be '/cse/home/rwu/Desktop/machine_learning_prms_accuracy/tmp_test'
 # /cse/home/rwu/Desktop/hadoop/spark_installation/spark-2.1.0/bin/pyspark
 
@@ -81,7 +85,7 @@ def exec_regression(filename, regression_technique):
 	predicted delta error col
 	'''
 	# get the libsvm file
-	output_file = app_path + '/static/data/delta_error.libsvm'
+	output_file = app_path + '/delta_error.libsvm'
 	convert_csv_into_libsvm(filename,output_file)
 
 	if regression_technique =='rf':
@@ -117,15 +121,18 @@ def exec_regression(filename, regression_technique):
 	# obtain the test data length
 	# test_data_len = 142
 	# for i in range(test_data_len):
-	command = [spark_submit_location,exec_file_loc,output_file,result_file]
+	command = [spark_submit_location, exec_file_loc,output_file,result_file, spark_config1, spark_config1]
 	# command = [spark_submit_location,exec_file_loc,output_file,i]
+	#  30 times crossover validation
+	for i in range(30):
 	# execute the model
-	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
-		process = subprocess.Popen(
-			command, stdout=process_out, stderr=err_out, cwd=app_path)
+		with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
+			process = subprocess.Popen(
+				command, stdout=process_out, stderr=err_out, cwd=app_path)
 
-	# this waits the process finishes
-	process.wait()
+		# this waits the process finishes
+		process.wait()
+		print "current processing loop: "+str(i)+"//////////////////////////////"
 
 	return True
 

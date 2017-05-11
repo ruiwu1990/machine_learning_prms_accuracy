@@ -1,0 +1,36 @@
+current processing: 1; 129 rows left.
+current processing: 2; 128 rows left.
+current processing: 3; 127 rows left.
+current processing: 4; 126 rows left.
+current processing: 5; 125 rows left.
+current processing: 6; 124 rows left.
+current processing: 7; 123 rows left.
+current processing: 8; 122 rows left.
+current processing: 9; 121 rows left.
+current processing: 10; 120 rows left.
+current processing: 11; 119 rows left.
+current processing: 12; 118 rows left.
+current processing: 13; 117 rows left.
+current processing: 14; 116 rows left.
+current processing: 15; 115 rows left.
+current processing: 16; 114 rows left.
+current processing: 17; 113 rows left.
+current processing: 18; 112 rows left.
+current processing: 19; 111 rows left.
+current processing: 20; 110 rows left.
+current processing: 21; 109 rows left.
+Traceback (most recent call last):
+  File "/cse/home/rwu/Desktop/machine_learning_prms_accuracy/tmp_test/ml_moduel/td_decision_tree_regression.py", line 60, in <module>
+    model = pipeline.fit(trainingData)
+  File "/cse/home/rwu/Desktop/hadoop/spark_installation/spark-2.1.0/python/lib/pyspark.zip/pyspark/ml/base.py", line 64, in fit
+  File "/cse/home/rwu/Desktop/hadoop/spark_installation/spark-2.1.0/python/lib/pyspark.zip/pyspark/ml/pipeline.py", line 108, in _fit
+  File "/cse/home/rwu/Desktop/hadoop/spark_installation/spark-2.1.0/python/lib/pyspark.zip/pyspark/ml/base.py", line 64, in fit
+  File "/cse/home/rwu/Desktop/hadoop/spark_installation/spark-2.1.0/python/lib/pyspark.zip/pyspark/ml/wrapper.py", line 236, in _fit
+  File "/cse/home/rwu/Desktop/hadoop/spark_installation/spark-2.1.0/python/lib/pyspark.zip/pyspark/ml/wrapper.py", line 233, in _fit_java
+  File "/cse/home/rwu/Desktop/hadoop/spark_installation/spark-2.1.0/python/lib/py4j-0.10.4-src.zip/py4j/java_gateway.py", line 1131, in __call__
+  File "/cse/home/rwu/Desktop/hadoop/spark_installation/spark-2.1.0/python/lib/py4j-0.10.4-src.zip/py4j/java_gateway.py", line 883, in send_command
+  File "/cse/home/rwu/Desktop/hadoop/spark_installation/spark-2.1.0/python/lib/py4j-0.10.4-src.zip/py4j/java_gateway.py", line 1028, in send_command
+  File "/usr/lib/python2.7/socket.py", line 451, in readline
+    data = self._sock.recv(self._rbufsize)
+  File "/cse/home/rwu/Desktop/hadoop/spark_installation/spark-2.1.0/python/lib/pyspark.zip/pyspark/context.py", line 236, in signal_handler
+KeyboardInterrupt
