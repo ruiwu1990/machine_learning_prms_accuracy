@@ -26,7 +26,7 @@ featureIndexer =\
     VectorIndexer(inputCol="features", outputCol="indexedFeatures", maxCategories=4).fit(data)
 
 # Split the data into training and test sets (30% held out for testing)
-(trainingData, testData) = data.randomSplit([0.7, 0.3])
+(trainingData, testData) = data.randomSplit([0.625, 0.375])
 
 # Train a DecisionTree model.
 dt = DecisionTreeRegressor(featuresCol="indexedFeatures")
@@ -44,6 +44,10 @@ need to remove first row in testData, using original.subtract(firstRowDF)
 '''
 # convert dataframe into list
 test = testData.collect()
+train = trainingData.collect()
+# sort by dtime
+test = sorted(test, key = lambda x: x['features'][5])
+new_train_data = sorted(train, key = lambda x: x['features'][5])
 predictions_list = []
 ground_truth_list = []
 test_len = len(test)
@@ -51,13 +55,16 @@ for count in range(test_len):
 	current_row = test[count]
 	new_data = sc.parallelize([current_row]).toDF()
 	# get current prediction
-	predictions = model.transform(new_data)
+	predictions = model.transform(new_data)	
 	# collect predictions into result lists
 	predictions_list.append(predictions.toPandas()['prediction'].tolist()[0])
 	ground_truth_list.append(predictions.toPandas()['label'].tolist()[0])
-	trainingData = trainingData.union(new_data)
+	new_train_data = [current_row] + new_train_data
+	# remove the oldest data
+	new_train_data = sorted(new_train_data, key = lambda x: x['features'][5])[1:]
+	new_train_data_df = sc.parallelize([current_row] + new_train_data).toDF()
 	# train model again with the updated data
-	model = pipeline.fit(trainingData)
+	model = pipeline.fit(new_train_data_df)
 	# print out hint info
 	print "current processing: "+str(count+1)+"; "+str(test_len-count-1)+" rows left."
 
