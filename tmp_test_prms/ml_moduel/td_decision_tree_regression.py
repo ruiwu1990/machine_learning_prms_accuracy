@@ -12,6 +12,11 @@ from pyspark.sql import SQLContext
 from pyspark import SparkContext
 import math
 
+# print "system 1: "+sys.argv[1]
+# print "system 2: "+sys.argv[2]
+# print "system 3: "+sys.argv[3]
+# print "system 4: "+sys.argv[4]
+
 sc = SparkContext()
 sqlContext = SQLContext(sc)
 
@@ -26,7 +31,8 @@ featureIndexer =\
     VectorIndexer(inputCol="features", outputCol="indexedFeatures", maxCategories=4).fit(data)
 
 # Split the data into training and test sets (30% held out for testing)
-(trainingData, testData) = data.randomSplit([0.625, 0.375])
+(trainingData, testData) = data.randomSplit([float(sys.argv[3]), 1-float(sys.argv[3])])
+# (trainingData, testData) = data.randomSplit([0.7,0.3])
 
 # Train a DecisionTree model.
 dt = DecisionTreeRegressor(featuresCol="indexedFeatures")
@@ -46,8 +52,8 @@ need to remove first row in testData, using original.subtract(firstRowDF)
 test = testData.collect()
 train = trainingData.collect()
 # sort by dtime
-test = sorted(test, key = lambda x: x['features'][5])
-new_train_data = sorted(train, key = lambda x: x['features'][5])
+test = sorted(test, key = lambda x: (x['features'][1],x['features'][2],x['features'][3]))
+new_train_data = sorted(train, key = lambda x: (x['features'][1],x['features'][2],x['features'][3]))
 predictions_list = []
 ground_truth_list = []
 test_len = len(test)
@@ -55,20 +61,19 @@ for count in range(test_len):
 	current_row = test[count]
 	new_data = sc.parallelize([current_row]).toDF()
 	# get current prediction
-	predictions = model.transform(new_data)	
+	predictions = model.transform(new_data)
 	# collect predictions into result lists
 	predictions_list.append(predictions.toPandas()['prediction'].tolist()[0])
 	ground_truth_list.append(predictions.toPandas()['label'].tolist()[0])
 	new_train_data = [current_row] + new_train_data
 	# remove the oldest data
-	new_train_data = sorted(new_train_data, key = lambda x: x['features'][5])[1:]
+	new_train_data = sorted(new_train_data, key = lambda x: (x['features'][1],x['features'][2],x['features'][3]))[1:]
 	new_train_data_df = sc.parallelize([current_row] + new_train_data).toDF()
 	# train model again with the updated data
 	model = pipeline.fit(new_train_data_df)
 	# print out hint info
 	print "current processing: "+str(count+1)+"; "+str(test_len-count-1)+" rows left."
 
-# print get_root_mean_squared_error(predictions_list,ground_truth_list)
 
 
 def get_root_mean_squared_error(list1,list2):
@@ -82,11 +87,14 @@ def get_root_mean_squared_error(list1,list2):
 	return math.sqrt(avg_sum_diff)
 
 
+# predictions_list = [10,2,3,4,5]
+# ground_truth_list = [2,2,4,4,5]
+# print (str(get_root_mean_squared_error(predictions_list,ground_truth_list)/float('0.1'))+'\n')
 
-# print sys.argv[1]
-# print sys.argv[2]
-# print sys.argv[3]
-# print sys.argv[4]
 fp = open(sys.argv[2],'a')
-fp.write(str(get_root_mean_squared_error(predictions_list,ground_truth_list))+'\n')
+fp.write(str(get_root_mean_squared_error(predictions_list,ground_truth_list)/float(sys.argv[4]))+'\n')
+# fp.write(str(get_root_mean_squared_error(predictions_list,ground_truth_list)/float('0.1')+'\n')
 fp.close()
+
+
+# str(get_root_mean_squared_error(predictions_list,ground_truth_list)/float(sys.argv[4]))

@@ -107,8 +107,9 @@ def exec_regression(filename, regression_technique):
 	elif regression_technique =='decision_tree':
 		log_path = app_path + '/decision_tree_log.txt'
 		err_log_path = app_path + '/decision_tree_err_log.txt'
-		# exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression.py'
-		exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
+		# change!!!!!!!!!!!!!!!
+		exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression.py'
+		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
 		result_file = app_path + '/decision_tree_result.txt'
 
 	elif regression_technique =='glr':
@@ -129,14 +130,19 @@ def exec_regression(filename, regression_technique):
 	best_alpha = -1
 	best_window_per = -1
 	fp1 = open('all_results.csv','w')
-	
-	for alpha_count in range(10):
-		alpha = 0.1*(alpha_count+1)
-		
-		for window_count in range(9):
+	# change!!!!!!!!!!!!!!!
+	# for alpha_count in range(10):
+	for alpha_count in range(1):
+		# alpha = 0.1*(alpha_count+1)
+		# change!!!!!!!!!!!!!!!
+		alpha = 0.1
+		# change!!!!!!!!!!!!!!!
+		# for window_count in range(9):
+		for window_count in range(1):
 			# max window size is 95%
-			window_per = 0.1*(window_count+1)
-
+			# window_per = 0.1*(window_count+1)
+			# change!!!!!!!!!!!!!!!
+			window_per = 0.9
 			# clean previous generated results
 			if os.path.isfile(result_file):
 				# if file exist
@@ -156,8 +162,9 @@ def exec_regression(filename, regression_technique):
 			# obtain the test data length
 			# test_data_len = 142
 			# for i in range(test_data_len):
-			# command = [spark_submit_location, exec_file_loc,delta_error_filename,result_file, spark_config1, spark_config1]
-			command = [spark_submit_location, exec_file_loc,delta_error_filename,result_file, str(window_per), spark_config1, spark_config1]
+			# change!!!!!!!!!!!!!!!
+			# command = [spark_submit_location, exec_file_loc,delta_error_filename,result_file, str(window_per), spark_config1, spark_config1]
+			command = [spark_submit_location, exec_file_loc,delta_error_filename,result_file, str(window_per), str(alpha), spark_config1, spark_config1]
 			# command = [spark_submit_location,exec_file_loc,output_file,i]
 			#  30 times crossover validation
 			for i in range(30):
@@ -169,10 +176,12 @@ def exec_regression(filename, regression_technique):
 				# this waits the process finishes
 				process.wait()
 				print "current processing loop for alaph "+str(alpha)+", and window size "+str(window_per)+": "+str(i)+"//////////////////////////////"
+				# sys.exit()
 
 			cur_avg_rmse = get_avg(result_file)
 			# need to times cur_avg_rmse back to real value
-			cur_avg_rmse = cur_avg_rmse * (1/alpha)
+			# change!!!!!!!!!!!!!!!
+			# cur_avg_rmse = cur_avg_rmse * (1/alpha)
 
 			print "~~~~~current avg is rmse: "+str(cur_avg_rmse)
 			fp1.write(str(alpha)+","+str(window_per)+","+str(cur_avg_rmse)+'\n')
