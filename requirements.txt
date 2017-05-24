@@ -8,3 +8,4 @@ Jinja2==2.8
 numpy==1.10.4
 urllib3==1.15.1
 pandas
+matplotlib

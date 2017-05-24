@@ -222,7 +222,7 @@ w = [1.26,-6.06,3.15,0.72,0.43,-0.17,2.95,-0.02,0,1.28,6.61,-5.55]
 
 
 alpha = 1
-min_rmse,a,b = ordered_td_prediction('feature.csv',0.7,0.3,w,alpha)
+min_rmse,a,b = ordered_td_prediction('feature.csv',0.625,0.375,w,alpha)
 
 
 print "best alpha is: "+str(alpha)+"; best rmse is: "+str(min_rmse)
