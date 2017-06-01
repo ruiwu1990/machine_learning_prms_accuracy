@@ -1,25 +1,12 @@
-current processing: 1; 347 rows left.
-current processing: 2; 346 rows left.
-current processing: 3; 345 rows left.
-current processing: 4; 344 rows left.
-current processing: 5; 343 rows left.
-current processing: 6; 342 rows left.
-current processing: 7; 341 rows left.
-current processing: 8; 340 rows left.
-current processing: 9; 339 rows left.
-current processing: 10; 338 rows left.
-current processing: 11; 337 rows left.
-current processing: 12; 336 rows left.
-current processing: 13; 335 rows left.
-current processing: 14; 334 rows left.
-current processing: 15; 333 rows left.
-current processing: 16; 332 rows left.
-current processing: 17; 331 rows left.
-current processing: 18; 330 rows left.
-current processing: 19; 329 rows left.
-current processing: 20; 328 rows left.
-current processing: 21; 327 rows left.
-current processing: 22; 326 rows left.
-current processing: 23; 325 rows left.
-current processing: 24; 324 rows left.
-current processing: 25; 323 rows left.
+Traceback (most recent call last):
+  File "/home/hos1/Desktop/machine_learning_prms_accuracy/tmp_test_prms/ml_moduel/td_decision_tree_regression_prediction_interval.py", line 64, in <module>
+    ssd = np.std(train,ddof=1)
+  File "/usr/local/lib/python2.7/dist-packages/numpy/core/fromnumeric.py", line 2985, in std
+    keepdims=keepdims)
+  File "/usr/local/lib/python2.7/dist-packages/numpy/core/_methods.py", line 124, in _std
+    keepdims=keepdims)
+  File "/usr/local/lib/python2.7/dist-packages/numpy/core/_methods.py", line 77, in _var
+    arr = asanyarray(a)
+  File "/usr/local/lib/python2.7/dist-packages/numpy/core/numeric.py", line 525, in asanyarray
+    return array(a, dtype, copy=False, order=order, subok=True)
+ValueError: setting an array element with a sequence.
