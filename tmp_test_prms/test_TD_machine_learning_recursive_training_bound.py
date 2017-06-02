@@ -166,10 +166,12 @@ def exec_regression(filename, regression_technique):
 			# for i in range(test_data_len):
 			# change!!!!!!!!!!!!!!!
 			# command = [spark_submit_location, exec_file_loc,delta_error_filename,result_file, str(window_per), spark_config1, spark_config1]
-			command = [spark_submit_location, exec_file_loc,delta_error_filename,result_file, str(window_per), str(alpha), spark_config1, spark_config1]
+			command = [spark_submit_location, exec_file_loc,delta_error_filename,result_file, str(window_per), str(alpha), app_path, spark_config1, spark_config1]
 			# command = [spark_submit_location,exec_file_loc,output_file,i]
 			#  30 times crossover validation
 			for i in range(30):
+			# !!!!!!!!!!!!!!!!!!!change
+			# for i in range(1):
 			# execute the model
 				with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
 					process = subprocess.Popen(
@@ -195,4 +197,5 @@ def exec_regression(filename, regression_technique):
 	print "min rmse is: "+ str(min_rmse)+"; best alpha is: "+str(best_alpha)+"; best window size is: "+str(window_per)
 	return True
 
+# input file, first column is observation, second column is prediction
 exec_regression('prms_input.csv','decision_tree')
