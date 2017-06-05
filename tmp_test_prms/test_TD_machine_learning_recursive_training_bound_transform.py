@@ -108,7 +108,7 @@ def exec_regression(filename, regression_technique):
 		log_path = app_path + '/decision_tree_log.txt'
 		err_log_path = app_path + '/decision_tree_err_log.txt'
 		# change!!!!!!!!!!!!!!!
-		# exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression.py'
+		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive.py'
 		exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
 		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
 		result_file = app_path + '/decision_tree_result.txt'
@@ -171,7 +171,7 @@ def exec_regression(filename, regression_technique):
 			#  30 times crossover validation
 			# for i in range(30):
 			# !!!!!!!!!!!!!!!!!!!change
-			for i in range(10):
+			for i in range(1):
 			# execute the model
 				with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
 					process = subprocess.Popen(
