@@ -171,7 +171,7 @@ def exec_regression(filename, regression_technique):
 			#  30 times crossover validation
 			# for i in range(30):
 			# !!!!!!!!!!!!!!!!!!!change
-			for i in range(1):
+			for i in range(10):
 			# execute the model
 				with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
 					process = subprocess.Popen(
