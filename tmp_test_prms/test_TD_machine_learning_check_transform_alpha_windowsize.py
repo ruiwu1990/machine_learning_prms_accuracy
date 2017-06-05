@@ -108,8 +108,7 @@ def exec_regression(filename, regression_technique):
 		log_path = app_path + '/decision_tree_log.txt'
 		err_log_path = app_path + '/decision_tree_err_log.txt'
 		# change!!!!!!!!!!!!!!!
-		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive.py'
-		exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
+		exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh.py'
 		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
 		result_file = app_path + '/decision_tree_result.txt'
 
@@ -133,18 +132,18 @@ def exec_regression(filename, regression_technique):
 	fp1 = open('all_results.csv','w')
 	# print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+exec_file_loc
 	# change!!!!!!!!!!!!!!!
-	# for alpha_count in range(10):
-	for alpha_count in range(1):
-		# alpha = 0.1*(alpha_count+1)
+	for alpha_count in range(10):
+	# for alpha_count in range(1):
+		alpha = 0.1*(alpha_count+1)
 		# change!!!!!!!!!!!!!!!
-		alpha = 0.8
+		# alpha = 0.8
 		# change!!!!!!!!!!!!!!!
-		# for window_count in range(9):
-		for window_count in range(1):
+		for window_count in range(9):
+		# for window_count in range(1):
 			# max window size is 95%
-			# window_per = 0.1*(window_count+1)
+			window_per = 0.1*(window_count+1)
 			# change!!!!!!!!!!!!!!!
-			window_per = 0.9
+			# window_per = 0.9
 			# clean previous generated results
 			if os.path.isfile(result_file):
 				# if file exist
@@ -169,9 +168,9 @@ def exec_regression(filename, regression_technique):
 			command = [spark_submit_location, exec_file_loc,delta_error_filename,result_file, str(window_per), str(alpha), app_path, spark_config1, spark_config1]
 			# command = [spark_submit_location,exec_file_loc,output_file,i]
 			#  30 times crossover validation
-			# for i in range(30):
+			for i in range(10):
 			# !!!!!!!!!!!!!!!!!!!change
-			for i in range(30):
+			# for i in range(1):
 			# execute the model
 				with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
 					process = subprocess.Popen(
