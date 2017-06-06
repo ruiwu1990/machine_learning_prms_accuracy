@@ -15,7 +15,7 @@ import json
 import os
 
 app_path = os.path.dirname(os.path.abspath('__file__'))
-spark_submit_location = '/home/hos1/Desktop/hadoop/spark-2.1.0/bin/spark-submit'
+spark_submit_location = '/home/host0/Desktop/hadoop/spark-2.1.0/bin/spark-submit'
 spark_config1 = '--conf spark.executor.heartbeatInterval=10000000'
 spark_config2 = '--conf spark.network.timeout=10000000'
 # this will be '/cse/home/rwu/Desktop/machine_learning_prms_accuracy/tmp_test'
@@ -108,7 +108,8 @@ def exec_regression(filename, regression_technique):
 		log_path = app_path + '/decision_tree_log.txt'
 		err_log_path = app_path + '/decision_tree_err_log.txt'
 		# change!!!!!!!!!!!!!!!
-		exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh.py'
+		exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_boxcox.py'
+		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh.py'
 		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
 		result_file = app_path + '/decision_tree_result.txt'
 

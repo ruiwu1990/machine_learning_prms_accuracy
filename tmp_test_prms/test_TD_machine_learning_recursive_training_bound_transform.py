@@ -15,7 +15,7 @@ import json
 import os
 
 app_path = os.path.dirname(os.path.abspath('__file__'))
-spark_submit_location = '/home/hos1/Desktop/hadoop/spark-2.1.0/bin/spark-submit'
+spark_submit_location = '/home/host0/Desktop/hadoop/spark-2.1.0/bin/spark-submit'
 spark_config1 = '--conf spark.executor.heartbeatInterval=10000000'
 spark_config2 = '--conf spark.network.timeout=10000000'
 # this will be '/cse/home/rwu/Desktop/machine_learning_prms_accuracy/tmp_test'
@@ -109,7 +109,7 @@ def exec_regression(filename, regression_technique):
 		err_log_path = app_path + '/decision_tree_err_log.txt'
 		# change!!!!!!!!!!!!!!!
 		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive.py'
-		exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
+		exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_boxcox.py'
 		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
 		result_file = app_path + '/decision_tree_result.txt'
 
@@ -137,14 +137,14 @@ def exec_regression(filename, regression_technique):
 	for alpha_count in range(1):
 		# alpha = 0.1*(alpha_count+1)
 		# change!!!!!!!!!!!!!!!
-		alpha = 0.8
+		alpha = 0.3
 		# change!!!!!!!!!!!!!!!
 		# for window_count in range(9):
 		for window_count in range(1):
 			# max window size is 95%
 			# window_per = 0.1*(window_count+1)
 			# change!!!!!!!!!!!!!!!
-			window_per = 0.9
+			window_per = 0.8
 			# clean previous generated results
 			if os.path.isfile(result_file):
 				# if file exist

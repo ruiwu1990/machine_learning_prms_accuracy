@@ -112,7 +112,7 @@ def collect_corresponding_obs_pred(input_df, time_list):
 	return obs_list, original_pred_list
 
 
-def vis_improved_prediction_PI(original_model_output, input_file, fig_title):
+def vis_improved_prediction_PI(original_model_output, input_file, fig_title, output_file = 'improved_predict_vs_obs.csv'):
 	'''
 	this function vis improved prediction boundary
 	'''
@@ -133,6 +133,12 @@ def vis_improved_prediction_PI(original_model_output, input_file, fig_title):
 
 	ground_truth = truth
 
+	fp = open(output_file,'w')
+	fp.write('improved_pred,obs'+'\n')
+	for i in range(len(prediction)):
+		fp.write(str(prediction[i])+','+str(truth[i])+'\n')
+	fp.close()
+
 	fig, ax = plt.subplots()
 	ax.plot(x_id,lower, '-',linewidth=2, label='lower_bound')
 	ax.plot(x_id,upper, '--',linewidth=2, label='upper_bound')
@@ -148,7 +154,9 @@ def vis_improved_prediction_PI(original_model_output, input_file, fig_title):
 	# fig.savefig(app_path+'/'+fig_title+'.png')
 
 # vis_error_prediction_PI('bound.csv','predicted_error_PI')
-vis_improved_prediction_PI('prms_input.csv', 'bound.csv','predicted_error_PI')
+# vis_improved_prediction_PI('prms_input.csv', 'bound.csv','predicted_error_PI','improved_predict_vs_obs.csv')
+# vis_improved_prediction_PI('prms_input.csv', '/home/host0/Downloads/03_08_boxcox_bound.csv','0.3 alpha 0.8 window size boxcox_PI','03_08_improved_predict_vs_obs.csv')
+vis_improved_prediction_PI('prms_input.csv', '/home/host0/Downloads/03_09_log_sinh_bound.csv','0.3 alpha 0.9 window size logsinh_PI','03_09_logsinh_improved_predict_vs_obs.csv')
 # improved_predication('prms_input.csv','bound.csv','improved_PI')
 # vis_3D('rmse_all_results.csv')
 
