@@ -72,11 +72,7 @@ def log_sinh_transform(input_row_list,tmp_min,epsilon = 0.01):
 	row_list = []
 	for i in input_row_list:
 		# transform here
-		# print '+++++++++++++++++++'+str(tmp_min)
-		# print '-------------------'+str()
-		# print "/////////////////////////////////////"+str(math.sinh(i['label'])-tmp_min+epsilon)
-		# when x >o, sinh(x) >0
-		row_list.append(pyspark.sql.types.Row(label=math.log10(math.sinh(i['label']-tmp_min+epsilon)), features=i['features']))
+		row_list.append(pyspark.sql.types.Row(label=math.log10(math.sinh(i['label']*float(sys.argv[7])+float(sys.argv[6])-tmp_min+epsilon))/float(sys.argv[7]), features=i['features']))
 	return row_list
 
 def reverse_log_sinh_transform(input_list,tmp_min,epsilon = 0.01):
@@ -87,8 +83,8 @@ def reverse_log_sinh_transform(input_list,tmp_min,epsilon = 0.01):
 	for i in input_list:
 		# transform here
 		# http://mathworld.wolfram.com/InverseHyperbolicSine.html
-		sinh_part = 10**i
-		tmp_origin = math.log(sinh_part+math.sqrt(1+sinh_part*sinh_part))+tmp_min-epsilon
+		sinh_part = 10**(i*float(sys.argv[7]))
+		tmp_origin = (math.log(sinh_part+math.sqrt(1+sinh_part*sinh_part))-float(sys.argv[6])+tmp_min-epsilon)/float(sys.argv[7])
 		result_list.append(tmp_origin)
 	return result_list
 
@@ -107,17 +103,16 @@ sqlContext = SQLContext(sc)
 
 # Load the data stored in LIBSVM format as a DataFrame.
 # filename = 'static/data/test.libsvm'
-filename = sys.argv[1]
-data = sqlContext.read.format("libsvm").load(filename)
+train_file = sys.argv[1]
+trainingData = sqlContext.read.format("libsvm").load(train_file)
+
+test_file = sys.argv[8]
+testData = sqlContext.read.format("libsvm").load(test_file)
 
 # Automatically identify categorical features, and index them.
 # We specify maxCategories so features with > 4 distinct values are treated as continuous.
 featureIndexer =\
-    VectorIndexer(inputCol="features", outputCol="indexedFeatures", maxCategories=4).fit(data)
-
-# Split the data into training and test sets (30% held out for testing)
-(trainingData, testData) = data.randomSplit([float(sys.argv[3]), 1-float(sys.argv[3])])
-# (trainingData, testData) = data.randomSplit([0.9,0.1])
+    VectorIndexer(inputCol="features", outputCol="indexedFeatures", maxCategories=4).fit(trainingData)
 
 # Train a DecisionTree model.
 dt = DecisionTreeRegressor(featuresCol="indexedFeatures")
@@ -131,7 +126,9 @@ use union to add first col in testData
 need to convert row into df
 need to remove first row in testData, using original.subtract(firstRowDF)
 '''
-tmp_min = find_min_label(data.collect())
+tmp_min1 = find_min_label(trainingData.collect())
+tmp_min2 = find_min_label(testData.collect())
+tmp_min = min(tmp_min1, tmp_min2)
 # convert dataframe into list
 test = testData.collect()
 test = log_sinh_transform(test,tmp_min)
