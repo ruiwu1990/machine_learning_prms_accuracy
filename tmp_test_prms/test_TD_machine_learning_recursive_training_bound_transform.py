@@ -181,10 +181,13 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 	train_file='prms_input1.csv'
 	test_file='prms_input2.csv'
 	split_csv_file(filename, window_per, train_file, test_file)
+
+	best_a = -1
+	best_b = -1
 	# change!!!!!!!!!!!!!!!
-	for alpha_count in range(10):
+	for alpha_count in range(5):
 	# for alpha_count in range(1):
-		alpha = 0.1*(alpha_count+1)
+		alpha = 0.2*(alpha_count+1)
 		# change!!!!!!!!!!!!!!!
 		# alpha = test_cases[window_count][0]
 		# alpha = 0.3
@@ -197,21 +200,20 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 		# get the libsvm file
 		delta_error_csv = app_path + '/temp_delta_error.csv'
 		delta_error_filename = app_path + '/delta_error.libsvm'
-		# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
 		
 		delta_error_file(train_file,delta_error_csv,alpha)
 		convert_csv_into_libsvm(delta_error_csv,delta_error_filename)
 
-		best_a = -1
-		best_b = -1
 		for a_count in range(5):
 		# change!!!!!!!!!!!!!!!!!!!!
 		# for a_count in range(1):
 			tmp_a = 0.01*(a_count+1)+0.0005
+
 			for b_count in range(5):
 			# change!!!!!!!!!!!!!!!!!!!!11
 			# for b_count in range(1):
 				tmp_b = 0.01*(b_count+1)+0.0005
+
 				# this command will work if source the spark-submit correctly
 				# no recursive for crossover validation
 				command = [spark_submit_location, exec_no_recursive_file_loc,delta_error_filename,result_file, str(window_per), str(alpha), str(tmp_a), str(tmp_b), spark_config1, spark_config2]
@@ -231,9 +233,7 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 					# sys.exit()
 
 				cur_avg_rmse = get_avg(result_file)
-				# need to times cur_avg_rmse back to real value
-				# change!!!!!!!!!!!!!!!
-				# cur_avg_rmse = cur_avg_rmse * (1/alpha)
+				os.remove(result_file)
 
 				print "~~~~~current avg is rmse: "+str(cur_avg_rmse)
 				fp1.write(str(alpha)+","+str(window_per)+","+str(cur_avg_rmse)+","+str(tmp_a)+","+str(tmp_b)+'\n')
