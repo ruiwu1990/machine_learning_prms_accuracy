@@ -204,21 +204,21 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 
 		best_a = -1
 		best_b = -1
-		for a_count in range(10):
+		for a_count in range(5):
 		# change!!!!!!!!!!!!!!!!!!!!
 		# for a_count in range(1):
-			tmp_a = 0.005*a_count+0.0005
-			for b_count in range(10):
+			tmp_a = 0.01*(a_count+1)+0.0005
+			for b_count in range(5):
 			# change!!!!!!!!!!!!!!!!!!!!11
 			# for b_count in range(1):
-				tmp_b = 0.005*b_count+0.0005
+				tmp_b = 0.01*(b_count+1)+0.0005
 				# this command will work if source the spark-submit correctly
 				# no recursive for crossover validation
 				command = [spark_submit_location, exec_no_recursive_file_loc,delta_error_filename,result_file, str(window_per), str(alpha), str(tmp_a), str(tmp_b), spark_config1, spark_config2]
 				#  30 times crossover validation
 				# for i in range(30):
 				# !!!!!!!!!!!!!!!!!!!change
-				for i in range(1):
+				for i in range(10):
 				# execute the model
 					with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
 						process = subprocess.Popen(
@@ -226,7 +226,8 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 
 					# this waits the process finishes
 					process.wait()
-					print "current processing loop for alaph "+str(alpha)+", and window size "+str(window_per)+": "+str(i)+"//////////////////////////////"
+					print "current processing loop for alaph "+str(alpha)+", a: "+str(tmp_a)+", b: "+str(tmp_b)+", and crossover time: "\
+							+str(i)+"//////////////////////////////"
 					# sys.exit()
 
 				cur_avg_rmse = get_avg(result_file)
