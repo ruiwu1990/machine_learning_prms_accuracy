@@ -129,8 +129,73 @@ def split_csv_file(input_file='prms_input.csv', n_per=0.9, fir_output_file='prms
 	fp1.close()
 	fp2.close()
 
+def exec_regression(filename, regression_technique, window_per, best_alpha,app_path, best_a, best_b):
+	'''
+	this function run decision tree regression
+	, output the results in a log file, and return the 
+	predicted delta error col
+	'''
+	if regression_technique =='rf':
+		log_path = app_path + '/rf_log.txt'
+		err_log_path = app_path + '/rf_err_log.txt'
+		exec_file_loc = app_path + '/ml_moduel/random_forest_regression.py'
+		result_file = app_path + '/rf_result.txt'
 
-def real_crossover_exec_regression(filename, regression_technique, window_per=0.9):
+	elif regression_technique =='decision_tree':
+		log_path = app_path + '/decision_tree_log.txt'
+		err_log_path = app_path + '/decision_tree_err_log.txt'
+		# change!!!!!!!!!!!!!!!
+		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh.py'
+		exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
+		result_file = app_path + '/decision_tree_result.txt'
+
+	elif regression_technique =='glr':
+		log_path = app_path + '/glr_log.txt'
+		err_log_path = app_path + '/glr_err_log.txt'
+		exec_file_loc = app_path + '/ml_moduel/generalized_linear_regression.py'
+		result_file = app_path + '/glr_result.txt'
+
+	elif regression_technique =='gb_tree':
+		log_path = app_path + '/gbt_log.txt'
+		err_log_path = app_path + '/gbt_err_log.txt'
+		exec_file_loc = app_path + '/ml_moduel/gradient_boosted_regression.py'
+		result_file = app_path + '/gbt_result.txt'
+	else:
+		print 'Sorry, current system does not support the input regression technique'
+	
+	if os.path.isfile(result_file):
+		# if file exist
+		os.remove(result_file)
+
+	train_file='prms_input1.csv'
+	test_file='prms_input2.csv'
+	split_csv_file(filename, window_per, train_file, test_file)
+	# training file
+	delta_error_csv_train = app_path + '/temp_delta_error_train.csv'
+	delta_error_filename_train = app_path + '/delta_error_train.libsvm'
+	# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
+	delta_error_file(train_file,delta_error_csv_train,best_alpha)
+	convert_csv_into_libsvm(delta_error_csv_train,delta_error_filename_train)
+
+	# test file
+	delta_error_csv_test = app_path + '/temp_delta_error_test.csv'
+	delta_error_filename_test = app_path + '/delta_error_test.libsvm'
+	# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
+	delta_error_file(test_file,delta_error_csv_test,best_alpha)
+	convert_csv_into_libsvm(delta_error_csv_test,delta_error_filename_test)
+
+	command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path, str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
+	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
+		process = subprocess.Popen(
+			command, stdout=process_out, stderr=err_out, cwd=app_path)
+
+	# this waits the process finishes
+	process.wait()
+	cur_avg_rmse = get_avg(result_file)
+	print "final rmse is: "+str(cur_avg_rmse)
+	return True
+
+def real_crossover_exec_regression(filename, regression_technique, window_per=0.9, training_window_per = 0.9):
 	'''
 	this function run decision tree regression
 	, output the results in a log file, and return the 
@@ -216,7 +281,7 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 
 				# this command will work if source the spark-submit correctly
 				# no recursive for crossover validation
-				command = [spark_submit_location, exec_no_recursive_file_loc,delta_error_filename,result_file, str(window_per), str(alpha), str(tmp_a), str(tmp_b), spark_config1, spark_config2]
+				command = [spark_submit_location, exec_no_recursive_file_loc,delta_error_filename,result_file, str(training_window_per), str(alpha), str(tmp_a), str(tmp_b), spark_config1, spark_config2]
 				#  30 times crossover validation
 				# for i in range(30):
 				# !!!!!!!!!!!!!!!!!!!change
@@ -254,14 +319,14 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 	delta_error_csv_train = app_path + '/temp_delta_error_train.csv'
 	delta_error_filename_train = app_path + '/delta_error_train.libsvm'
 	# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
-	delta_error_file(train_file,delta_error_csv_train,alpha)
+	delta_error_file(train_file,delta_error_csv_train,best_alpha)
 	convert_csv_into_libsvm(delta_error_csv_train,delta_error_filename_train)
 
 	# test file
 	delta_error_csv_test = app_path + '/temp_delta_error_test.csv'
 	delta_error_filename_test = app_path + '/delta_error_test.libsvm'
 	# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
-	delta_error_file(test_file,delta_error_csv_test,alpha)
+	delta_error_file(test_file,delta_error_csv_test,best_alpha)
 	convert_csv_into_libsvm(delta_error_csv_test,delta_error_filename_test)
 
 	command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path, str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
@@ -278,112 +343,7 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 
 # input file, first column is observation, second column is prediction
 # exec_regression('prms_input.csv','decision_tree')
-real_crossover_exec_regression('prms_input.csv','decision_tree',0.9)
+# real_crossover_exec_regression('prms_input.csv','decision_tree',0.9)
+exec_regression('prms_input.csv', 'decision_tree', 0.9, 0.2,app_path, 0.0205, 0.0305)
+# exec_regression('prms_input.csv', 'decision_tree', window_per=0.9, best_alpha=0.2,app_path, best_a=0.0205, best_b=0.0305)
 
-
-
-# def exec_regression(filename, regression_technique):
-# 	'''
-# 	this function run decision tree regression
-# 	, output the results in a log file, and return the 
-# 	predicted delta error col
-# 	'''
-# 	if regression_technique =='rf':
-# 		log_path = app_path + '/rf_log.txt'
-# 		err_log_path = app_path + '/rf_err_log.txt'
-# 		exec_file_loc = app_path + '/ml_moduel/random_forest_regression.py'
-# 		result_file = app_path + '/rf_result.txt'
-
-# 	elif regression_technique =='decision_tree':
-# 		log_path = app_path + '/decision_tree_log.txt'
-# 		err_log_path = app_path + '/decision_tree_err_log.txt'
-# 		# change!!!!!!!!!!!!!!!
-# 		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive.py'
-# 		exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_boxcox.py'
-# 		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
-# 		result_file = app_path + '/decision_tree_result.txt'
-
-# 	elif regression_technique =='glr':
-# 		log_path = app_path + '/glr_log.txt'
-# 		err_log_path = app_path + '/glr_err_log.txt'
-# 		exec_file_loc = app_path + '/ml_moduel/generalized_linear_regression.py'
-# 		result_file = app_path + '/glr_result.txt'
-
-# 	elif regression_technique =='gb_tree':
-# 		log_path = app_path + '/gbt_log.txt'
-# 		err_log_path = app_path + '/gbt_err_log.txt'
-# 		exec_file_loc = app_path + '/ml_moduel/gradient_boosted_regression.py'
-# 		result_file = app_path + '/gbt_result.txt'
-# 	else:
-# 		print 'Sorry, current system does not support the input regression technique'
-	
-# 	min_rmse = 10000
-# 	best_alpha = -1
-# 	best_window_per = -1
-# 	fp1 = open('all_results.csv','w')
-# 	# print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+exec_file_loc
-# 	test_cases = [[0.3,0.8],[0.8,0.9],[0.8,0.7],[0.4,0.9],[0.1,0.9],[0.9,0.9],[0.7,0.6],[0.6,0.9],[0.1,0.8],[0.2,0.7]]
-# 	# change!!!!!!!!!!!!!!!
-# 	# for alpha_count in range(10):
-# 	for alpha_count in range(len(test_cases)):
-# 		# alpha = 0.1*(alpha_count+1)
-# 		# change!!!!!!!!!!!!!!!
-# 		alpha = test_cases[alpha_count][0]
-# 		# change!!!!!!!!!!!!!!!
-# 		# for window_count in range(9):
-# 		for window_count in range(1):
-# 			# max window size is 95%
-# 			# window_per = 0.1*(window_count+1)
-# 			# change!!!!!!!!!!!!!!!
-# 			window_per = test_cases[alpha_count][1]
-# 			# clean previous generated results
-# 			if os.path.isfile(result_file):
-# 				# if file exist
-# 				os.remove(result_file)
-
-# 			# get the libsvm file
-# 			delta_error_csv = app_path + '/temp_delta_error.csv'
-# 			delta_error_filename = app_path + '/delta_error.libsvm'
-# 			# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
-			
-# 			delta_error_file(filename,delta_error_csv,alpha)
-# 			convert_csv_into_libsvm(delta_error_csv,delta_error_filename)
-
-# 			# this command will work if source the spark-submit correctly
-# 			# command = ['spark-submit',exec_file_loc,output_file,result_file]
-# 			# hard coded here because the pyspark random split is confusing... I need to mannually 
-# 			# obtain the test data length
-# 			# test_data_len = 142
-# 			# for i in range(test_data_len):
-# 			# change!!!!!!!!!!!!!!!
-# 			# command = [spark_submit_location, exec_file_loc,delta_error_filename,result_file, str(window_per), spark_config1, spark_config1]
-# 			command = [spark_submit_location, exec_file_loc,delta_error_filename,result_file, str(window_per), str(alpha), app_path, spark_config1, spark_config1]
-# 			# command = [spark_submit_location,exec_file_loc,output_file,i]
-# 			#  30 times crossover validation
-# 			# for i in range(30):
-# 			# !!!!!!!!!!!!!!!!!!!change
-# 			for i in range(5):
-# 			# execute the model
-# 				with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
-# 					process = subprocess.Popen(
-# 						command, stdout=process_out, stderr=err_out, cwd=app_path)
-
-# 				# this waits the process finishes
-# 				process.wait()
-# 				print "current processing loop for alaph "+str(alpha)+", and window size "+str(window_per)+": "+str(i)+"//////////////////////////////"
-# 				# sys.exit()
-
-# 			cur_avg_rmse = get_avg(result_file)
-# 			# need to times cur_avg_rmse back to real value
-# 			# change!!!!!!!!!!!!!!!
-# 			# cur_avg_rmse = cur_avg_rmse * (1/alpha)
-
-# 			print "~~~~~current avg is rmse: "+str(cur_avg_rmse)
-# 			fp1.write(str(alpha)+","+str(window_per)+","+str(cur_avg_rmse)+'\n')
-# 			if cur_avg_rmse < min_rmse:
-# 				min_rmse = cur_avg_rmse
-# 				best_alpha = alpha
-# 				best_window_per = window_per
-# 	fp1.close()
-# 	print "min rmse is: "+ str(min_rmse)+"; best alpha is: "+str(best_alpha)+"; best window size is: "+str(window_per)
-# 	return True
