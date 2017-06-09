@@ -129,7 +129,7 @@ def split_csv_file(input_file='prms_input.csv', n_per=0.9, fir_output_file='prms
 	fp1.close()
 	fp2.close()
 
-def exec_regression(filename, regression_technique, window_per, best_alpha,app_path, best_a, best_b):
+def exec_regression(filename, regression_technique, window_per, best_alpha,app_path, best_a, best_b, recursive = True, transformation = True):
 	'''
 	this function run decision tree regression
 	, output the results in a log file, and return the 
@@ -145,8 +145,14 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 		log_path = app_path + '/decision_tree_log.txt'
 		err_log_path = app_path + '/decision_tree_err_log.txt'
 		# change!!!!!!!!!!!!!!!
-		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh.py'
-		exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
+		if recursive == True and transformation == True:
+			exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
+		elif recursive == False and transformation == True:
+			exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh_final_test.py'
+		elif recursive == True and transformation == False:
+			exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_no_transform_interval_log_sinh.py'
+		elif recursive == False and transformation == False:
+			exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
 		result_file = app_path + '/decision_tree_result.txt'
 
 	elif regression_technique =='glr':
@@ -158,7 +164,14 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 	elif regression_technique =='gb_tree':
 		log_path = app_path + '/gbt_log.txt'
 		err_log_path = app_path + '/gbt_err_log.txt'
-		exec_file_loc = app_path + '/ml_moduel/gradient_boosted_regression.py'
+		if recursive == True and transformation == True:
+			exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_interval_log_sinh.py'
+		elif recursive == False and transformation == True:
+			exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_transform_no_recursive_logsinh_final_test.py'
+		elif recursive == True and transformation == False:
+			exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_no_transform_interval_log_sinh.py'
+		elif recursive == False and transformation == False:
+			exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
 		result_file = app_path + '/gbt_result.txt'
 	else:
 		print 'Sorry, current system does not support the input regression technique'
@@ -183,8 +196,10 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 	# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
 	delta_error_file(test_file,delta_error_csv_test,best_alpha)
 	convert_csv_into_libsvm(delta_error_csv_test,delta_error_filename_test)
-
-	command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path, str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
+	if recursive == True:
+		command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path, str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
+	else:
+		command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
 	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
 		process = subprocess.Popen(
 			command, stdout=process_out, stderr=err_out, cwd=app_path)
@@ -194,6 +209,8 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 	cur_avg_rmse = get_avg(result_file)
 	print "final rmse is: "+str(cur_avg_rmse)
 	return True
+
+
 
 def real_crossover_exec_regression(filename, regression_technique, window_per=0.9, training_window_per = 0.9):
 	'''
@@ -225,7 +242,8 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 	elif regression_technique =='gb_tree':
 		log_path = app_path + '/gbt_log.txt'
 		err_log_path = app_path + '/gbt_err_log.txt'
-		exec_file_loc = app_path + '/ml_moduel/gradient_boosted_regression.py'
+		exec_no_recursive_file_loc = app_path + '/ml_moduel/gb_tree_regression_transform_no_recursive_logsinh.py'
+		exec_file_loc = app_path + '/ml_moduel/td_gd_tree_regression_prediction_interval_log_sinh.py'
 		result_file = app_path + '/gbt_result.txt'
 	else:
 		print 'Sorry, current system does not support the input regression technique'
@@ -341,9 +359,33 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 
 	return True
 
+def get_root_mean_squared_error(list1,list2):
+	if len(list1) != len(list2):
+		raise Exception('two lists have different lengths')
+	list_len = len(list1)
+	sum_diff = 0
+	for count in range(list_len):
+		sum_diff = sum_diff + (list1[count]-list2[count])**2
+	avg_sum_diff = sum_diff/list_len
+	return math.sqrt(avg_sum_diff)
+
+
+def original_csv_rmse(filename, window_per=0.9):
+	'''
+	this function finds original model (1-window_per%) rmse
+	'''
+	fir_output_file='prms_input1.csv'
+	sec_output_file='prms_input2.csv'
+	split_csv_file(filename, window_per, fir_output_file, sec_output_file)
+	df = pd.read_csv(sec_output_file)
+	return get_root_mean_squared_error(df['runoff_obs'].tolist(),df['basin_cfs_pred'].tolist())
+
+
 # input file, first column is observation, second column is prediction
 # exec_regression('prms_input.csv','decision_tree')
-# real_crossover_exec_regression('prms_input.csv','decision_tree',0.9)
-exec_regression('prms_input.csv', 'decision_tree', 0.9, 0.2,app_path, 0.0205, 0.0305)
+real_crossover_exec_regression('prms_input.csv','gb_tree',0.9)
+# print 'original rmse is: '+str(original_csv_rmse('prms_input.csv',0.9))
+
+# exec_regression('prms_input.csv', 'gb_tree', 0.95, 1,app_path, 0.0105, 0.0205, False, True)
 # exec_regression('prms_input.csv', 'decision_tree', window_per=0.9, best_alpha=0.2,app_path, best_a=0.0205, best_b=0.0305)
 
