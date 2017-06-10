@@ -383,7 +383,7 @@ def original_csv_rmse(filename, window_per=0.9):
 
 # input file, first column is observation, second column is prediction
 # exec_regression('prms_input.csv','decision_tree')
-real_crossover_exec_regression('prms_input.csv','gb_tree',0.9)
+real_crossover_exec_regression('prms_input.csv','gb_tree',0.7)
 # print 'original rmse is: '+str(original_csv_rmse('prms_input.csv',0.9))
 
 # exec_regression('prms_input.csv', 'gb_tree', 0.95, 1,app_path, 0.0105, 0.0205, False, True)
