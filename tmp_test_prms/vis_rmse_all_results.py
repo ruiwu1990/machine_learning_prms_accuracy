@@ -7,6 +7,7 @@ import numpy as np
 from datetime import datetime
 import os
 
+
 app_path = os.path.dirname(os.path.abspath('__file__'))
 
 def vis_3D(filename):
@@ -153,11 +154,85 @@ def vis_improved_prediction_PI(original_model_output, input_file, fig_title, out
 	plt.show()
 	# fig.savefig(app_path+'/'+fig_title+'.png')
 
+def vis_window_vs_rmse(win_list, origin_rmse, improved_rmse, fig_title='Original vs Improved RMSE'):
+	'''
+	this vis compare origin and improved rmse
+	'''
+	fig, ax = plt.subplots()
+	ax.plot(win_list,origin_rmse, '-',linewidth=2, label='origin_rmse')
+	ax.plot(win_list,improved_rmse, '--',linewidth=2, label='GB_tree_improved_rmse')
+
+	legend = ax.legend(loc='lower right', shadow=True)
+	# legend = ax.legend(bbox_to_anchor=(0., 0.0, 1.0, .050), loc=3, ncol=1, mode="expand", borderaxespad=0.)
+
+	plt.xlabel('window size')
+	plt.ylabel('rmse')
+	plt.title(fig_title)
+	plt.show()
+
+def vis_original_truth_pred(original_file, smooth_file ,obs_name='runoff_obs',pred_name='basin_cfs_pred',fig_title='smooth original prediction'):
+	'''
+	'''
+	df_origin = pd.read_csv(original_file)
+	df = pd.read_csv(smooth_file)
+	obs = df[obs_name].tolist()
+	pred = df[pred_name].tolist()
+	origin_pred = df_origin[pred_name].tolist()
+
+	# hardcoded timestamp list
+	year = df['year'].tolist()
+	month = df['month'].tolist()
+	day = df['day'].tolist()
+	time = []
+	for i in range(len(year)):
+		time.append(datetime.strptime(str(year[i])+'-'+str(month[i])+'-'+str(day[i]), '%Y-%m-%d'))
+	
+
+	fig, ax = plt.subplots()
+	ax.plot(time,obs, '-',linewidth=2, label='truth')
+	ax.plot(time,pred, '--',linewidth=2, label='smooth_pred')
+	ax.plot(time,origin_pred, '--',linewidth=2, label='original_pred')
+
+	legend = ax.legend(loc='upper right', shadow=True)
+	# legend = ax.legend(bbox_to_anchor=(0., 0.0, 1.0, .050), loc=3, ncol=1, mode="expand", borderaxespad=0.)
+
+	plt.xlabel('time')
+	plt.ylabel('value')
+	plt.title(fig_title)
+	plt.show()
+
+def smooth_origin_input_cse(input_file, output_file, threshold):
+	'''
+	this function smooths original function predictions
+	if Pt - Pt-1 > threshold, then Pt <- Pt-1
+	'''
+	df_input = pd.read_csv(input_file)
+	# second col predicted
+	predicted_name = list(df_input.columns.values)[1]
+	origin_predict = df_input[predicted_name].tolist()
+	for i in range(1,len(origin_predict)-1):
+		if abs(origin_predict[i] - origin_predict[i+1]) > threshold:
+			origin_predict[i+1] = origin_predict[i]
+
+	# replace original prediction with smoothed prediction
+	df_input[predicted_name] = pd.Series(np.asarray(origin_predict))
+	df_input.to_csv(output_file, mode = 'w', index=False)
+
+
 # vis_error_prediction_PI('bound.csv','predicted_error_PI')
 # vis_improved_prediction_PI('prms_input.csv', 'bound.csv','predicted_error_PI','improved_predict_vs_obs.csv')
 # vis_improved_prediction_PI('prms_input.csv', '/home/host0/Downloads/03_08_boxcox_bound.csv','0.3 alpha 0.8 window size boxcox_PI','03_08_improved_predict_vs_obs.csv')
-vis_improved_prediction_PI('prms_input.csv', '/home/host0/Downloads/03_09_log_sinh_bound.csv','0.3 alpha 0.9 window size logsinh_PI','03_09_logsinh_improved_predict_vs_obs.csv')
+
 # improved_predication('prms_input.csv','bound.csv','improved_PI')
 # vis_3D('rmse_all_results.csv')
 
+# vis_improved_prediction_PI('prms_input.csv', '/home/host0/Downloads/05_bound.csv','0.6 alpha, 0.5 window size GB tree logsinh_PI transform','05_logsinh_improved_predict_vs_obs.csv')
 
+# win_list = [0.4,0.5,0.6,0.7,0.8,0.9]
+# origin_rmse = [5.28813754801,5.77548835599,6.08245036506,6.54099071958,7.42383352014,2.16472090388]
+# improved_rmse = [3.37988118301,2.46425126765,4.5716992025,5.15222647189,5.22045868218,2.89334929188]
+# vis_window_vs_rmse(win_list, origin_rmse, improved_rmse)
+
+
+smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 20)
+vis_original_truth_pred('prms_input.csv', 'smoothed_prms_input.csv')

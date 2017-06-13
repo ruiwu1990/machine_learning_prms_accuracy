@@ -14,6 +14,7 @@ from collections import defaultdict
 import json
 import os
 import shutil
+import numpy as np
 
 app_path = os.path.dirname(os.path.abspath('__file__'))
 spark_submit_location = '/home/host0/Desktop/hadoop/spark-2.1.0/bin/spark-submit'
@@ -79,6 +80,23 @@ def delta_error_file(filename, e_filename, alpha=1):
 	del pd_df[predicted_name]
 	pd_df.to_csv(e_filename,index=False)
 	return observed_name, predicted_name
+
+def smooth_origin_input_cse(input_file, output_file, threshold):
+	'''
+	this function smooths original function predictions
+	if Pt - Pt-1 > threshold, then Pt <- Pt-1
+	'''
+	df_input = pd.read_csv(input_file)
+	# second col predicted
+	predicted_name = list(df_input.columns.values)[1]
+	origin_predict = df_input[predicted_name].tolist()
+	for i in range(1,len(origin_predict)-1):
+		if abs(origin_predict[i] - origin_predict[i+1]) > threshold:
+			origin_predict[i+1] = origin_predict[i]
+
+	# replace original prediction with smoothed prediction
+	df_input[predicted_name] = pd.Series(np.asarray(origin_predict))
+	df_input.to_csv(output_file, mode = 'w', index=False)
 
 def get_avg(filename):
 	'''
@@ -193,7 +211,7 @@ def split_csv_file_loop(input_file, loop_count, train_file_len, max_test_file_le
 	# print test_line_count
 	print 'Split file done....'
 
-def merge_bound_file(file_path,loop_time):
+def merge_bound_file(orginal_file, file_path,loop_time):
 	'''
 	this function merge bound0.csv, bound1.csv, ..., boundn-1.csv 
 	and return rmse
@@ -215,9 +233,111 @@ def merge_bound_file(file_path,loop_time):
 				fp.write(line)
 		fp_tmp.close()
 	fp.close()
+
+	# make sure that all values above 0, coz physical meaning
+	df_delta = pd.read_csv(bound_loc)
+	df_origin = pd.read_csv(orginal_file)
+
+	delta_upper = df_delta['upper']
+	delta_lower = df_delta['lower']
+	delta_pred = df_delta['prediction']
+	# delta_truth = df_delta['ground_truth']
+
+	origin_pred = df_origin['basin_cfs_pred']
+
+	df_delta['upper'] = delta_upper + origin_pred
+	df_delta['lower'] = delta_lower + origin_pred
+	df_delta['prediction'] = delta_pred + origin_pred
+	# replace negative values with zeros
+	df_delta[df_delta<0] = 0
+
+	df_delta.to_csv(bound_loc,index=False)
+
 	# get rmse
-	df = pd.read_csv(bound_loc)
-	return get_root_mean_squared_error(df['prediction'].tolist(),df['ground_truth'].tolist())
+	return get_root_mean_squared_error(df_delta['prediction'].tolist(),df_origin['basin_cfs_pred'].tolist())
+
+def exec_regression_by_name(train_file, test_file, regression_technique, window_per, best_alpha,app_path, best_a, best_b, recursive = True, transformation = True, max_row_num=500):
+	'''
+	!!!!!!!!!!!!!!!file should be ordered based on time, from oldest to latest
+	this function run decision tree regression
+	, output the results in a log file, and return the 
+	predicted delta error col
+	max_row_num means each spark program max handle row num
+	'''
+	if regression_technique =='rf':
+		log_path = app_path + '/rf_log.txt'
+		err_log_path = app_path + '/rf_err_log.txt'
+		exec_file_loc = app_path + '/ml_moduel/random_forest_regression.py'
+		result_file = app_path + '/rf_result.txt'
+
+	elif regression_technique =='decision_tree':
+		log_path = app_path + '/decision_tree_log.txt'
+		err_log_path = app_path + '/decision_tree_err_log.txt'
+		# change!!!!!!!!!!!!!!!
+		if recursive == True and transformation == True:
+			exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
+		elif recursive == False and transformation == True:
+			exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh_final_test.py'
+		elif recursive == True and transformation == False:
+			exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_no_transform_interval_log_sinh.py'
+		elif recursive == False and transformation == False:
+			exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
+		result_file = app_path + '/decision_tree_result.txt'
+
+	elif regression_technique =='glr':
+		log_path = app_path + '/glr_log.txt'
+		err_log_path = app_path + '/glr_err_log.txt'
+		exec_file_loc = app_path + '/ml_moduel/generalized_linear_regression.py'
+		result_file = app_path + '/glr_result.txt'
+
+	elif regression_technique =='gb_tree':
+		log_path = app_path + '/gbt_log.txt'
+		err_log_path = app_path + '/gbt_err_log.txt'
+		if recursive == True and transformation == True:
+			exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_interval_log_sinh.py'
+		elif recursive == False and transformation == True:
+			exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_transform_no_recursive_logsinh_final_test.py'
+		elif recursive == True and transformation == False:
+			exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_no_transform_interval_log_sinh.py'
+		elif recursive == False and transformation == False:
+			exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
+		result_file = app_path + '/gbt_result.txt'
+	else:
+		print 'Sorry, current system does not support the input regression technique'
+	
+	if os.path.isfile(result_file):
+		# if file exist
+		os.remove(result_file)
+
+
+	# should not count header
+	test_file_len = obtain_total_row_num(test_file) - 1
+	delta_error_csv_train = app_path + '/temp_delta_error_train.csv'
+	delta_error_filename_train = app_path + '/delta_error_train.libsvm'
+	# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
+	delta_error_file(train_file,delta_error_csv_train,best_alpha)
+	convert_csv_into_libsvm(delta_error_csv_train,delta_error_filename_train)
+
+	# test file
+	delta_error_csv_test = app_path + '/temp_delta_error_test.csv'
+	delta_error_filename_test = app_path + '/delta_error_test.libsvm'
+	# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
+	delta_error_file(test_file,delta_error_csv_test,best_alpha)
+	convert_csv_into_libsvm(delta_error_csv_test,delta_error_filename_test)
+	if recursive == True:
+		command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path, str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
+	else:
+		command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
+	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
+		process = subprocess.Popen(
+			command, stdout=process_out, stderr=err_out, cwd=app_path)
+
+	# this waits the process finishes
+	process.wait()
+	cur_avg_rmse = get_avg(result_file)
+	print "final rmse is: "+str(cur_avg_rmse)
+	
+	return True
 
 
 def exec_regression(filename, regression_technique, window_per, best_alpha,app_path, best_a, best_b, recursive = True, transformation = True, max_row_num=500):
@@ -358,7 +478,7 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 				shutil.copyfile(bound_loc,app_path+'/'+tmp_dirt+'bound'+str(i)+'.csv')
 			# TODO need to merge result file too!!!!
 
-		print 'final rmse is: '+str(merge_bound_file(app_path+'/'+tmp_dirt,loop_time))
+		print 'final rmse is: '+str(merge_bound_file(filename, app_path+'/'+tmp_dirt,loop_time))
 
 	return True
 
@@ -524,5 +644,10 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 
 # exec_regression('prms_input.csv', 'gb_tree', 0.9, 0.8,app_path, 0.0105, 0.0205, True, True, 100)
 
+# create smooth version input file
+smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 20)
 
-real_crossover_exec_regression('prms_input.csv','gb_tree',0.7)
+real_crossover_exec_regression('smoothed_prms_input.csv','gb_tree',0.5)
+
+# exec_regression_by_name('sub_results/prms_train0.csv', 'sub_results/prms_test0.csv', 'gb_tree', 0.2, 0.4,app_path, 0.0405, 0.0505)
+# print original_csv_rmse('prms_input.csv', window_per=0.4)
