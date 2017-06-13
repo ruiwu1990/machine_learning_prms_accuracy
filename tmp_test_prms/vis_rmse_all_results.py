@@ -219,6 +219,44 @@ def smooth_origin_input_cse(input_file, output_file, threshold):
 	df_input.to_csv(output_file, mode = 'w', index=False)
 
 
+
+def vis_bound_file(original_model_output, input_file, fig_title, output_file = 'improved_predict_vs_obs.csv'):
+	'''
+	if bound file has everything then use this one
+	'''
+	df_origin = pd.read_csv(original_model_output)
+	df = pd.read_csv(input_file)
+	time_list = df['time'].tolist()
+
+	truth,origin_pred = collect_corresponding_obs_pred(df_origin,time_list)
+	x_id = convert_str_into_time(time_list)
+	lower = df['lower'].tolist()
+
+	upper = df['upper'].tolist()
+
+	prediction = df['prediction'].tolist()
+
+	ground_truth = truth
+
+	fp = open(output_file,'w')
+	fp.write('improved_pred,obs'+'\n')
+	for i in range(len(prediction)):
+		fp.write(str(prediction[i])+','+str(truth[i])+'\n')
+	fp.close()
+
+	fig, ax = plt.subplots()
+	ax.plot(x_id,lower, '-',linewidth=2, label='lower_bound')
+	ax.plot(x_id,upper, '--',linewidth=2, label='upper_bound')
+	ax.plot(x_id,prediction, ':',linewidth=2, label='improved_prediction')
+	ax.plot(x_id,truth, 'r--',linewidth=2, label='ground_truth')
+	legend = ax.legend(loc='upper right', shadow=True)
+	# legend = ax.legend(bbox_to_anchor=(0., 0.0, 1.0, .050), loc=3, ncol=1, mode="expand", borderaxespad=0.)
+
+	plt.xlabel('time')
+	plt.ylabel('value')
+	plt.title(fig_title)
+	plt.show()
+
 # vis_error_prediction_PI('bound.csv','predicted_error_PI')
 # vis_improved_prediction_PI('prms_input.csv', 'bound.csv','predicted_error_PI','improved_predict_vs_obs.csv')
 # vis_improved_prediction_PI('prms_input.csv', '/home/host0/Downloads/03_08_boxcox_bound.csv','0.3 alpha 0.8 window size boxcox_PI','03_08_improved_predict_vs_obs.csv')
@@ -234,5 +272,7 @@ def smooth_origin_input_cse(input_file, output_file, threshold):
 # vis_window_vs_rmse(win_list, origin_rmse, improved_rmse)
 
 
-smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 20)
-vis_original_truth_pred('prms_input.csv', 'smoothed_prms_input.csv')
+# smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 20)
+
+# vis_original_truth_pred('prms_input.csv', 'smoothed_prms_input.csv')
+vis_bound_file('prms_input.csv', '/home/host0/Downloads/05_bound.csv','0.6 alpha, 0.5 window size GB tree logsinh_PI transform','05_logsinh_improved_predict_vs_obs.csv')
