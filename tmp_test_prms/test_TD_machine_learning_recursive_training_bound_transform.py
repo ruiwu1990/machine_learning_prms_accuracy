@@ -566,7 +566,7 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 	# change!!!!!!!!!!!!!!!
 	for alpha_count in range(5):
 	# for alpha_count in range(1):
-		alpha = 0.2*(alpha_count+1)
+		alpha = 0.1*(alpha_count+1)
 		# change!!!!!!!!!!!!!!!
 		# alpha = test_cases[window_count][0]
 		# alpha = 0.3
@@ -583,12 +583,12 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 		delta_error_file(train_file,delta_error_csv,alpha)
 		convert_csv_into_libsvm(delta_error_csv,delta_error_filename)
 
-		for a_count in range(5):
+		for a_count in range(10):
 		# change!!!!!!!!!!!!!!!!!!!!
 		# for a_count in range(1):
 			tmp_a = 0.01*(a_count+1)+0.0005
 
-			for b_count in range(5):
+			for b_count in range(10):
 			# change!!!!!!!!!!!!!!!!!!!!11
 			# for b_count in range(1):
 				tmp_b = 0.01*(b_count+1)+0.0005
