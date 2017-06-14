@@ -249,6 +249,7 @@ def vis_bound_file(original_model_output, input_file, fig_title, output_file = '
 	ax.plot(x_id,upper, '--',linewidth=2, label='upper_bound')
 	ax.plot(x_id,prediction, ':',linewidth=2, label='improved_prediction')
 	ax.plot(x_id,truth, 'r--',linewidth=2, label='ground_truth')
+	ax.plot(x_id,origin_pred, '-',linewidth=2, label='original_predication')
 	legend = ax.legend(loc='upper right', shadow=True)
 	# legend = ax.legend(bbox_to_anchor=(0., 0.0, 1.0, .050), loc=3, ncol=1, mode="expand", borderaxespad=0.)
 
@@ -275,4 +276,4 @@ def vis_bound_file(original_model_output, input_file, fig_title, output_file = '
 # smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 20)
 
 # vis_original_truth_pred('prms_input.csv', 'smoothed_prms_input.csv')
-vis_bound_file('prms_input.csv', '/home/host0/Downloads/05_bound.csv','0.6 alpha, 0.5 window size GB tree logsinh_PI transform','05_logsinh_improved_predict_vs_obs.csv')
+vis_bound_file('prms_input.csv', 'sub_results/bound.csv','0.2 alpha, 0.5 window size GB tree logsinh_PI transform','05_logsinh_improved_predict_vs_obs.csv')

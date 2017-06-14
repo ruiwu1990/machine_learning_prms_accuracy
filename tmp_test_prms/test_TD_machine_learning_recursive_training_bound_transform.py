@@ -211,7 +211,24 @@ def split_csv_file_loop(input_file, loop_count, train_file_len, max_test_file_le
 	# print test_line_count
 	print 'Split file done....'
 
-def merge_bound_file(orginal_file, file_path,loop_time):
+def collect_corresponding_obs_pred(input_df, time_list):
+	'''
+	this function collects corresponding values
+	based on time info, and return obs and original pred
+	'''
+	obs_list = []
+	original_pred_list = []
+	for i in time_list:
+		time_info = i.split('--')
+		year = time_info[0]
+		month = time_info[1]
+		day = time_info[2]
+		aim_df = input_df.query('year=='+year+' & month=='+month+' & day=='+day)
+		obs_list.append(float(aim_df['runoff_obs']))
+		original_pred_list.append(float(aim_df['basin_cfs_pred']))
+	return obs_list, original_pred_list
+
+def merge_bound_file(original_file, file_path,loop_time):
 	'''
 	this function merge bound0.csv, bound1.csv, ..., boundn-1.csv 
 	and return rmse
@@ -236,25 +253,32 @@ def merge_bound_file(orginal_file, file_path,loop_time):
 
 	# make sure that all values above 0, coz physical meaning
 	df_delta = pd.read_csv(bound_loc)
-	df_origin = pd.read_csv(orginal_file)
+	df_origin = pd.read_csv(original_file)
+	time_list = df_delta['time'].tolist()
+	truth,origin_pred = collect_corresponding_obs_pred(df_origin,time_list)
 
-	delta_upper = df_delta['upper']
-	delta_lower = df_delta['lower']
-	delta_pred = df_delta['prediction']
-	# delta_truth = df_delta['ground_truth']
+	lower_error = df_delta['lower'].tolist()
+	lower = [x + y for x, y in zip(lower_error,origin_pred)]
+	df_delta['lower'] = pd.Series(np.asarray(lower))
 
-	origin_pred = df_origin['basin_cfs_pred']
+	upper_error = df_delta['upper'].tolist()
+	upper = [x + y for x, y in zip(upper_error,origin_pred)]
+	df_delta['upper'] = pd.Series(np.asarray(upper))
 
-	df_delta['upper'] = delta_upper + origin_pred
-	df_delta['lower'] = delta_lower + origin_pred
-	df_delta['prediction'] = delta_pred + origin_pred
+	prediction_error = df_delta['prediction'].tolist()
+	prediction = [x + y for x, y in zip(prediction_error,origin_pred)]
+	# need series
+	df_delta['prediction'] = pd.Series(np.asarray(prediction))
+
+
+
 	# replace negative values with zeros
-	df_delta[df_delta<0] = 0
+	num = df_delta._get_numeric_data()
+	num[num<0] = 0
 
 	df_delta.to_csv(bound_loc,index=False)
-
 	# get rmse
-	return get_root_mean_squared_error(df_delta['prediction'].tolist(),df_origin['basin_cfs_pred'].tolist())
+	return get_root_mean_squared_error(prediction,truth)
 
 def exec_regression_by_name(train_file, test_file, regression_technique, window_per, best_alpha,app_path, best_a, best_b, recursive = True, transformation = True, max_row_num=500):
 	'''
@@ -651,3 +675,5 @@ real_crossover_exec_regression('smoothed_prms_input.csv','gb_tree',0.5)
 
 # exec_regression_by_name('sub_results/prms_train0.csv', 'sub_results/prms_test0.csv', 'gb_tree', 0.2, 0.4,app_path, 0.0405, 0.0505)
 # print original_csv_rmse('prms_input.csv', window_per=0.4)
+
+#merge_bound_file('smoothed_prms_input.csv', file_path,loop_time)
