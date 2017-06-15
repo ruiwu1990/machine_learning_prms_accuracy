@@ -195,7 +195,7 @@ fp = open(sys.argv[5] + '/bound.csv','w')
 
 fp.write("time,lower,upper,prediction,ground_truth\n")
 for i in range(len(PI_upper)):
-	fp.write(time_stamp[i]+","+str(PI_lower[i])+","+str(PI_upper[i])+","+str(predictions_list[i])+","+str(ground_truth_list[i])+"\n")
+	fp.write(time_stamp[i]+","+str(PI_lower[i])+","+str(PI_upper[i])+","+str(predictions_list[i])+","+str(ground_truth_list[i]/float(sys.argv[4]))+"\n")
 
 fp.close()
 

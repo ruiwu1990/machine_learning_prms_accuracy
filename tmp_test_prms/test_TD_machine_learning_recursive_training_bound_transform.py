@@ -269,8 +269,7 @@ def merge_bound_file(original_file, file_path,loop_time):
 	prediction = [x + y for x, y in zip(prediction_error,origin_pred)]
 	# need series
 	df_delta['prediction'] = pd.Series(np.asarray(prediction))
-
-
+	df_delta['ground_truth'] = pd.Series(np.asarray(truth))
 
 	# replace negative values with zeros
 	num = df_delta._get_numeric_data()
@@ -278,7 +277,8 @@ def merge_bound_file(original_file, file_path,loop_time):
 
 	df_delta.to_csv(bound_loc,index=False)
 	# get rmse
-	return get_root_mean_squared_error(prediction,truth)
+	return get_root_mean_squared_error(df_delta['prediction'],truth)
+	# return get_root_mean_squared_error(df_delta['prediction'],df_delta['ground_truth'].tolist())
 
 def exec_regression_by_name(train_file, test_file, regression_technique, window_per, best_alpha,app_path, best_a, best_b, recursive = True, transformation = True, max_row_num=500):
 	'''
@@ -668,12 +668,13 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 
 # exec_regression('prms_input.csv', 'gb_tree', 0.9, 0.8,app_path, 0.0105, 0.0205, True, True, 100)
 
-# create smooth version input file
-smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 20)
-
-real_crossover_exec_regression('smoothed_prms_input.csv','gb_tree',0.5)
-
 # exec_regression_by_name('sub_results/prms_train0.csv', 'sub_results/prms_test0.csv', 'gb_tree', 0.2, 0.4,app_path, 0.0405, 0.0505)
 # print original_csv_rmse('prms_input.csv', window_per=0.4)
 
 #merge_bound_file('smoothed_prms_input.csv', file_path,loop_time)
+
+# create smooth version input file
+smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 30)
+#smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 20)
+#real_crossover_exec_regression('smoothed_prms_input.csv','gb_tree',0.5)
+exec_regression('smoothed_prms_input.csv', 'gb_tree',0.5, 0.6,app_path, 0.0305, 0.0105, True, True, 500)
