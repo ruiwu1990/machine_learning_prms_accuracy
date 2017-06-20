@@ -273,7 +273,7 @@ def vis_bound_file(original_model_output, input_file, fig_title, output_file = '
 # vis_window_vs_rmse(win_list, origin_rmse, improved_rmse)
 
 
-# smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 20)
+smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 10)
 
-# vis_original_truth_pred('prms_input.csv', 'smoothed_prms_input.csv')
-vis_bound_file('prms_input.csv', 'sub_results/bound.csv','0.6 alpha, 0.5 window size GB tree logsinh_PI transform','05_logsinh_improved_predict_vs_obs.csv')
+vis_original_truth_pred('prms_input.csv', 'smoothed_prms_input.csv')
+#vis_bound_file('prms_input.csv', 'sub_results/bound.csv','0.9 alpha, 0.5 window size GB tree logsinh_PI transform','05_logsinh_improved_predict_vs_obs.csv')

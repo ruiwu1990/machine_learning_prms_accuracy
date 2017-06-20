@@ -674,7 +674,14 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 #merge_bound_file('smoothed_prms_input.csv', file_path,loop_time)
 
 # create smooth version input file
-smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 30)
-#smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 20)
+# smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 30)
 #real_crossover_exec_regression('smoothed_prms_input.csv','gb_tree',0.5)
-exec_regression('smoothed_prms_input.csv', 'gb_tree',0.5, 0.6,app_path, 0.0305, 0.0105, True, True, 500)
+#exec_regression('smoothed_prms_input.csv', 'gb_tree',0.5, 0.6,app_path, 0.0305, 0.0105, True, True, 500)
+
+# smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 10)
+# exec_regression('smoothed_prms_input.csv', 'gb_tree',0.5, 0.9,app_path, 0.1005, 0.0705, True, True, 500)
+
+
+smooth_origin_input_cse('prms_input_without_calibrate.csv', 'smoothed_prms_input.csv', 10)
+real_crossover_exec_regression('smoothed_prms_input.csv','gb_tree',0.5)
+# exec_regression('smoothed_prms_input.csv', 'gb_tree',0.5, 0.9,app_path, 0.1005, 0.0705, True, True, 500)
