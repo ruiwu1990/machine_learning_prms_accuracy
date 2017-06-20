@@ -641,7 +641,7 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 	# # test file
 	# delta_error_csv_test = app_path + '/temp_delta_error_test.csv'
 	# delta_error_filename_test = app_path + '/delta_error_test.libsvm'
-	# # observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
+	# # observed_name, predicted_name = dereal_crossover_exec_regression('smoothed_prms_input.csv','gb_tree',0.5)lta_error_file(filename,delta_error_filename)
 	# delta_error_file(test_file,delta_error_csv_test,best_alpha)
 	# convert_csv_into_libsvm(delta_error_csv_test,delta_error_filename_test)
 
