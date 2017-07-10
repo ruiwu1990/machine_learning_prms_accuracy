@@ -10,6 +10,81 @@ import os
 import shutil
 import numpy as np
 
+app_path = os.path.dirname(os.path.abspath('__file__'))
+spark_submit_location = '/home/host0/Desktop/hadoop/spark-2.1.0/bin/spark-submit'
+spark_config1 = '--conf spark.executor.heartbeatInterval=10000000'
+spark_config2 = '--conf spark.network.timeout=10000000'
+
+# ------------------------
+# test matrix functions
+
+def get_root_mean_squared_error(list1,list2):
+	if len(list1) != len(list2):
+		raise Exception('two lists have different lengths')
+	list_len = len(list1)
+	sum_diff = 0
+	for count in range(list_len):
+		sum_diff = sum_diff + (list1[count]-list2[count])**2
+	avg_sum_diff = sum_diff/list_len
+	return math.sqrt(avg_sum_diff)
+
+def get_pbias(list1, list2):
+	'''
+	percent bias
+	list1 is model simulated value
+	list2 is observed data
+	'''
+	if len(list1) != len(list2):
+		raise Exception('two lists have different lengths')
+	list_len = len(list1)
+	sum_diff = 0
+	sum_original = 0
+	for count in range(list_len):
+		sum_diff = sum_diff + (list1[count]-list2[count])
+		sum_original = sum_original + list2[count]
+	result = sum_diff/sum_original
+	return result*100
+
+def get_coeficient_determination(list1,list2):
+	'''
+	list1 is model simulated value
+	list2 is observed data
+	'''
+	if len(list1) != len(list2):
+		raise Exception('two lists have different lengths')
+	list_len = len(list1)
+	mean_list1 = reduce(lambda x, y: x + y, list1) / len(list1)
+	mean_list2 = reduce(lambda x, y: x + y, list2) / len(list2)
+	sum_diff = 0
+	sum_diff_o_s = 0
+	sum_diff_p_s = 0
+	for count in range(list_len):
+		sum_diff = sum_diff + (list1[count]-mean_list1)*(list2[count]-mean_list2)
+		sum_diff_o_s = sum_diff_o_s + (list2[count]-mean_list2)**2
+		sum_diff_p_s = sum_diff_p_s + (list1[count]-mean_list1)**2
+	result = (sum_diff/(pow(sum_diff_o_s,0.5)*pow(sum_diff_p_s,0.5)))**2
+	return result
+
+def get_nse(list1,list2):
+	'''
+	Nash-Sutcliffe efficiency
+	list1 is model simulated value
+	list2 is observed data
+	'''
+	if len(list1) != len(list2):
+		raise Exception('two lists have different lengths')
+	list_len = len(list1)
+	sum_diff_power = 0
+	sum_diff_o_power = 0
+	mean_list2 = reduce(lambda x, y: x + y, list2) / len(list2)
+	for count in range(list_len):
+		sum_diff_power = sum_diff_power + (list1[count]-list2[count])**2
+		sum_diff_o_power = sum_diff_o_power + (list2[count]-mean_list2)**2
+	result = sum_diff_power/sum_diff_o_power
+	return 1 - result
+
+# ------------------------
+
 # this will be '/cse/home/rwu/Desktop/machine_learning_prms_accuracy/tmp_test'
 # /cse/home/rwu/Desktop/hadoop/spark_installation/spark-2.1.0/bin/pyspark
 
@@ -458,6 +533,7 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 		# 	os.remove(bound_loc)
 
 		for i in range(loop_time):
+		# for i in range(1):
 			tmp_test_file = tmp_dirt+'prms_test'+str(i)+'.csv'
 			tmp_train_file= tmp_dirt+'prms_train'+str(i)+'.csv'
 			# split files into train and test
@@ -477,6 +553,7 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 
 			if recursive == True:
 				command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path+'/'+tmp_dirt.replace('/',''), str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
+				# sys.argv = ['ml_moduel/gb_tree_regression_no_transform_no_recursive_logsinh_final_test.py','delta_error_train.libsvm','gbt_result.txt','0.5','0.1','/home/host0/Desktop/machine_learning_prms_accuracy/tmp_test_prms','0.0405','0.0305','delta_error_test.libsvm']
 			else:
 				command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
 			with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
@@ -491,7 +568,6 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 			if os.path.isfile(bound_loc):
 				# if file exist
 				shutil.copyfile(bound_loc,app_path+'/'+tmp_dirt+'bound'+str(i)+'.csv')
-			# TODO need to merge result file too!!!!
 
 		print 'final rmse is: '+str(merge_bound_file(filename, app_path+'/'+tmp_dirt,loop_time))
 

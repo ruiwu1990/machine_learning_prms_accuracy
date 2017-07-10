@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 import os
-
+from util import get_root_mean_squared_error, get_pbias, get_coeficient_determination, get_nse
 
 app_path = os.path.dirname(os.path.abspath('__file__'))
 
@@ -189,8 +189,8 @@ def vis_original_truth_pred(original_file, smooth_file ,obs_name='runoff_obs',pr
 	
 
 	fig, ax = plt.subplots()
-	ax.plot(time,obs, '-',linewidth=2, label='truth')
-	ax.plot(time,pred, '--',linewidth=2, label='smooth_pred')
+	ax.plot(time,obs, ':',linewidth=2, label='truth')
+	ax.plot(time,pred, '-',linewidth=2, label='smooth_pred')
 	ax.plot(time,origin_pred, '--',linewidth=2, label='original_pred')
 
 	legend = ax.legend(loc='upper right', shadow=True)
@@ -258,6 +258,64 @@ def vis_bound_file(original_model_output, input_file, fig_title, output_file = '
 	plt.title(fig_title)
 	plt.show()
 
+def vis_measurement_metrix_bar_graph(original_file, result_file):
+	'''
+	bar graph [improved_rmse,pbias,cd,nse,original_rmse,pbias,cd,nse]
+	'''
+	df_origin = pd.read_csv(original_file)
+	df = pd.read_csv(result_file)
+	time_list = df['time'].tolist()
+
+	truth,origin_pred = collect_corresponding_obs_pred(df_origin,time_list)
+	prediction = df['prediction'].tolist()
+	if len(prediction)!=len(origin_pred):
+		print "Error! Len does not match"
+		return
+	else:
+		improved_rmse = get_root_mean_squared_error(prediction,truth)
+		improved_pbias = get_pbias(prediction,truth)
+		improved_cd = get_coeficient_determination(prediction,truth)
+		improved_nse = get_nse(prediction,truth)
+		original_rmse = get_root_mean_squared_error(origin_pred,truth)
+		original_pbias = get_pbias(origin_pred,truth)
+		original_cd = get_coeficient_determination(origin_pred,truth)
+		original_nse = get_nse(origin_pred,truth)
+
+		n_groups = 4
+
+		improved = (improved_rmse, improved_pbias, improved_cd, improved_nse)
+
+		original = (original_rmse, original_pbias, original_cd, original_nse)
+
+		fig, ax = plt.subplots()
+
+		index = np.arange(n_groups)
+		bar_width = 0.35
+
+		opacity = 0.4
+		error_config = {'ecolor': '0.3'}
+
+		rects1 = plt.bar(index, improved, bar_width,
+						 alpha=opacity,
+						 color='b',
+						 error_kw=error_config,
+						 label='Improved')
+
+		rects2 = plt.bar(index + bar_width, original, bar_width,
+						 alpha=opacity,
+						 color='r',
+						 error_kw=error_config,
+						 label='Original')
+
+		plt.xlabel('Measurements')
+		plt.ylabel('Values')
+		plt.title('measurements')
+		plt.xticks(index + bar_width / 2, ('RMSE', 'PBIAS', 'CD', 'NSE'))
+		plt.legend()
+
+		plt.tight_layout()
+		plt.show()
+
 # vis_error_prediction_PI('bound.csv','predicted_error_PI')
 # vis_improved_prediction_PI('prms_input.csv', 'bound.csv','predicted_error_PI','improved_predict_vs_obs.csv')
 # vis_improved_prediction_PI('prms_input.csv', '/home/host0/Downloads/03_08_boxcox_bound.csv','0.3 alpha 0.8 window size boxcox_PI','03_08_improved_predict_vs_obs.csv')
@@ -273,7 +331,14 @@ def vis_bound_file(original_model_output, input_file, fig_title, output_file = '
 # vis_window_vs_rmse(win_list, origin_rmse, improved_rmse)
 
 
-smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 10)
+# smooth_origin_input_cse('data/prms_input.csv', 'data/smoothed_prms_input.csv', 10)
+# vis_original_truth_pred('data/prms_input.csv', 'data/smoothed_prms_input.csv', fig_title='smooth original prediction threshold 10')
 
-vis_original_truth_pred('prms_input.csv', 'smoothed_prms_input.csv')
-#vis_bound_file('prms_input.csv', 'sub_results/bound.csv','0.9 alpha, 0.5 window size GB tree logsinh_PI transform','05_logsinh_improved_predict_vs_obs.csv')
+# smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 10)
+
+# vis_original_truth_pred('prms_input.csv', 'smoothed_prms_input.csv')
+# vis_bound_file('data/tmp_cali.csv', 'sub_results/bound.csv','0.1 alpha, 0.5 window size GB tree logsinh_PI transform','05_logsinh_improved_predict_vs_obs.csv')
+
+
+
+vis_measurement_metrix_bar_graph('data/prms_input.csv', '/home/host0/Desktop/05_06_threshold_20_sub_results/bound.csv')

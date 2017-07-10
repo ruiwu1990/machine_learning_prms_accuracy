@@ -285,15 +285,17 @@ def preprocess_input_csv(input_result, input_feature, cali_file='data/tmp_cali.c
 # #/// exec_regression('smoothed_prms_input.csv', 'gb_tree',0.5, 0.9,app_path, 0.1005, 0.0705, True, True, 500)
 
 # with cali
-extract_feature_row('data/2.csv','data/tmp_2.csv')
-preprocess_input_csv('data/1.csv','data/tmp_2.csv')
-print 'original rmse is: '+str(original_csv_rmse('data/tmp_cali.csv',0.5))
-smooth_origin_input_cse('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', 10)
-real_crossover_exec_regression('data/smoothed_prms_input.csv','gb_tree',0.5)
-
-# # without cali
 # extract_feature_row('data/2.csv','data/tmp_2.csv')
 # preprocess_input_csv('data/1.csv','data/tmp_2.csv')
-# print 'original rmse is: '+str(original_csv_rmse('data/tmp_uncali.csv',0.5))
-# smooth_origin_input_cse('data/tmp_uncali.csv', 'data/smoothed_prms_input.csv', 10)
+# print 'original rmse is: '+str(original_csv_rmse('data/tmp_cali.csv',0.5))
+# smooth_origin_input_cse('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', 10)
 # real_crossover_exec_regression('data/smoothed_prms_input.csv','gb_tree',0.5)
+# exec_regression('data/smoothed_prms_input.csv', 'decision_tree',0.5, 0.1,app_path, 0.0405, 0.0305, True, True, 500)
+#exec_regression('data/smoothed_prms_input.csv', 'gb_tree',0.55, 0.1,app_path, 0.0405, 0.0305, True, True, 500)
+
+# # without cali
+extract_feature_row('data/2.csv','data/tmp_2.csv')
+preprocess_input_csv('data/1.csv','data/tmp_2.csv')
+print 'original rmse is: '+str(original_csv_rmse('data/tmp_uncali.csv',0.55))
+smooth_origin_input_cse('data/tmp_uncali.csv', 'data/smoothed_prms_input.csv', 10)
+real_crossover_exec_regression('data/smoothed_prms_input.csv','gb_tree',0.55)

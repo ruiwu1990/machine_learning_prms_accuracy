@@ -1,183 +1,108 @@
-current processing: 1; 182 rows left.
-current processing: 2; 181 rows left.
-current processing: 3; 180 rows left.
-current processing: 4; 179 rows left.
-current processing: 5; 178 rows left.
-current processing: 6; 177 rows left.
-current processing: 7; 176 rows left.
-current processing: 8; 175 rows left.
-current processing: 9; 174 rows left.
-current processing: 10; 173 rows left.
-current processing: 11; 172 rows left.
-current processing: 12; 171 rows left.
-current processing: 13; 170 rows left.
-current processing: 14; 169 rows left.
-current processing: 15; 168 rows left.
-current processing: 16; 167 rows left.
-current processing: 17; 166 rows left.
-current processing: 18; 165 rows left.
-current processing: 19; 164 rows left.
-current processing: 20; 163 rows left.
-current processing: 21; 162 rows left.
-current processing: 22; 161 rows left.
-current processing: 23; 160 rows left.
-current processing: 24; 159 rows left.
-current processing: 25; 158 rows left.
-current processing: 26; 157 rows left.
-current processing: 27; 156 rows left.
-current processing: 28; 155 rows left.
-current processing: 29; 154 rows left.
-current processing: 30; 153 rows left.
-current processing: 31; 152 rows left.
-current processing: 32; 151 rows left.
-current processing: 33; 150 rows left.
-current processing: 34; 149 rows left.
-current processing: 35; 148 rows left.
-current processing: 36; 147 rows left.
-current processing: 37; 146 rows left.
-current processing: 38; 145 rows left.
-current processing: 39; 144 rows left.
-current processing: 40; 143 rows left.
-current processing: 41; 142 rows left.
-current processing: 42; 141 rows left.
-current processing: 43; 140 rows left.
-current processing: 44; 139 rows left.
-current processing: 45; 138 rows left.
-current processing: 46; 137 rows left.
-current processing: 47; 136 rows left.
-current processing: 48; 135 rows left.
-current processing: 49; 134 rows left.
-current processing: 50; 133 rows left.
-current processing: 51; 132 rows left.
-current processing: 52; 131 rows left.
-current processing: 53; 130 rows left.
-current processing: 54; 129 rows left.
-current processing: 55; 128 rows left.
-current processing: 56; 127 rows left.
-current processing: 57; 126 rows left.
-current processing: 58; 125 rows left.
-current processing: 59; 124 rows left.
-current processing: 60; 123 rows left.
-current processing: 61; 122 rows left.
-current processing: 62; 121 rows left.
-current processing: 63; 120 rows left.
-current processing: 64; 119 rows left.
-current processing: 65; 118 rows left.
-current processing: 66; 117 rows left.
-current processing: 67; 116 rows left.
-current processing: 68; 115 rows left.
-current processing: 69; 114 rows left.
-current processing: 70; 113 rows left.
-current processing: 71; 112 rows left.
-current processing: 72; 111 rows left.
-current processing: 73; 110 rows left.
-current processing: 74; 109 rows left.
-current processing: 75; 108 rows left.
-current processing: 76; 107 rows left.
-current processing: 77; 106 rows left.
-current processing: 78; 105 rows left.
-current processing: 79; 104 rows left.
-current processing: 80; 103 rows left.
-current processing: 81; 102 rows left.
-current processing: 82; 101 rows left.
-current processing: 83; 100 rows left.
-current processing: 84; 99 rows left.
-current processing: 85; 98 rows left.
-current processing: 86; 97 rows left.
-current processing: 87; 96 rows left.
-current processing: 88; 95 rows left.
-current processing: 89; 94 rows left.
-current processing: 90; 93 rows left.
-current processing: 91; 92 rows left.
-current processing: 92; 91 rows left.
-current processing: 93; 90 rows left.
-current processing: 94; 89 rows left.
-current processing: 95; 88 rows left.
-current processing: 96; 87 rows left.
-current processing: 97; 86 rows left.
-current processing: 98; 85 rows left.
-current processing: 99; 84 rows left.
-current processing: 100; 83 rows left.
-current processing: 101; 82 rows left.
-current processing: 102; 81 rows left.
-current processing: 103; 80 rows left.
-current processing: 104; 79 rows left.
-current processing: 105; 78 rows left.
-current processing: 106; 77 rows left.
-current processing: 107; 76 rows left.
-current processing: 108; 75 rows left.
-current processing: 109; 74 rows left.
-current processing: 110; 73 rows left.
-current processing: 111; 72 rows left.
-current processing: 112; 71 rows left.
-current processing: 113; 70 rows left.
-current processing: 114; 69 rows left.
-current processing: 115; 68 rows left.
-current processing: 116; 67 rows left.
-current processing: 117; 66 rows left.
-current processing: 118; 65 rows left.
-current processing: 119; 64 rows left.
-current processing: 120; 63 rows left.
-current processing: 121; 62 rows left.
-current processing: 122; 61 rows left.
-current processing: 123; 60 rows left.
-current processing: 124; 59 rows left.
-current processing: 125; 58 rows left.
-current processing: 126; 57 rows left.
-current processing: 127; 56 rows left.
-current processing: 128; 55 rows left.
-current processing: 129; 54 rows left.
-current processing: 130; 53 rows left.
-current processing: 131; 52 rows left.
-current processing: 132; 51 rows left.
-current processing: 133; 50 rows left.
-current processing: 134; 49 rows left.
-current processing: 135; 48 rows left.
-current processing: 136; 47 rows left.
-current processing: 137; 46 rows left.
-current processing: 138; 45 rows left.
-current processing: 139; 44 rows left.
-current processing: 140; 43 rows left.
-current processing: 141; 42 rows left.
-current processing: 142; 41 rows left.
-current processing: 143; 40 rows left.
-current processing: 144; 39 rows left.
-current processing: 145; 38 rows left.
-current processing: 146; 37 rows left.
-current processing: 147; 36 rows left.
-current processing: 148; 35 rows left.
-current processing: 149; 34 rows left.
-current processing: 150; 33 rows left.
-current processing: 151; 32 rows left.
-current processing: 152; 31 rows left.
-current processing: 153; 30 rows left.
-current processing: 154; 29 rows left.
-current processing: 155; 28 rows left.
-current processing: 156; 27 rows left.
-current processing: 157; 26 rows left.
-current processing: 158; 25 rows left.
-current processing: 159; 24 rows left.
-current processing: 160; 23 rows left.
-current processing: 161; 22 rows left.
-current processing: 162; 21 rows left.
-current processing: 163; 20 rows left.
-current processing: 164; 19 rows left.
-current processing: 165; 18 rows left.
-current processing: 166; 17 rows left.
-current processing: 167; 16 rows left.
-current processing: 168; 15 rows left.
-current processing: 169; 14 rows left.
-current processing: 170; 13 rows left.
-current processing: 171; 12 rows left.
-current processing: 172; 11 rows left.
-current processing: 173; 10 rows left.
-current processing: 174; 9 rows left.
-current processing: 175; 8 rows left.
-current processing: 176; 7 rows left.
-current processing: 177; 6 rows left.
-current processing: 178; 5 rows left.
-current processing: 179; 4 rows left.
-current processing: 180; 3 rows left.
-current processing: 181; 2 rows left.
-current processing: 182; 1 rows left.
-current processing: 183; 0 rows left.
+Traceback (most recent call last):
+  File "/home/host0/Desktop/machine_learning_prms_accuracy/tmp_test_prms/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py", line 168, in <module>
+    tmp_predict = predictions.toPandas()['prediction'].tolist()[0]
+  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/pyspark.zip/pyspark/sql/dataframe.py", line 1576, in toPandas
+  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/pyspark.zip/pyspark/sql/dataframe.py", line 391, in collect
+  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/py4j-0.10.4-src.zip/py4j/java_gateway.py", line 1133, in __call__
+  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/pyspark.zip/pyspark/sql/utils.py", line 63, in deco
+  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/py4j-0.10.4-src.zip/py4j/protocol.py", line 319, in get_return_value
+py4j.protocol.Py4JJavaError: An error occurred while calling o142.collectToPython.
+: org.apache.spark.SparkException: Job aborted due to stage failure: Task 7 in stage 26.0 failed 1 times, most recent failure: Lost task 7.0 in stage 26.0 (TID 137, localhost, executor driver): org.apache.spark.SparkException: Failed to execute user defined function($anonfun$11: (vector) => vector)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIterator.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenExec$$anonfun$8$$anon$1.hasNext(WholeStageCodegenExec.scala:377)
+	at org.apache.spark.sql.execution.SparkPlan$$anonfun$2.apply(SparkPlan.scala:231)
+	at org.apache.spark.sql.execution.SparkPlan$$anonfun$2.apply(SparkPlan.scala:225)
+	at org.apache.spark.rdd.RDD$$anonfun$mapPartitionsInternal$1$$anonfun$apply$25.apply(RDD.scala:826)
+	at org.apache.spark.rdd.RDD$$anonfun$mapPartitionsInternal$1$$anonfun$apply$25.apply(RDD.scala:826)
+	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:38)
+	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:323)
+	at org.apache.spark.rdd.RDD.iterator(RDD.scala:287)
+	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:87)
+	at org.apache.spark.scheduler.Task.run(Task.scala:99)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:282)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: java.util.NoSuchElementException: key not found: 4.0
+	at scala.collection.MapLike$class.default(MapLike.scala:228)
+	at scala.collection.AbstractMap.default(Map.scala:59)
+	at scala.collection.MapLike$class.apply(MapLike.scala:141)
+	at scala.collection.AbstractMap.apply(Map.scala:59)
+	at org.apache.spark.ml.feature.VectorIndexerModel$$anonfun$10.apply(VectorIndexer.scala:340)
+	at org.apache.spark.ml.feature.VectorIndexerModel$$anonfun$10.apply(VectorIndexer.scala:318)
+	at org.apache.spark.ml.feature.VectorIndexerModel$$anonfun$11.apply(VectorIndexer.scala:363)
+	at org.apache.spark.ml.feature.VectorIndexerModel$$anonfun$11.apply(VectorIndexer.scala:363)
+	... 16 more
+
+Driver stacktrace:
+	at org.apache.spark.scheduler.DAGScheduler.org$apache$spark$scheduler$DAGScheduler$$failJobAndIndependentStages(DAGScheduler.scala:1435)
+	at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1423)
+	at org.apache.spark.scheduler.DAGScheduler$$anonfun$abortStage$1.apply(DAGScheduler.scala:1422)
+	at scala.collection.mutable.ResizableArray$class.foreach(ResizableArray.scala:59)
+	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:48)
+	at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:1422)
+	at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:802)
+	at org.apache.spark.scheduler.DAGScheduler$$anonfun$handleTaskSetFailed$1.apply(DAGScheduler.scala:802)
+	at scala.Option.foreach(Option.scala:257)
+	at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:802)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:1650)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1605)
+	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:1594)
+	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:48)
+	at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:628)
+	at org.apache.spark.SparkContext.runJob(SparkContext.scala:1918)
+	at org.apache.spark.SparkContext.runJob(SparkContext.scala:1931)
+	at org.apache.spark.SparkContext.runJob(SparkContext.scala:1944)
+	at org.apache.spark.SparkContext.runJob(SparkContext.scala:1958)
+	at org.apache.spark.rdd.RDD$$anonfun$collect$1.apply(RDD.scala:935)
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
+	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)
+	at org.apache.spark.rdd.RDD.withScope(RDD.scala:362)
+	at org.apache.spark.rdd.RDD.collect(RDD.scala:934)
+	at org.apache.spark.sql.execution.SparkPlan.executeCollect(SparkPlan.scala:275)
+	at org.apache.spark.sql.Dataset$$anonfun$collectToPython$1.apply$mcI$sp(Dataset.scala:2745)
+	at org.apache.spark.sql.Dataset$$anonfun$collectToPython$1.apply(Dataset.scala:2742)
+	at org.apache.spark.sql.Dataset$$anonfun$collectToPython$1.apply(Dataset.scala:2742)
+	at org.apache.spark.sql.execution.SQLExecution$.withNewExecutionId(SQLExecution.scala:57)
+	at org.apache.spark.sql.Dataset.withNewExecutionId(Dataset.scala:2765)
+	at org.apache.spark.sql.Dataset.collectToPython(Dataset.scala:2742)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)
+	at py4j.Gateway.invoke(Gateway.java:280)
+	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+	at py4j.commands.CallCommand.execute(CallCommand.java:79)
+	at py4j.GatewayConnection.run(GatewayConnection.java:214)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.apache.spark.SparkException: Failed to execute user defined function($anonfun$11: (vector) => vector)
+	at org.apache.spark.sql.catalyst.expressions.GeneratedClass$GeneratedIterator.processNext(Unknown Source)
+	at org.apache.spark.sql.execution.BufferedRowIterator.hasNext(BufferedRowIterator.java:43)
+	at org.apache.spark.sql.execution.WholeStageCodegenExec$$anonfun$8$$anon$1.hasNext(WholeStageCodegenExec.scala:377)
+	at org.apache.spark.sql.execution.SparkPlan$$anonfun$2.apply(SparkPlan.scala:231)
+	at org.apache.spark.sql.execution.SparkPlan$$anonfun$2.apply(SparkPlan.scala:225)
+	at org.apache.spark.rdd.RDD$$anonfun$mapPartitionsInternal$1$$anonfun$apply$25.apply(RDD.scala:826)
+	at org.apache.spark.rdd.RDD$$anonfun$mapPartitionsInternal$1$$anonfun$apply$25.apply(RDD.scala:826)
+	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:38)
+	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:323)
+	at org.apache.spark.rdd.RDD.iterator(RDD.scala:287)
+	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:87)
+	at org.apache.spark.scheduler.Task.run(Task.scala:99)
+	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:282)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	... 1 more
+Caused by: java.util.NoSuchElementException: key not found: 4.0
+	at scala.collection.MapLike$class.default(MapLike.scala:228)
+	at scala.collection.AbstractMap.default(Map.scala:59)
+	at scala.collection.MapLike$class.apply(MapLike.scala:141)
+	at scala.collection.AbstractMap.apply(Map.scala:59)
+	at org.apache.spark.ml.feature.VectorIndexerModel$$anonfun$10.apply(VectorIndexer.scala:340)
+	at org.apache.spark.ml.feature.VectorIndexerModel$$anonfun$10.apply(VectorIndexer.scala:318)
+	at org.apache.spark.ml.feature.VectorIndexerModel$$anonfun$11.apply(VectorIndexer.scala:363)
+	at org.apache.spark.ml.feature.VectorIndexerModel$$anonfun$11.apply(VectorIndexer.scala:363)
+	... 16 more
+
