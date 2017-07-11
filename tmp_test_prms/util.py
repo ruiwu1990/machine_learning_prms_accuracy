@@ -346,7 +346,7 @@ def merge_bound_file(original_file, file_path,loop_time):
 	return get_root_mean_squared_error(df_delta['prediction'],truth)
 	# return get_root_mean_squared_error(df_delta['prediction'],df_delta['ground_truth'].tolist())
 
-def exec_regression_by_name(train_file, test_file, regression_technique, window_per, best_alpha,app_path, best_a, best_b, recursive = True, transformation = True, max_row_num=500):
+def exec_regression_by_name(train_file, test_file, regression_technique, window_per, best_alpha,app_path, best_a, best_b, recursive = True, transformation = True, max_row_num=500, transform_tech = 'logsinh', best_lambda = 1):
 	'''
 	!!!!!!!!!!!!!!!file should be ordered based on time, from oldest to latest
 	this function run decision tree regression
@@ -363,16 +363,23 @@ def exec_regression_by_name(train_file, test_file, regression_technique, window_
 	elif regression_technique =='decision_tree':
 		log_path = app_path + '/decision_tree_log.txt'
 		err_log_path = app_path + '/decision_tree_err_log.txt'
-		# change!!!!!!!!!!!!!!!
-		if recursive == True and transformation == True:
-			exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
-		elif recursive == False and transformation == True:
-			exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh_final_test.py'
-		elif recursive == True and transformation == False:
-			exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_no_transform_interval_log_sinh.py'
-		elif recursive == False and transformation == False:
-			exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
 		result_file = app_path + '/decision_tree_result.txt'
+
+		if transform_tech == 'logsinh':
+			if recursive == True and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
+			elif recursive == False and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh_final_test.py'
+			elif recursive == True and transformation == False:
+				exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_no_transform_interval_log_sinh.py'
+			elif recursive == False and transformation == False:
+				exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
+		elif transform_tech == 'boxcox':
+			if recursive == True and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_boxcox.py'
+		else:
+			print 'Sorry, current system does not support the input transformation technique'
+		
 
 	elif regression_technique =='glr':
 		log_path = app_path + '/glr_log.txt'
@@ -383,15 +390,20 @@ def exec_regression_by_name(train_file, test_file, regression_technique, window_
 	elif regression_technique =='gb_tree':
 		log_path = app_path + '/gbt_log.txt'
 		err_log_path = app_path + '/gbt_err_log.txt'
-		if recursive == True and transformation == True:
-			exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_interval_log_sinh.py'
-		elif recursive == False and transformation == True:
-			exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_transform_no_recursive_logsinh_final_test.py'
-		elif recursive == True and transformation == False:
-			exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_no_transform_interval_log_sinh.py'
-		elif recursive == False and transformation == False:
-			exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
 		result_file = app_path + '/gbt_result.txt'
+
+		if transform_tech == 'logsinh':
+			if recursive == True and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_interval_log_sinh.py'
+			elif recursive == False and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_transform_no_recursive_logsinh_final_test.py'
+			elif recursive == True and transformation == False:
+				exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_no_transform_interval_log_sinh.py'
+			elif recursive == False and transformation == False:
+				exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
+		else:
+			print 'Sorry, current system does not support the input transformation technique'
+		
 	else:
 		print 'Sorry, current system does not support the input regression technique'
 	
@@ -414,8 +426,10 @@ def exec_regression_by_name(train_file, test_file, regression_technique, window_
 	# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
 	delta_error_file(test_file,delta_error_csv_test,best_alpha)
 	convert_csv_into_libsvm(delta_error_csv_test,delta_error_filename_test)
-	if recursive == True:
+	if recursive == True and transform_tech == 'logsinh':
 		command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path, str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
+	elif recursive == True and transform_tech == 'boxcox':
+		command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path, str(best_lambda), delta_error_filename_test, spark_config1, spark_config2]
 	else:
 		command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
 	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
@@ -430,7 +444,7 @@ def exec_regression_by_name(train_file, test_file, regression_technique, window_
 	return True
 
 
-def exec_regression(filename, regression_technique, window_per, best_alpha,app_path, best_a, best_b, recursive = True, transformation = True, max_row_num=500):
+def exec_regression(filename, regression_technique, window_per, best_alpha,app_path, best_a, best_b, recursive = True, transformation = True, max_row_num=500, transform_tech = 'logsinh', best_lambda = 1):
 	'''
 	!!!!!!!!!!!!!!!file should be ordered based on time, from oldest to latest
 	this function run decision tree regression
@@ -447,16 +461,23 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 	elif regression_technique =='decision_tree':
 		log_path = app_path + '/decision_tree_log.txt'
 		err_log_path = app_path + '/decision_tree_err_log.txt'
-		# change!!!!!!!!!!!!!!!
-		if recursive == True and transformation == True:
-			exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
-		elif recursive == False and transformation == True:
-			exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh_final_test.py'
-		elif recursive == True and transformation == False:
-			exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_no_transform_interval_log_sinh.py'
-		elif recursive == False and transformation == False:
-			exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
 		result_file = app_path + '/decision_tree_result.txt'
+
+		if transform_tech == 'logsinh':
+			if recursive == True and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
+			elif recursive == False and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh_final_test.py'
+			elif recursive == True and transformation == False:
+				exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_no_transform_interval_log_sinh.py'
+			elif recursive == False and transformation == False:
+				exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
+		elif transform_tech == 'boxcox':
+			if recursive == True and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_boxcox.py'
+		else:
+			print 'Sorry, current system does not support the input transformation technique'
+		
 
 	elif regression_technique =='glr':
 		log_path = app_path + '/glr_log.txt'
@@ -467,15 +488,20 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 	elif regression_technique =='gb_tree':
 		log_path = app_path + '/gbt_log.txt'
 		err_log_path = app_path + '/gbt_err_log.txt'
-		if recursive == True and transformation == True:
-			exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_interval_log_sinh.py'
-		elif recursive == False and transformation == True:
-			exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_transform_no_recursive_logsinh_final_test.py'
-		elif recursive == True and transformation == False:
-			exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_no_transform_interval_log_sinh.py'
-		elif recursive == False and transformation == False:
-			exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
 		result_file = app_path + '/gbt_result.txt'
+
+		if transform_tech == 'logsinh':
+			if recursive == True and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_interval_log_sinh.py'
+			elif recursive == False and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_transform_no_recursive_logsinh_final_test.py'
+			elif recursive == True and transformation == False:
+				exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_no_transform_interval_log_sinh.py'
+			elif recursive == False and transformation == False:
+				exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
+		else:
+			print 'Sorry, current system does not support the input transformation technique'
+		
 	else:
 		print 'Sorry, current system does not support the input regression technique'
 	
@@ -503,8 +529,10 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 		# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
 		delta_error_file(test_file,delta_error_csv_test,best_alpha)
 		convert_csv_into_libsvm(delta_error_csv_test,delta_error_filename_test)
-		if recursive == True:
+		if recursive == True and transform_tech == 'logsinh':
 			command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path, str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
+		elif recursive == True and transform_tech == 'boxcox':
+			command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path, str(best_lambda), delta_error_filename_test, spark_config1, spark_config2]
 		else:
 			command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
 		with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
@@ -551,9 +579,11 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 			delta_error_file(tmp_test_file,delta_error_csv_test,best_alpha)
 			convert_csv_into_libsvm(delta_error_csv_test,delta_error_filename_test)
 
-			if recursive == True:
+			if recursive == True and transform_tech == 'logsinh':
 				command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path+'/'+tmp_dirt.replace('/',''), str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
 				# sys.argv = ['ml_moduel/gb_tree_regression_no_transform_no_recursive_logsinh_final_test.py','delta_error_train.libsvm','gbt_result.txt','0.5','0.1','/home/host0/Desktop/machine_learning_prms_accuracy/tmp_test_prms','0.0405','0.0305','delta_error_test.libsvm']
+			elif recursive == True and transform_tech == 'boxcox':
+				command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path+'/'+tmp_dirt.replace('/',''), str(best_lambda), delta_error_filename_test, spark_config1, spark_config2]
 			else:
 				command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
 			with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:

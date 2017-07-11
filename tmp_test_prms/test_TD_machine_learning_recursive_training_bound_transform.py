@@ -25,7 +25,7 @@ spark_config1 = '--conf spark.executor.heartbeatInterval=10000000'
 spark_config2 = '--conf spark.network.timeout=10000000'
 
 
-def real_crossover_exec_regression(filename, regression_technique, window_per=0.9, training_window_per = 0.9):
+def real_crossover_exec_regression(filename, regression_technique, window_per=0.9, training_window_per = 0.9, transform_tech = 'logsinh'):
 	'''
 	this function run decision tree regression
 	, output the results in a log file, and return the 
@@ -38,26 +38,40 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 		result_file = app_path + '/rf_result.txt'
 
 	elif regression_technique =='decision_tree':
-		log_path = app_path + '/decision_tree_log.txt'
-		err_log_path = app_path + '/decision_tree_err_log.txt'
-		# change!!!!!!!!!!!!!!!
-		exec_no_recursive_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh.py'
-		exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
-		# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
-		result_file = app_path + '/decision_tree_result.txt'
+			log_path = app_path + '/decision_tree_log.txt'
+			err_log_path = app_path + '/decision_tree_err_log.txt'
+			result_file = app_path + '/decision_tree_result.txt'
+
+			if transform_tech == 'logsinh':
+				exec_no_recursive_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh.py'
+				# exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
+				# exec_file_loc = app_path + '/ml_moduel/decision_tree_regression.py'
+			elif transform_tech == 'boxcox':
+				exec_no_recursive_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_boxcox.py'
+			else:
+				print 'Sorry, current system does not support the input transformation technique'
+			
 
 	elif regression_technique =='glr':
 		log_path = app_path + '/glr_log.txt'
 		err_log_path = app_path + '/glr_err_log.txt'
-		exec_file_loc = app_path + '/ml_moduel/generalized_linear_regression.py'
 		result_file = app_path + '/glr_result.txt'
+		if transform_tech == 'boxcox':
+			exec_no_recursive_file_loc = app_path + '/ml_moduel/generalized_linear_regression_transform_no_recursive_boxcox.py'
+		else:
+			print 'Sorry, current system does not support the input transformation technique'
 
 	elif regression_technique =='gb_tree':
 		log_path = app_path + '/gbt_log.txt'
 		err_log_path = app_path + '/gbt_err_log.txt'
-		exec_no_recursive_file_loc = app_path + '/ml_moduel/gb_tree_regression_transform_no_recursive_logsinh.py'
-		exec_file_loc = app_path + '/ml_moduel/td_gd_tree_regression_prediction_interval_log_sinh.py'
 		result_file = app_path + '/gbt_result.txt'
+
+		if transform_tech == 'logsinh':
+			exec_no_recursive_file_loc = app_path + '/ml_moduel/gb_tree_regression_transform_no_recursive_logsinh.py'
+			# exec_file_loc = app_path + '/ml_moduel/td_gd_tree_regression_prediction_interval_log_sinh.py'
+		else:
+			print 'Sorry, current system does not support the input transformation technique'
+
 	else:
 		print 'Sorry, current system does not support the input regression technique'
 	
@@ -71,6 +85,7 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 
 	best_a = -1
 	best_b = -1
+	best_lambda = -1
 	# change!!!!!!!!!!!!!!!
 	for alpha_count in range(5):
 	# for alpha_count in range(1):
@@ -91,19 +106,56 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 		delta_error_file(train_file,delta_error_csv,alpha)
 		convert_csv_into_libsvm(delta_error_csv,delta_error_filename)
 
-		for a_count in range(10):
-		# change!!!!!!!!!!!!!!!!!!!!
-		# for a_count in range(1):
-			tmp_a = 0.01*(a_count+1)+0.0005
+		if transform_tech == 'logsinh':
+			for a_count in range(10):
+			# change!!!!!!!!!!!!!!!!!!!!
+			# for a_count in range(1):
+				tmp_a = 0.01*(a_count+1)+0.0005
 
-			for b_count in range(10):
-			# change!!!!!!!!!!!!!!!!!!!!11
-			# for b_count in range(1):
-				tmp_b = 0.01*(b_count+1)+0.0005
+				for b_count in range(10):
+				# change!!!!!!!!!!!!!!!!!!!!11
+				# for b_count in range(1):
+					tmp_b = 0.01*(b_count+1)+0.0005
+
+					# this command will work if source the spark-submit correctly
+					# no recursive for crossover validation
+					
+					command = [spark_submit_location, exec_no_recursive_file_loc,delta_error_filename,result_file, str(training_window_per), str(alpha), str(tmp_a), str(tmp_b), spark_config1, spark_config2]
+
+					#  30 times crossover validation
+					# for i in range(30):
+					# !!!!!!!!!!!!!!!!!!!change
+					for i in range(10):
+					# execute the model
+						with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
+							process = subprocess.Popen(
+								command, stdout=process_out, stderr=err_out, cwd=app_path)
+
+						# this waits the process finishes
+						process.wait()
+						print "current processing loop for alaph "+str(alpha)+", a: "+str(tmp_a)+", b: "+str(tmp_b)+", and crossover time: "\
+								+str(i)+"//////////////////////////////"
+						# sys.exit()
+
+					cur_avg_rmse = get_avg(result_file)
+					os.remove(result_file)
+
+					print "~~~~~current avg is rmse: "+str(cur_avg_rmse)
+					fp1.write(str(alpha)+","+str(window_per)+","+str(cur_avg_rmse)+","+str(tmp_a)+","+str(tmp_b)+'\n')
+					if cur_avg_rmse < min_rmse:
+						min_rmse = cur_avg_rmse
+						best_alpha = alpha
+						best_a = tmp_a
+						best_b = tmp_b
+
+		elif transform_tech == 'boxcox':
+			for lambda_count in range(20):
+				tmp_lambda = 0.1*(lambda_count+1)
 
 				# this command will work if source the spark-submit correctly
 				# no recursive for crossover validation
-				command = [spark_submit_location, exec_no_recursive_file_loc,delta_error_filename,result_file, str(training_window_per), str(alpha), str(tmp_a), str(tmp_b), spark_config1, spark_config2]
+				command = [spark_submit_location, exec_no_recursive_file_loc,delta_error_filename,result_file, str(training_window_per), str(alpha), str(tmp_lambda), spark_config1, spark_config2]
+
 				#  30 times crossover validation
 				# for i in range(30):
 				# !!!!!!!!!!!!!!!!!!!change
@@ -115,7 +167,7 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 
 					# this waits the process finishes
 					process.wait()
-					print "current processing loop for alaph "+str(alpha)+", a: "+str(tmp_a)+", b: "+str(tmp_b)+", and crossover time: "\
+					print "current processing loop for alaph "+str(alpha)+", lambda: "+str(tmp_lambda)+", and crossover time: "\
 							+str(i)+"//////////////////////////////"
 					# sys.exit()
 
@@ -123,21 +175,24 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 				os.remove(result_file)
 
 				print "~~~~~current avg is rmse: "+str(cur_avg_rmse)
-				fp1.write(str(alpha)+","+str(window_per)+","+str(cur_avg_rmse)+","+str(tmp_a)+","+str(tmp_b)+'\n')
+				fp1.write(str(alpha)+","+str(window_per)+","+str(cur_avg_rmse)+","+str(tmp_lambda)+'\n')
 				if cur_avg_rmse < min_rmse:
 					min_rmse = cur_avg_rmse
 					best_alpha = alpha
-					best_a = tmp_a
-					best_b = tmp_b
+					best_lambda = tmp_lambda
+
 	fp1.close()
-	print "min rmse is: "+ str(min_rmse)+"; best alpha is: "+str(best_alpha)+"; best a is: "+str(best_a)+"; best b is: "+str(best_b)+"; current window size is: "+str(window_per)
-	
+	if transform_tech == 'logsinh':
+		print "min rmse is: "+ str(min_rmse)+"; best alpha is: "+str(best_alpha)+"; best a is: "+str(best_a)+"; best b is: "+str(best_b)+"; current window size is: "+str(window_per)
+	elif transform_tech == 'boxcox':
+		print "min rmse is: "+ str(min_rmse)+"; best alpha is: "+str(best_alpha)+"; best lambda is: "+str(tmp_lambda)+"; current window size is: "+str(window_per)
+
 	# recursive test file, with best alpha, a and b
 	if os.path.isfile(result_file):
 		# if file exist
 		os.remove(result_file)
 
-	exec_regression(filename, regression_technique, window_per, best_alpha,app_path, best_a, best_b, True, True, 500)
+	exec_regression(filename, regression_technique, window_per, best_alpha,app_path, best_a, best_b, True, True, 500, transform_tech, best_lambda)
 
 	return True
 
@@ -285,17 +340,18 @@ def preprocess_input_csv(input_result, input_feature, cali_file='data/tmp_cali.c
 # #/// exec_regression('smoothed_prms_input.csv', 'gb_tree',0.5, 0.9,app_path, 0.1005, 0.0705, True, True, 500)
 
 # with cali
-# extract_feature_row('data/2.csv','data/tmp_2.csv')
-# preprocess_input_csv('data/1.csv','data/tmp_2.csv')
-# print 'original rmse is: '+str(original_csv_rmse('data/tmp_cali.csv',0.5))
-# smooth_origin_input_cse('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', 10)
-# real_crossover_exec_regression('data/smoothed_prms_input.csv','gb_tree',0.5)
-# exec_regression('data/smoothed_prms_input.csv', 'decision_tree',0.5, 0.1,app_path, 0.0405, 0.0305, True, True, 500)
-#exec_regression('data/smoothed_prms_input.csv', 'gb_tree',0.55, 0.1,app_path, 0.0405, 0.0305, True, True, 500)
-
-# # without cali
 extract_feature_row('data/2.csv','data/tmp_2.csv')
 preprocess_input_csv('data/1.csv','data/tmp_2.csv')
-print 'original rmse is: '+str(original_csv_rmse('data/tmp_uncali.csv',0.55))
-smooth_origin_input_cse('data/tmp_uncali.csv', 'data/smoothed_prms_input.csv', 10)
-real_crossover_exec_regression('data/smoothed_prms_input.csv','gb_tree',0.55)
+print 'original rmse is: '+str(original_csv_rmse('data/tmp_cali.csv',0.55))
+smooth_origin_input_cse('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', 10)
+real_crossover_exec_regression('data/smoothed_prms_input.csv','decision_tree',0.55, transform_tech = 'boxcox')
+
+# exec_regression('data/smoothed_prms_input.csv', 'decision_tree',0.5, 0.1,app_path, 0.0405, 0.0305, True, True, 500)
+# exec_regression('data/smoothed_prms_input.csv', 'decision_tree',0.55, 0.1,app_path, 0.0405, 0.0305, True, True, 500)
+
+# # # without cali
+# extract_feature_row('data/2.csv','data/tmp_2.csv')
+# preprocess_input_csv('data/1.csv','data/tmp_2.csv')
+# print 'original rmse is: '+str(original_csv_rmse('data/tmp_uncali.csv',0.55))
+# smooth_origin_input_cse('data/tmp_uncali.csv', 'data/smoothed_prms_input.csv', 10)
+# real_crossover_exec_regression('data/smoothed_prms_input.csv','decision_tree',0.55, transform_tech = 'boxcox')

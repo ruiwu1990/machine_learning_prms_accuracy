@@ -15,6 +15,10 @@ from scipy import stats
 import numpy as np
 from itertools import izip
 
+# !!!!!!!!!!!!!!!!!
+# You need to get best lambda before you use this transformation
+# !!!!!!!!!!!!!!!!!
+
 def collect_features(input):
 	'''
 	this function is used to collect delta errors from array
@@ -64,49 +68,24 @@ def find_min_label(input_row_list):
 			tmp_min = i['label'] 
 	return tmp_min
 
-# def log_sinh_transform(input_row_list,tmp_min,epsilon = 0.01):
-# 	'''
-# 	this function transform original y
-# 	it returns transformed value and a (tmp_min)
-# 	'''
-# 	row_list = []
-# 	for i in input_row_list:
-# 		# transform here
-# 		# print '+++++++++++++++++++'+str(tmp_min)
-# 		# print '-------------------'+str()
-# 		# print "/////////////////////////////////////"+str(math.sinh(i['label'])-tmp_min+epsilon)
-# 		# when x >o, sinh(x) >0
-# 		row_list.append(pyspark.sql.types.Row(label=math.log10(math.sinh(i['label']-tmp_min+epsilon)), features=i['features']))
-# 	return row_list
 
-# def reverse_log_sinh_transform(input_list,tmp_min,epsilon = 0.01):
-# 	'''
-# 	this function transform y back
-# 	'''
-# 	result_list = []
-# 	for i in input_list:
-# 		# transform here
-# 		# http://mathworld.wolfram.com/InverseHyperbolicSine.html
-# 		sinh_part = 10**i
-# 		tmp_origin = math.log(sinh_part+math.sqrt(1+sinh_part*sinh_part))+tmp_min-epsilon
-# 		result_list.append(tmp_origin)
-# 	return result_list
-
-def boxcox_transform(input_row_list, tmp_min, best_lambda = 1.838384):
+def boxcox_transform(input_row_list, tmp_min):
 	'''
 	this function transform original y
 	it returns transformed value and a (tmp_min)
 	'''
+	best_lambda = float(sys.argv[5])
 	row_list = []
 	for i in input_row_list:
 		# transform here
 		row_list.append(pyspark.sql.types.Row(label=((i['label']-tmp_min)**best_lambda-1)/best_lambda, features=i['features']))
 	return row_list
 
-def reverse_boxcox_transform(input_list, tmp_min, best_lambda = 1.838384):
+def reverse_boxcox_transform(input_list, tmp_min):
 	'''
 	this function transform y back
 	'''
+	best_lambda = float(sys.argv[5])
 	result_list = []
 	for i in input_list:
 		# transform here
@@ -148,11 +127,7 @@ dt = DecisionTreeRegressor(featuresCol="indexedFeatures")
 pipeline = Pipeline(stages=[featureIndexer, dt])
 
 
-'''
-use union to add first col in testData
-need to convert row into df
-need to remove first row in testData, using original.subtract(firstRowDF)
-'''
+
 tmp_min = find_min_label(data.collect())
 # convert dataframe into list
 test = testData.collect()
@@ -165,30 +140,14 @@ train = boxcox_transform(train,tmp_min)
 model = pipeline.fit(sc.parallelize(train).toDF())
 
 
-# change!!!!
 predictions = model.transform(sc.parallelize(test).toDF())
 predictions_list = predictions.toPandas()['prediction'].tolist()
 ground_truth_list = predictions.toPandas()['label'].tolist()
-# change!!!!ends
 
 # reverse log sinh transform
-# PI_lower = reverse_log_sinh_transform(PI_lower,tmp_min)
-# PI_upper = reverse_log_sinh_transform(PI_upper,tmp_min)
 predictions_list = reverse_boxcox_transform(predictions_list,tmp_min)
 ground_truth_list = reverse_boxcox_transform(ground_truth_list,tmp_min)
 
-
-# fp = open(sys.argv[5] + '/bound.csv','w')
-
-# fp.write("time,lower,upper,prediction,ground_truth\n")
-# for i in range(len(PI_upper)):
-# 	fp.write(time_stamp[i]+","+str(PI_lower[i])+","+str(PI_upper[i])+","+str(predictions_list[i])+","+str(ground_truth_list[i])+"\n")
-
-# fp.close()
-
-# predictions_list = [10,2,3,4,5]
-# ground_truth_list = [2,2,4,4,5]
-# print (str(get_root_mean_squared_error(predictions_list,ground_truth_list)/float('0.1'))+'\n')
 
 fp = open(sys.argv[2],'a')
 fp.write(str(get_root_mean_squared_error(predictions_list,ground_truth_list)/float(sys.argv[4]))+'\n')
