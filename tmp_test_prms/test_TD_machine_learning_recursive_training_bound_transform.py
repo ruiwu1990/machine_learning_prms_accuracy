@@ -150,7 +150,7 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 
 		elif transform_tech == 'boxcox':
 			for lambda_count in range(20):
-				tmp_lambda = 0.1*(lambda_count+1)
+				tmp_lambda = 0.2*(lambda_count+1)+3
 
 				# this command will work if source the spark-submit correctly
 				# no recursive for crossover validation
@@ -345,9 +345,8 @@ preprocess_input_csv('data/1.csv','data/tmp_2.csv')
 print 'original rmse is: '+str(original_csv_rmse('data/tmp_cali.csv',0.55))
 smooth_origin_input_cse('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', 10)
 real_crossover_exec_regression('data/smoothed_prms_input.csv','decision_tree',0.55, transform_tech = 'boxcox')
+# exec_regression('data/smoothed_prms_input.csv', 'decision_tree',0.55, 0.2,app_path, 0.0405, 0.0305, True, True, 500, 'boxcox', 2.0)
 
-# exec_regression('data/smoothed_prms_input.csv', 'decision_tree',0.5, 0.1,app_path, 0.0405, 0.0305, True, True, 500)
-# exec_regression('data/smoothed_prms_input.csv', 'decision_tree',0.55, 0.1,app_path, 0.0405, 0.0305, True, True, 500)
 
 # # # without cali
 # extract_feature_row('data/2.csv','data/tmp_2.csv')

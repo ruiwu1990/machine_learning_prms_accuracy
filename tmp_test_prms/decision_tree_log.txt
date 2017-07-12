@@ -1,0 +1,38 @@
+current processing: 1; 499 rows left.
+current processing: 2; 498 rows left.
+current processing: 3; 497 rows left.
+current processing: 4; 496 rows left.
+current processing: 5; 495 rows left.
+current processing: 6; 494 rows left.
+current processing: 7; 493 rows left.
+current processing: 8; 492 rows left.
+current processing: 9; 491 rows left.
+current processing: 10; 490 rows left.
+current processing: 11; 489 rows left.
+current processing: 12; 488 rows left.
+current processing: 13; 487 rows left.
+current processing: 14; 486 rows left.
+current processing: 15; 485 rows left.
+current processing: 16; 484 rows left.
+current processing: 17; 483 rows left.
+current processing: 18; 482 rows left.
+current processing: 19; 481 rows left.
+current processing: 20; 480 rows left.
+current processing: 21; 479 rows left.
+current processing: 22; 478 rows left.
+current processing: 23; 477 rows left.
+current processing: 24; 476 rows left.
+current processing: 25; 475 rows left.
+current processing: 26; 474 rows left.
+Traceback (most recent call last):
+  File "/home/host0/Desktop/machine_learning_prms_accuracy/tmp_test_prms/ml_moduel/td_decision_tree_regression_prediction_interval_boxcox.py", line 168, in <module>
+    tmp_predict = predictions.toPandas()['prediction'].tolist()[0]
+  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/pyspark.zip/pyspark/sql/dataframe.py", line 1576, in toPandas
+  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/pyspark.zip/pyspark/sql/dataframe.py", line 391, in collect
+  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/py4j-0.10.4-src.zip/py4j/java_gateway.py", line 1131, in __call__
+  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/py4j-0.10.4-src.zip/py4j/java_gateway.py", line 883, in send_command
+  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/py4j-0.10.4-src.zip/py4j/java_gateway.py", line 1028, in send_command
+  File "/usr/lib/python2.7/socket.py", line 451, in readline
+    data = self._sock.recv(self._rbufsize)
+  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/pyspark.zip/pyspark/context.py", line 236, in signal_handler
+KeyboardInterrupt

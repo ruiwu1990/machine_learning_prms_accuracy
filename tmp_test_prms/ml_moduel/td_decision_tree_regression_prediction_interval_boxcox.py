@@ -102,18 +102,16 @@ sc = SparkContext()
 sqlContext = SQLContext(sc)
 
 
-
-# Automatically identify categorical features, and index them.
-# We specify maxCategories so features with > 4 distinct values are treated as continuous.
-featureIndexer =\
-    VectorIndexer(inputCol="features", outputCol="indexedFeatures", maxCategories=4).fit(data)
-
-
 train_file = sys.argv[1]
 trainingData = sqlContext.read.format("libsvm").load(train_file)
 
 test_file = sys.argv[7]
 testData = sqlContext.read.format("libsvm").load(test_file)
+
+# Automatically identify categorical features, and index them.
+# We specify maxCategories so features with > 4 distinct values are treated as continuous.
+featureIndexer =\
+    VectorIndexer(inputCol="features", outputCol="indexedFeatures", maxCategories=4).fit(trainingData)
 
 tmp_min1 = find_min_label(trainingData.collect())
 tmp_min2 = find_min_label(testData.collect())
