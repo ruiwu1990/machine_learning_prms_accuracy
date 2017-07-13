@@ -82,9 +82,14 @@ def reverse_boxcox_transform(input_list, tmp_min):
 	'''
 	best_lambda = float(sys.argv[6])
 	result_list = []
+	base = min(input_list)
 	for i in input_list:
 		# transform here
 		tmp = i*best_lambda+1
+		# check if there are negative elements
+		# this will only happen for lower bound
+		if tmp < 0:
+			tmp = (i-base)*best_lambda+1
 		result_list.append((tmp**(1.0/best_lambda))+tmp_min)
 	return result_list
 
@@ -164,14 +169,24 @@ for count in range(test_len):
 	new_data = sc.parallelize([current_row]).toDF()
 	# get current prediction
 	predictions = model.transform(new_data)
-	# collect predictions into result lists
-	tmp_predict = predictions.toPandas()['prediction'].tolist()[0]
+	try:
+		# collect predictions into result lists
+		tmp_predict = predictions.toPandas()['prediction'].tolist()[0]
+	except Exception:
+		# TODO there are some records, our regression technique does not work
+		print "line "+str(count)+" in test file cannot be processed"
+		continue
 	predictions_list.append(tmp_predict)
 	ground_truth_list.append(predictions.toPandas()['label'].tolist()[0])
 	tmp = ta*ssd*surfix
 	PI_upper.append(smean+tmp)
 	PI_lower.append(smean-tmp)
-	time_stamp.append(str(int(current_row['features'][0]))+"--"+str(int(current_row['features'][1]))+"--"+str(int(current_row['features'][2])))
+	if int(float(current_row['features'][2])) == float(current_row['features'][2]):
+		# hour and min are not merged into day
+		time_stamp.append(str(int(current_row['features'][0]))+"--"+str(int(current_row['features'][1]))+"--"+str(int(current_row['features'][2])))
+	else:
+		# hour and min are merged into day
+		time_stamp.append(str(int(current_row['features'][0]))+"--"+str(int(current_row['features'][1]))+"--"+str(float(current_row['features'][2])))
 	new_train_data = [current_row] + new_train_data
 	# remove the oldest data
 	new_train_data = sorted(new_train_data, key = lambda x: (x['features'][0],x['features'][1],x['features'][2]))[1:]

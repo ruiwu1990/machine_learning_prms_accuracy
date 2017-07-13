@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 import os
-from util import get_root_mean_squared_error, get_pbias, get_coeficient_determination, get_nse
+from util import get_root_mean_squared_error, get_pbias, get_coeficient_determination, get_nse, collect_corresponding_obs_pred, convert_str_into_time
 
 app_path = os.path.dirname(os.path.abspath('__file__'))
 
@@ -65,11 +65,7 @@ def improved_predication(original_file, input_file, output_file):
 	df_input = pd.read_csv(input_file)
 	df_output = pd.DataFrame({})
 
-def convert_str_into_time(input_list):
-	result_list = []
-	for i in input_list:
-		result_list.append(datetime.strptime(i, '%Y--%m--%d'))
-	return result_list
+
 
 def vis_error_prediction_PI(input_file, fig_title):
 	'''
@@ -95,22 +91,6 @@ def vis_error_prediction_PI(input_file, fig_title):
 	plt.title(fig_title)
 	plt.show()
 
-def collect_corresponding_obs_pred(input_df, time_list):
-	'''
-	this function collects corresponding values
-	based on time info, and return obs and original pred
-	'''
-	obs_list = []
-	original_pred_list = []
-	for i in time_list:
-		time_info = i.split('--')
-		year = time_info[0]
-		month = time_info[1]
-		day = time_info[2]
-		aim_df = input_df.query('year=='+year+' & month=='+month+' & day=='+day)
-		obs_list.append(float(aim_df['runoff_obs']))
-		original_pred_list.append(float(aim_df['basin_cfs_pred']))
-	return obs_list, original_pred_list
 
 
 def vis_improved_prediction_PI(original_model_output, input_file, fig_title, output_file = 'improved_predict_vs_obs.csv'):
@@ -184,9 +164,11 @@ def vis_original_truth_pred(original_file, smooth_file ,obs_name='runoff_obs',pr
 	month = df['month'].tolist()
 	day = df['day'].tolist()
 	time = []
+	input_time_list = []
 	for i in range(len(year)):
-		time.append(datetime.strptime(str(year[i])+'-'+str(month[i])+'-'+str(day[i]), '%Y-%m-%d'))
-	
+		input_time_list.append(str(year[i])+'--'+str(month[i])+'--'+str(day[i]))
+
+	time = convert_str_into_time(input_time_list)	
 
 	fig, ax = plt.subplots()
 	ax.plot(time,obs, ':',linewidth=2, label='truth')
@@ -331,14 +313,14 @@ def vis_measurement_metrix_bar_graph(original_file, result_file):
 # vis_window_vs_rmse(win_list, origin_rmse, improved_rmse)
 
 
-# smooth_origin_input_cse('data/prms_input.csv', 'data/smoothed_prms_input.csv', 10)
-# vis_original_truth_pred('data/prms_input.csv', 'data/smoothed_prms_input.csv', fig_title='smooth original prediction threshold 10')
+smooth_origin_input_cse('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', 100000000)
+vis_original_truth_pred('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', fig_title='smooth original prediction threshold 10')
 
 # smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 10)
 
 # vis_original_truth_pred('prms_input.csv', 'smoothed_prms_input.csv')
-# vis_bound_file('data/tmp_cali.csv', 'sub_results/bound.csv','0.1 alpha, 0.5 window size GB tree logsinh_PI transform','05_logsinh_improved_predict_vs_obs.csv')
 
 
+#vis_measurement_metrix_bar_graph('data/prms_input.csv', '/home/host0/Desktop/05_06_threshold_20_sub_results/bound.csv')
 
-vis_measurement_metrix_bar_graph('data/prms_input.csv', '/home/host0/Desktop/05_06_threshold_20_sub_results/bound.csv')
+# vis_bound_file('data/tmp_cali.csv', 'sub_results/bound.csv','0.2 alpha, 0.5 window size decision tree boxcox_PI transform','05_logsinh_improved_predict_vs_obs.csv')

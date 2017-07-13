@@ -9,6 +9,7 @@ import json
 import os
 import shutil
 import numpy as np
+from datetime import datetime
 
 app_path = os.path.dirname(os.path.abspath('__file__'))
 spark_submit_location = '/home/host0/Desktop/hadoop/spark-2.1.0/bin/spark-submit'
@@ -185,16 +186,6 @@ def obtain_total_row_num(filename):
 	fp.close()
 	return result
 
-def get_root_mean_squared_error(list1,list2):
-	if len(list1) != len(list2):
-		raise Exception('two lists have different lengths')
-	list_len = len(list1)
-	sum_diff = 0
-	for count in range(list_len):
-		sum_diff = sum_diff + (list1[count]-list2[count])**2
-	avg_sum_diff = sum_diff/list_len
-	return math.sqrt(avg_sum_diff)
-
 
 def original_csv_rmse(filename, window_per=0.9):
 	'''
@@ -276,6 +267,44 @@ def split_csv_file_loop(input_file, loop_count, train_file_len, max_test_file_le
 	# print test_line_count
 	print 'Split file done....'
 
+def convert_str_into_time(input_list):
+	result_list = []
+	if int(float(input_list[0].split('--')[2])) == float(input_list[0].split('--')[2]):
+		for i in input_list:
+			result_list.append(datetime.strptime(i, '%Y--%m--%d'))
+	else:
+		for i in input_list:
+			# turn day into day and hour
+			tmp = i.split('--')
+			tmp = [float(m) for m in tmp]
+			# separate hour from day
+			tmp.append(round(float(str(tmp[2]-int(tmp[2]))[1:])*24))
+			tmp = [int(m) for m in tmp]
+			tmp = [str(m) for m in tmp]
+			tmp = '--'.join(tmp)
+			try:
+				result_list.append(datetime.strptime(tmp, '%Y--%m--%d--%H'))
+			except Exception:
+				print "Error with this day:"+tmp+";original time: "+i
+				tmp = tmp.split('--')
+				tmp = [int(m) for m in tmp]
+				tmp[2] = tmp[2] - 1
+				tmp[3] = 23
+				tmp = [str(m) for m in tmp]
+				tmp = '--'.join(tmp)
+				result_list.append(datetime.strptime(tmp, '%Y--%m--%d--%H'))
+	return result_list
+
+def nth_decimal(input_a, n):
+	'''
+	this function will not carry-over
+	e.g. 1.55, 1 => 1.5
+	'''
+	input_str = str(input_a)
+	result_list = input_str.split('.')
+	result_list[1] = result_list[1][:n]
+	return float(result_list[0]+'.'+result_list[1])
+
 def collect_corresponding_obs_pred(input_df, time_list):
 	'''
 	this function collects corresponding values
@@ -288,9 +317,19 @@ def collect_corresponding_obs_pred(input_df, time_list):
 		year = time_info[0]
 		month = time_info[1]
 		day = time_info[2]
-		aim_df = input_df.query('year=='+year+' & month=='+month+' & day=='+day)
-		obs_list.append(float(aim_df['runoff_obs']))
-		original_pred_list.append(float(aim_df['basin_cfs_pred']))
+		if int(float(day)) == float(day):
+			aim_df = input_df.query('year=='+year+' & month=='+month+' & day=='+day)
+		else:
+			# if day is not int then only convert day into 8 decimals
+			tmp_df = input_df.round({'day': 8})
+			aim_df = tmp_df.query('year=='+year+' & month=='+month+' & day=='+'{0:.8f}'.format(float(day)))
+			# aim_df = input_df.query('year=='+year+' & month=='+month+' & day=='+str(nth_decimal(day,6)))
+		try:
+			# get first search result
+			obs_list.append(float(aim_df.iloc[0]['runoff_obs']))
+			original_pred_list.append(float(aim_df.iloc[0]['basin_cfs_pred']))
+		except Exception:
+			print "errors with time: "+i
 	return obs_list, original_pred_list
 
 

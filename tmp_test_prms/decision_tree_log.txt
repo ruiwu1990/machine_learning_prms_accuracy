@@ -1,38 +1,45 @@
-current processing: 1; 499 rows left.
-current processing: 2; 498 rows left.
-current processing: 3; 497 rows left.
-current processing: 4; 496 rows left.
-current processing: 5; 495 rows left.
-current processing: 6; 494 rows left.
-current processing: 7; 493 rows left.
-current processing: 8; 492 rows left.
-current processing: 9; 491 rows left.
-current processing: 10; 490 rows left.
-current processing: 11; 489 rows left.
-current processing: 12; 488 rows left.
-current processing: 13; 487 rows left.
-current processing: 14; 486 rows left.
-current processing: 15; 485 rows left.
-current processing: 16; 484 rows left.
-current processing: 17; 483 rows left.
-current processing: 18; 482 rows left.
-current processing: 19; 481 rows left.
-current processing: 20; 480 rows left.
-current processing: 21; 479 rows left.
-current processing: 22; 478 rows left.
-current processing: 23; 477 rows left.
-current processing: 24; 476 rows left.
-current processing: 25; 475 rows left.
-current processing: 26; 474 rows left.
-Traceback (most recent call last):
-  File "/home/host0/Desktop/machine_learning_prms_accuracy/tmp_test_prms/ml_moduel/td_decision_tree_regression_prediction_interval_boxcox.py", line 168, in <module>
-    tmp_predict = predictions.toPandas()['prediction'].tolist()[0]
-  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/pyspark.zip/pyspark/sql/dataframe.py", line 1576, in toPandas
-  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/pyspark.zip/pyspark/sql/dataframe.py", line 391, in collect
-  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/py4j-0.10.4-src.zip/py4j/java_gateway.py", line 1131, in __call__
-  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/py4j-0.10.4-src.zip/py4j/java_gateway.py", line 883, in send_command
-  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/py4j-0.10.4-src.zip/py4j/java_gateway.py", line 1028, in send_command
-  File "/usr/lib/python2.7/socket.py", line 451, in readline
-    data = self._sock.recv(self._rbufsize)
-  File "/home/host0/Desktop/hadoop/spark-2.1.0/python/lib/pyspark.zip/pyspark/context.py", line 236, in signal_handler
-KeyboardInterrupt
+current processing: 1; 44 rows left.
+current processing: 2; 43 rows left.
+current processing: 3; 42 rows left.
+current processing: 4; 41 rows left.
+current processing: 5; 40 rows left.
+current processing: 6; 39 rows left.
+current processing: 7; 38 rows left.
+current processing: 8; 37 rows left.
+current processing: 9; 36 rows left.
+current processing: 10; 35 rows left.
+current processing: 11; 34 rows left.
+current processing: 12; 33 rows left.
+current processing: 13; 32 rows left.
+current processing: 14; 31 rows left.
+current processing: 15; 30 rows left.
+current processing: 16; 29 rows left.
+current processing: 17; 28 rows left.
+current processing: 18; 27 rows left.
+current processing: 19; 26 rows left.
+current processing: 20; 25 rows left.
+current processing: 21; 24 rows left.
+current processing: 22; 23 rows left.
+current processing: 23; 22 rows left.
+current processing: 24; 21 rows left.
+current processing: 25; 20 rows left.
+current processing: 26; 19 rows left.
+current processing: 27; 18 rows left.
+current processing: 28; 17 rows left.
+current processing: 29; 16 rows left.
+current processing: 30; 15 rows left.
+current processing: 31; 14 rows left.
+current processing: 32; 13 rows left.
+current processing: 33; 12 rows left.
+current processing: 34; 11 rows left.
+current processing: 35; 10 rows left.
+current processing: 36; 9 rows left.
+current processing: 37; 8 rows left.
+current processing: 38; 7 rows left.
+current processing: 39; 6 rows left.
+current processing: 40; 5 rows left.
+current processing: 41; 4 rows left.
+current processing: 42; 3 rows left.
+current processing: 43; 2 rows left.
+current processing: 44; 1 rows left.
+current processing: 45; 0 rows left.
