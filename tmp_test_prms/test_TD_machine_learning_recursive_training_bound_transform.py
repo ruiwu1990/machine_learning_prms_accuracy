@@ -150,7 +150,7 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 
 		elif transform_tech == 'boxcox':
 			for lambda_count in range(20):
-				tmp_lambda = 0.4*(lambda_count+1)+1
+				tmp_lambda = 0.2*(lambda_count+1)+7
 
 				# this command will work if source the spark-submit correctly
 				# no recursive for crossover validation
@@ -340,17 +340,18 @@ def preprocess_input_csv(input_result, input_feature, cali_file='data/tmp_cali.c
 # #/// exec_regression('smoothed_prms_input.csv', 'gb_tree',0.5, 0.9,app_path, 0.1005, 0.0705, True, True, 500)
 
 # with cali
-extract_feature_row('data/2.csv','data/tmp_2.csv')
-preprocess_input_csv('data/1.csv','data/tmp_2.csv')
-print 'original rmse is: '+str(original_csv_rmse('data/tmp_cali.csv',0.55))
-smooth_origin_input_cse('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', 100000000)
-real_crossover_exec_regression('data/smoothed_prms_input.csv','decision_tree',0.55, transform_tech = 'boxcox')
-# exec_regression('data/smoothed_prms_input.csv', 'decision_tree',0.55, 0.2,app_path, 0.0405, 0.0305, True, True, 50, 'boxcox', 7.0)
+#extract_feature_row('data/2.csv','data/tmp_2.csv')
+#preprocess_input_csv('data/1.csv','data/tmp_2.csv')
+#print 'original rmse is: '+str(original_csv_rmse('data/tmp_cali.csv',0.55))
+#smooth_origin_input_cse('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', 100000000)
+#real_crossover_exec_regression('data/smoothed_prms_input.csv','decision_tree',0.55, transform_tech = 'boxcox')
+#exec_regression('data/smoothed_prms_input.csv', 'decision_tree',0.55, 0.3,app_path, 0.0405, 0.0305, True, True, 50, 'boxcox', 11.0)
 # exec_regression_by_name('sub_results/prms_train0.csv', 'sub_results/prms_test0.csv', 'decision_tree', 0.2, 0.4,app_path, 0.0405, 0.0505, 'boxcox', 7.0)
 
 # # # without cali
-# extract_feature_row('data/2.csv','data/tmp_2.csv')
-# preprocess_input_csv('data/1.csv','data/tmp_2.csv')
-# print 'original rmse is: '+str(original_csv_rmse('data/tmp_uncali.csv',0.55))
-# smooth_origin_input_cse('data/tmp_uncali.csv', 'data/smoothed_prms_input.csv', 10)
-# real_crossover_exec_regression('data/smoothed_prms_input.csv','decision_tree',0.55, transform_tech = 'boxcox')
+#extract_feature_row('data/2.csv','data/tmp_2.csv')
+#preprocess_input_csv('data/1.csv','data/tmp_2.csv')
+#print 'original rmse is: '+str(original_csv_rmse('data/tmp_uncali.csv',0.55))
+#smooth_origin_input_cse('data/tmp_uncali.csv', 'data/smoothed_prms_input.csv', 1000000000)
+#real_crossover_exec_regression('data/smoothed_prms_input.csv','decision_tree',0.55, transform_tech = 'boxcox')
+exec_regression('data/smoothed_prms_input.csv', 'decision_tree',0.55, 0.4,app_path, 0.0405, 0.0305, True, True, 50, 'boxcox', 11.0)

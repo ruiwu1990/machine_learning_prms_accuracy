@@ -263,6 +263,8 @@ def vis_measurement_metrix_bar_graph(original_file, result_file):
 		original_cd = get_coeficient_determination(origin_pred,truth)
 		original_nse = get_nse(origin_pred,truth)
 
+		print "improved RMSE: "+str(improved_rmse)+"; improved pbias: "+str(improved_pbias)+"; improved cd: "+str(improved_cd)+"; improved nse: "+str(improved_nse)
+		print "original RMSE: "+str(original_rmse)+"; original pbias: "+str(original_pbias)+"; original cd: "+str(original_cd)+"; original nse: "+str(original_nse)
 		n_groups = 4
 
 		improved = (improved_rmse, improved_pbias, improved_cd, improved_nse)
@@ -313,14 +315,14 @@ def vis_measurement_metrix_bar_graph(original_file, result_file):
 # vis_window_vs_rmse(win_list, origin_rmse, improved_rmse)
 
 
-smooth_origin_input_cse('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', 100000000)
-vis_original_truth_pred('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', fig_title='smooth original prediction threshold 10')
+#smooth_origin_input_cse('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', 100000000)
+#vis_original_truth_pred('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', fig_title='smooth original prediction threshold 10')
 
 # smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 10)
 
 # vis_original_truth_pred('prms_input.csv', 'smoothed_prms_input.csv')
 
 
-#vis_measurement_metrix_bar_graph('data/prms_input.csv', '/home/host0/Desktop/05_06_threshold_20_sub_results/bound.csv')
+vis_measurement_metrix_bar_graph('data/prms_input.csv', '/home/host0/Desktop/05_09_threshold_20_sub_results/bound.csv')
 
-# vis_bound_file('data/tmp_cali.csv', 'sub_results/bound.csv','0.2 alpha, 0.5 window size decision tree boxcox_PI transform','05_logsinh_improved_predict_vs_obs.csv')
+# vis_bound_file('data/tmp_cali.csv', 'sub_results/bound.csv','0.3 alpha, 0.5 window size decision tree boxcox_PI transform','05_logsinh_improved_predict_vs_obs.csv')
