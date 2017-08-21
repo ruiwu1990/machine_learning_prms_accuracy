@@ -2,9 +2,11 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
+import matplotlib.mlab as mlab
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import statistics
 import os
 from util import get_root_mean_squared_error, get_pbias, get_coeficient_determination, get_nse, collect_corresponding_obs_pred, convert_str_into_time
 
@@ -240,6 +242,29 @@ def vis_bound_file(original_model_output, input_file, fig_title, output_file = '
 	plt.title(fig_title)
 	plt.show()
 
+def vis_error_his(input_file):
+	'''
+	this functino vis data error histogram
+	'''
+	df = pd.read_csv(input_file)
+	errors = (df['runoff_obs'] - df['basin_cfs_pred']).tolist()
+	# # error mean
+	# mu = reduce(lambda x, y: x + y, errors) / len(errors)
+	# # error variance
+	# sigma = statistics.stdev(errors)
+	n, bins, patches = plt.hist(errors, 100, normed=1, facecolor='green', edgecolor='black', linewidth=1.2)
+
+	# draw lines alone each bar
+	# y = mlab.normpdf( bins, mu, sigma)
+	# l = plt.plot(bins, y, 'r--', linewidth=1)
+	# plt.grid(True)
+
+	plt.xlabel('Errors')
+	plt.ylabel('Probability')
+	plt.title('Error Frequency Distribution')
+	plt.show()
+
+
 def vis_measurement_metrix_bar_graph(original_file, result_file):
 	'''
 	bar graph [improved_rmse,pbias,cd,nse,original_rmse,pbias,cd,nse]
@@ -323,6 +348,8 @@ def vis_measurement_metrix_bar_graph(original_file, result_file):
 # vis_original_truth_pred('prms_input.csv', 'smoothed_prms_input.csv')
 
 
-vis_measurement_metrix_bar_graph('data/prms_input.csv', '/home/host0/Desktop/05_09_threshold_20_sub_results/bound.csv')
+# vis_measurement_metrix_bar_graph('data/prms_input.csv', '/home/host0/Desktop/05_09_threshold_20_sub_results/bound.csv')
 
 # vis_bound_file('data/tmp_cali.csv', 'sub_results/bound.csv','0.3 alpha, 0.5 window size decision tree boxcox_PI transform','05_logsinh_improved_predict_vs_obs.csv')
+
+vis_error_his('data/prms_input.csv')
