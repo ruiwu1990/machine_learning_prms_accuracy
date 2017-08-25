@@ -295,6 +295,18 @@ def convert_str_into_time(input_list):
 				result_list.append(datetime.strptime(tmp, '%Y--%m--%d--%H'))
 	return result_list
 
+def convert_year_month_day_into_time(year_list,month_list,day_list):
+	'''
+	'''
+	result_list = []
+	for counter in range(len(year_list)):
+		tmp = str(year_list[counter])+'--'+str(month_list[counter])+'--'+str(day_list[counter])
+		result_list.append(datetime.strptime(tmp, '%Y--%m--%d'))
+
+	return result_list		
+
+
+
 def nth_decimal(input_a, n):
 	'''
 	this function will not carry-over

@@ -1,0 +1,6 @@
+MET_2010.csv
+line 252, 12 column : -47.6 modified to 10.2
+
+
+MET_2010.csv, GE_kW_2010.csv, MITS_kW_2010.csv
+"[10506] No good data for calculation" modified to "NaN"

@@ -8,7 +8,7 @@ import numpy as np
 from datetime import datetime
 import statistics
 import os
-from util import get_root_mean_squared_error, get_pbias, get_coeficient_determination, get_nse, collect_corresponding_obs_pred, convert_str_into_time
+from util import get_root_mean_squared_error, get_pbias, get_coeficient_determination, get_nse, collect_corresponding_obs_pred, convert_str_into_time, convert_year_month_day_into_time
 
 app_path = os.path.dirname(os.path.abspath('__file__'))
 
@@ -325,6 +325,56 @@ def vis_measurement_metrix_bar_graph(original_file, result_file):
 		plt.tight_layout()
 		plt.show()
 
+def vis_error_vs(inputfile,vs_name):
+	'''
+	this function compares error (y) with vs_name
+	'''
+	x_list = []
+	df = pd.read_csv(inputfile)
+	if vs_name == 'time':
+		year_list = df['year'].tolist()
+		month_list = df['month'].tolist()
+		day_list = df['day'].tolist()
+		x_list = convert_year_month_day_into_time(year_list,month_list,day_list)
+	else:
+		x_list = df[vs_name].tolist()
+
+	errors = (df['runoff_obs'] - df['basin_cfs_pred']).tolist()
+
+	# fig, ax = plt.subplots()
+	# ax.plot(x_list,errors, '-',linewidth=2)
+	plt.plot(x_list,errors, "o")
+	# legend = ax.legend(loc='upper right', shadow=True)
+
+	plt.xlabel(vs_name)
+	plt.ylabel('error')
+	plt.title('error vs '+vs_name)
+	plt.show()
+
+def vis_error_vs_time_vs_original(inputfile):
+	x_list = []
+	df = pd.read_csv(inputfile)
+	year_list = df['year'].tolist()
+	month_list = df['month'].tolist()
+	day_list = df['day'].tolist()
+	x_list = convert_year_month_day_into_time(year_list,month_list,day_list)
+
+	error = (df['runoff_obs'] - df['basin_cfs_pred']).tolist()
+	truth = df['runoff_obs'].tolist()
+
+	fig, ax = plt.subplots()
+	ax.plot(x_list,error, '-',linewidth=2, label='error')
+	ax.plot(x_list,truth, '--',linewidth=2, label='truth')
+	# legend = ax.legend(bbox_to_anchor=(0., 0.0, 1.0, .050), loc=3, ncol=1, mode="expand", borderaxespad=0.)
+	legend = ax.legend(loc='upper right', shadow=True)
+
+	plt.xlabel('date')
+	plt.ylabel('value')
+	plt.title('Error vs Truth')
+	plt.show()
+
+
+
 # vis_error_prediction_PI('bound.csv','predicted_error_PI')
 # vis_improved_prediction_PI('prms_input.csv', 'bound.csv','predicted_error_PI','improved_predict_vs_obs.csv')
 # vis_improved_prediction_PI('prms_input.csv', '/home/host0/Downloads/03_08_boxcox_bound.csv','0.3 alpha 0.8 window size boxcox_PI','03_08_improved_predict_vs_obs.csv')
@@ -352,4 +402,8 @@ def vis_measurement_metrix_bar_graph(original_file, result_file):
 
 # vis_bound_file('data/tmp_cali.csv', 'sub_results/bound.csv','0.3 alpha, 0.5 window size decision tree boxcox_PI transform','05_logsinh_improved_predict_vs_obs.csv')
 
-vis_error_his('data/prms_input.csv')
+# vis_error_his('data/prms_input.csv')
+# vis_error_vs('data/prms_input.csv','time')
+# vis_error_vs('data/prms_input.csv','tmin')
+
+vis_error_vs_time_vs_original('data/prms_input.csv')
