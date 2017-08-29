@@ -366,11 +366,21 @@ def vis_error_vs_time_vs_original(inputfile):
 	ax.plot(x_list,error, '-',linewidth=2, label='error')
 	ax.plot(x_list,truth, '--',linewidth=2, label='truth')
 	# legend = ax.legend(bbox_to_anchor=(0., 0.0, 1.0, .050), loc=3, ncol=1, mode="expand", borderaxespad=0.)
-	legend = ax.legend(loc='upper right', shadow=True)
+	legend = ax.legend(loc='upper right', shadow=True, prop={'size': 20})
+	# plt.legend(loc=2, prop={'size': 6})
 
-	plt.xlabel('date')
-	plt.ylabel('value')
-	plt.title('Error vs Truth')
+	plt.xlabel('date', fontsize=25)
+	plt.ylabel('value', fontsize=25)
+	plt.title('Error vs Truth', fontsize=25)
+
+	# change axis font size
+	for tick in ax.xaxis.get_major_ticks():
+		tick.label.set_fontsize(20)
+	
+	for tick in ax.yaxis.get_major_ticks():
+		tick.label.set_fontsize(20)
+	# set up margin percentage
+	ax.margins(0.0)
 	plt.show()
 
 
