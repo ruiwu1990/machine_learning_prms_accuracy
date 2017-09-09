@@ -11,6 +11,11 @@ import shutil
 import numpy as np
 from datetime import datetime
 
+import matplotlib.pyplot as plt
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
+import matplotlib.mlab as mlab
+
 app_path = os.path.dirname(os.path.abspath('__file__'))
 spark_submit_location = '/home/host0/Desktop/hadoop/spark-2.1.0/bin/spark-submit'
 spark_config1 = '--conf spark.executor.heartbeatInterval=10000000'
@@ -653,3 +658,59 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 		print 'final rmse is: '+str(merge_bound_file(filename, app_path+'/'+tmp_dirt,loop_time))
 
 	return True
+
+def calculate_cor(filename, err_col='error', init_window_per=0.5):
+	'''
+	moving window based on cor values
+	err_col: should be the error col name
+	init_window_per: inital window size percentage
+	'''
+	window_size_list = []
+	new_data_num_list = []
+	df = pd.read_csv(filename)
+	total_len = df.shape[0]
+	# start is the lower bound of training dataset
+	start = 0
+	window_size = int(total_len*init_window_per)
+	left = total_len - window_size
+	cur_df = df[:window_size]
+	# replace nan with 0 and convert all negative with abs value
+	cur_list = [0 if math.isnan(x) else abs(x) for x in cur_df.corr()[err_col]]
+	# abs value sum
+	cur_result = sum([i for i in cur_list])
+	# new_data_index is upper bound of training dataset
+	new_data_index = start + window_size - 1
+	for i in range(left):
+		new_data_index = new_data_index + 1
+		flag_inloop = False
+		while tmp_result <= cur_result and start < new_data_index:
+			flag_inloop = True
+			start = start + 1
+			cur_df = df[start:new_data_index]
+			# replace nan with 0 and convert all negative with abs value
+			cur_list = [0 if math.isnan(x) else abs(x) for x in cur_df.corr()[err_col]]
+			# abs value sum
+			cur_result = sum([m for m in cur_list])
+			if tmp_result <= cur_result:
+				tmp_result = cur_result
+			print "current lower bound is: "+str(start)+"; current upper bound is: "+str(new_data_index)+"; total len is: "+str(new_data_index-start)
+		#
+		if flag_inloop: 
+			start = start - 1
+		window_size = new_data_index-start
+		print "current lower bound is: "+str(start)+"; current upper bound is: "+str(new_data_index)+"; total len is: "+str(window_size)
+		# draw graph
+		window_size_list.append(window_size)
+		new_data_num_list.append(i)
+
+	print window_size_list
+	fig, ax = plt.subplots()
+	ax.plot(new_data_num_list,window_size_list, '-',linewidth=2, label='new_data_vs_window_size')
+
+	plt.xlabel('new_data_id')
+	plt.ylabel('window_size')
+	plt.title('new_data_vs_window_size')
+	plt.show()
+
+
+

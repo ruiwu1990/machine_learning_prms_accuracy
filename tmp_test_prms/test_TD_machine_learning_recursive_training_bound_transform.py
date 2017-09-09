@@ -25,7 +25,7 @@ spark_config1 = '--conf spark.executor.heartbeatInterval=10000000'
 spark_config2 = '--conf spark.network.timeout=10000000'
 
 
-def real_crossover_exec_regression(filename, regression_technique, window_per=0.9, training_window_per = 0.9, transform_tech = 'logsinh'):
+def real_crossover_exec_regression(filename, regression_technique, window_per=0.5, training_window_per = 0.9, transform_tech = 'logsinh'):
 	'''
 	this function run decision tree regression
 	, output the results in a log file, and return the 

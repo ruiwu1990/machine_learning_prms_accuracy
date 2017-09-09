@@ -252,16 +252,29 @@ def vis_error_his(input_file):
 	# mu = reduce(lambda x, y: x + y, errors) / len(errors)
 	# # error variance
 	# sigma = statistics.stdev(errors)
-	n, bins, patches = plt.hist(errors, 100, normed=1, facecolor='green', edgecolor='black', linewidth=1.2)
+	fig, ax = plt.subplots()
+	n, bins, patches = ax.hist(errors, 100, normed=1, facecolor='green', edgecolor='black', linewidth=1.2)
 
 	# draw lines alone each bar
 	# y = mlab.normpdf( bins, mu, sigma)
 	# l = plt.plot(bins, y, 'r--', linewidth=1)
 	# plt.grid(True)
 
-	plt.xlabel('Errors')
-	plt.ylabel('Probability')
-	plt.title('Error Frequency Distribution')
+	plt.xlabel('Errors', fontsize=25)
+	plt.ylabel('Probability', fontsize=25)
+	plt.title('Error Frequency Distribution', fontsize=25)
+	plt.autoscale(enable=True, axis='x', tight=True)
+
+	# limits x axis scope, to have tight graph
+	plt.xlim([-20,20])
+
+	# change axis font size
+	for tick in ax.xaxis.get_major_ticks():
+		tick.label.set_fontsize(20)
+	
+	for tick in ax.yaxis.get_major_ticks():
+		tick.label.set_fontsize(20)
+
 	plt.show()
 
 
@@ -412,8 +425,8 @@ def vis_error_vs_time_vs_original(inputfile):
 
 # vis_bound_file('data/tmp_cali.csv', 'sub_results/bound.csv','0.3 alpha, 0.5 window size decision tree boxcox_PI transform','05_logsinh_improved_predict_vs_obs.csv')
 
-# vis_error_his('data/prms_input.csv')
+vis_error_his('data/prms_input.csv')
 # vis_error_vs('data/prms_input.csv','time')
 # vis_error_vs('data/prms_input.csv','tmin')
 
-vis_error_vs_time_vs_original('data/prms_input.csv')
+# vis_error_vs_time_vs_original('data/prms_input.csv')
