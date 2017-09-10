@@ -168,7 +168,14 @@ for count in range(test_len):
 	# get current prediction
 	predictions = model.transform(new_data)
 	# collect predictions into result lists
-	tmp_predict = predictions.toPandas()['prediction'].tolist()[0]
+	# tmp_predict = predictions.toPandas()['prediction'].tolist()[0]
+	try:
+		# collect predictions into result lists
+		tmp_predict = predictions.toPandas()['prediction'].tolist()[0]
+	except Exception:
+		# TODO there are some records, our regression technique does not work
+		print "line "+str(count)+" in test file cannot be processed"
+		continue
 	predictions_list.append(tmp_predict)
 	ground_truth_list.append(predictions.toPandas()['label'].tolist()[0])
 	tmp = ta*ssd*surfix
