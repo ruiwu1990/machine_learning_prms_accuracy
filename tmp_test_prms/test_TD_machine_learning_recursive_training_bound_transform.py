@@ -327,12 +327,16 @@ def preprocess_input_csv(input_result, input_feature, cali_file='data/tmp_cali.c
 
 # create smooth version input file
 # smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 30)
-#real_crossover_exec_regression('smoothed_prms_input.csv','gb_tree',0.5)
-#exec_regression('smoothed_prms_input.csv', 'gb_tree',0.5, 0.6,app_path, 0.0305, 0.0105, True, True, 500)
+# real_crossover_exec_regression('smoothed_prms_input.csv','gb_tree',0.5)
+# exec_regression('smoothed_prms_input.csv', 'gb_tree',0.5, 0.6,app_path, 0.0305, 0.0105, True, True, 500)
 
 # smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 10)
 # exec_regression('smoothed_prms_input.csv', 'gb_tree',0.5, 0.9,app_path, 0.1005, 0.0705, True, True, 500)
 
+train_file = 'data/window_train.csv'
+test_file = 'data/window_test.csv'
+filename = 'data/train_input.csv'
+exec_regression_by_name(filename, train_file, test_file, 'gb_tree', 0.5, 0.9,app_path, 0.1005, 0.0705, True, True, 100)
 
 
 # smooth_origin_input_cse('prms_input_without_calibrate.csv', 'smoothed_prms_input.csv', 10)
@@ -354,4 +358,4 @@ def preprocess_input_csv(input_result, input_feature, cali_file='data/tmp_cali.c
 #print 'original rmse is: '+str(original_csv_rmse('data/tmp_uncali.csv',0.55))
 #smooth_origin_input_cse('data/tmp_uncali.csv', 'data/smoothed_prms_input.csv', 1000000000)
 #real_crossover_exec_regression('data/smoothed_prms_input.csv','decision_tree',0.55, transform_tech = 'boxcox')
-exec_regression('data/smoothed_prms_input.csv', 'decision_tree',0.55, 0.4,app_path, 0.0405, 0.0305, True, True, 50, 'boxcox', 11.0)
+# exec_regression('data/smoothed_prms_input.csv', 'decision_tree',0.55, 0.4,app_path, 0.0405, 0.0305, True, True, 50, 'boxcox', 11.0)

@@ -402,102 +402,6 @@ def merge_bound_file(original_file, file_path,loop_time):
 	return get_root_mean_squared_error(df_delta['prediction'],truth)
 	# return get_root_mean_squared_error(df_delta['prediction'],df_delta['ground_truth'].tolist())
 
-def exec_regression_by_name(train_file, test_file, regression_technique, window_per, best_alpha,app_path, best_a, best_b, recursive = True, transformation = True, max_row_num=500, transform_tech = 'logsinh', best_lambda = 1):
-	'''
-	!!!!!!!!!!!!!!!file should be ordered based on time, from oldest to latest
-	this function run decision tree regression
-	, output the results in a log file, and return the 
-	predicted delta error col
-	max_row_num means each spark program max handle row num
-	'''
-	if regression_technique =='rf':
-		log_path = app_path + '/rf_log.txt'
-		err_log_path = app_path + '/rf_err_log.txt'
-		exec_file_loc = app_path + '/ml_moduel/random_forest_regression.py'
-		result_file = app_path + '/rf_result.txt'
-
-	elif regression_technique =='decision_tree':
-		log_path = app_path + '/decision_tree_log.txt'
-		err_log_path = app_path + '/decision_tree_err_log.txt'
-		result_file = app_path + '/decision_tree_result.txt'
-
-		if transform_tech == 'logsinh':
-			if recursive == True and transformation == True:
-				exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
-			elif recursive == False and transformation == True:
-				exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh_final_test.py'
-			elif recursive == True and transformation == False:
-				exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_no_transform_interval_log_sinh.py'
-			elif recursive == False and transformation == False:
-				exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
-		elif transform_tech == 'boxcox':
-			if recursive == True and transformation == True:
-				exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_boxcox.py'
-		else:
-			print 'Sorry, current system does not support the input transformation technique'
-		
-
-	elif regression_technique =='glr':
-		log_path = app_path + '/glr_log.txt'
-		err_log_path = app_path + '/glr_err_log.txt'
-		exec_file_loc = app_path + '/ml_moduel/generalized_linear_regression.py'
-		result_file = app_path + '/glr_result.txt'
-
-	elif regression_technique =='gb_tree':
-		log_path = app_path + '/gbt_log.txt'
-		err_log_path = app_path + '/gbt_err_log.txt'
-		result_file = app_path + '/gbt_result.txt'
-
-		if transform_tech == 'logsinh':
-			if recursive == True and transformation == True:
-				exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_interval_log_sinh.py'
-			elif recursive == False and transformation == True:
-				exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_transform_no_recursive_logsinh_final_test.py'
-			elif recursive == True and transformation == False:
-				exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_no_transform_interval_log_sinh.py'
-			elif recursive == False and transformation == False:
-				exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
-		else:
-			print 'Sorry, current system does not support the input transformation technique'
-		
-	else:
-		print 'Sorry, current system does not support the input regression technique'
-	
-	if os.path.isfile(result_file):
-		# if file exist
-		os.remove(result_file)
-
-
-	# should not count header
-	test_file_len = obtain_total_row_num(test_file) - 1
-	delta_error_csv_train = app_path + '/temp_delta_error_train.csv'
-	delta_error_filename_train = app_path + '/delta_error_train.libsvm'
-	# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
-	delta_error_file(train_file,delta_error_csv_train,best_alpha)
-	convert_csv_into_libsvm(delta_error_csv_train,delta_error_filename_train)
-
-	# test file
-	delta_error_csv_test = app_path + '/temp_delta_error_test.csv'
-	delta_error_filename_test = app_path + '/delta_error_test.libsvm'
-	# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
-	delta_error_file(test_file,delta_error_csv_test,best_alpha)
-	convert_csv_into_libsvm(delta_error_csv_test,delta_error_filename_test)
-	if recursive == True and transform_tech == 'logsinh':
-		command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path, str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
-	elif recursive == True and transform_tech == 'boxcox':
-		command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path, str(best_lambda), delta_error_filename_test, spark_config1, spark_config2]
-	else:
-		command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
-	with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
-		process = subprocess.Popen(
-			command, stdout=process_out, stderr=err_out, cwd=app_path)
-
-	# this waits the process finishes
-	process.wait()
-	cur_avg_rmse = get_avg(result_file)
-	print "final rmse is: "+str(cur_avg_rmse)
-	
-	return True
 
 
 def exec_regression(filename, regression_technique, window_per, best_alpha,app_path, best_a, best_b, recursive = True, transformation = True, max_row_num=500, transform_tech = 'logsinh', best_lambda = 1):
@@ -659,6 +563,166 @@ def exec_regression(filename, regression_technique, window_per, best_alpha,app_p
 
 	return True
 
+def exec_regression_by_name(filename, train_file, test_file, regression_technique, window_per, best_alpha,app_path, best_a, best_b, recursive = True, transformation = True, max_row_num=500, transform_tech = 'logsinh', best_lambda = 1):
+	'''
+	!!!!!!!!!!!!!!!file should be ordered based on time, from oldest to latest
+	this function run decision tree regression
+	, output the results in a log file, and return the 
+	predicted delta error col
+	max_row_num means each spark program max handle row num
+	window_per no use for this function.
+	'''
+	if regression_technique =='rf':
+		log_path = app_path + '/rf_log.txt'
+		err_log_path = app_path + '/rf_err_log.txt'
+		exec_file_loc = app_path + '/ml_moduel/random_forest_regression.py'
+		result_file = app_path + '/rf_result.txt'
+
+	elif regression_technique =='decision_tree':
+		log_path = app_path + '/decision_tree_log.txt'
+		err_log_path = app_path + '/decision_tree_err_log.txt'
+		result_file = app_path + '/decision_tree_result.txt'
+
+		if transform_tech == 'logsinh':
+			if recursive == True and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_log_sinh.py'
+			elif recursive == False and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_transform_no_recursive_logsinh_final_test.py'
+			elif recursive == True and transformation == False:
+				exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_no_transform_interval_log_sinh.py'
+			elif recursive == False and transformation == False:
+				exec_file_loc = app_path + '/ml_moduel/decision_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
+		elif transform_tech == 'boxcox':
+			if recursive == True and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/td_decision_tree_regression_prediction_interval_boxcox.py'
+		else:
+			print 'Sorry, current system does not support the input transformation technique'
+		
+
+	elif regression_technique =='glr':
+		log_path = app_path + '/glr_log.txt'
+		err_log_path = app_path + '/glr_err_log.txt'
+		exec_file_loc = app_path + '/ml_moduel/generalized_linear_regression.py'
+		result_file = app_path + '/glr_result.txt'
+
+	elif regression_technique =='gb_tree':
+		log_path = app_path + '/gbt_log.txt'
+		err_log_path = app_path + '/gbt_err_log.txt'
+		result_file = app_path + '/gbt_result.txt'
+
+		if transform_tech == 'logsinh':
+			if recursive == True and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_interval_log_sinh.py'
+			elif recursive == False and transformation == True:
+				exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_transform_no_recursive_logsinh_final_test.py'
+			elif recursive == True and transformation == False:
+				exec_file_loc = app_path + '/ml_moduel/td_gb_tree_regression_prediction_no_transform_interval_log_sinh.py'
+			elif recursive == False and transformation == False:
+				exec_file_loc = app_path + '/ml_moduel/gb_tree_regression_no_transform_no_recursive_logsinh_final_test.py'
+		else:
+			print 'Sorry, current system does not support the input transformation technique'
+		
+	else:
+		print 'Sorry, current system does not support the input regression technique'
+	
+	if os.path.isfile(result_file):
+		# if file exist
+		os.remove(result_file)
+
+	# train_file='prms_input1.csv'
+	# test_file='prms_input2.csv'
+	# split_csv_file(filename, window_per, train_file, test_file)
+
+	# should not count header
+	test_file_len = obtain_total_row_num(test_file) - 1
+	if test_file_len < max_row_num:
+		# training file
+		delta_error_csv_train = app_path + '/temp_delta_error_train.csv'
+		delta_error_filename_train = app_path + '/delta_error_train.libsvm'
+		# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
+		delta_error_file(train_file,delta_error_csv_train,best_alpha)
+		convert_csv_into_libsvm(delta_error_csv_train,delta_error_filename_train)
+
+		# test file
+		delta_error_csv_test = app_path + '/temp_delta_error_test.csv'
+		delta_error_filename_test = app_path + '/delta_error_test.libsvm'
+		# observed_name, predicted_name = delta_error_file(filename,delta_error_filename)
+		delta_error_file(test_file,delta_error_csv_test,best_alpha)
+		convert_csv_into_libsvm(delta_error_csv_test,delta_error_filename_test)
+		if recursive == True and transform_tech == 'logsinh':
+			command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path, str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
+		elif recursive == True and transform_tech == 'boxcox':
+			command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path, str(best_lambda), delta_error_filename_test, spark_config1, spark_config2]
+		else:
+			command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
+		with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
+			process = subprocess.Popen(
+				command, stdout=process_out, stderr=err_out, cwd=app_path)
+
+		# this waits the process finishes
+		process.wait()
+		cur_avg_rmse = get_avg(result_file)
+		print "final rmse is: "+str(cur_avg_rmse)
+	else:
+		tmp_dirt = 'sub_results/'
+		loop_time = int(math.ceil(float(test_file_len)/max_row_num))
+		# if folder does not exist create folder, if not delete
+		if not os.path.exists(tmp_dirt):
+			os.makedirs(tmp_dirt)
+		else:
+			shutil.rmtree(tmp_dirt)
+			os.makedirs(tmp_dirt)
+
+		train_file_len = obtain_total_row_num(train_file) - 1
+
+		bound_loc = app_path+'/'+tmp_dirt+'bound.csv'
+		# if os.path.isfile(bound_loc):
+		# 	# if file exist
+		# 	os.remove(bound_loc)
+
+		for i in range(loop_time):
+		# for i in range(1):
+			tmp_test_file = tmp_dirt+'prms_test'+str(i)+'.csv'
+			tmp_train_file= tmp_dirt+'prms_train'+str(i)+'.csv'
+			# split files into train and test
+			split_csv_file_loop(filename, i, train_file_len, max_row_num, tmp_train_file, tmp_test_file)
+			# print 'current max_row_num: '+str(max_row_num)+'; current loop num: '+str(loop_time)
+			# break
+			delta_error_csv_train = app_path + '/temp_delta_error_train.csv'
+			delta_error_filename_train = app_path + '/delta_error_train.libsvm'
+			delta_error_file(tmp_train_file,delta_error_csv_train,best_alpha)
+			convert_csv_into_libsvm(delta_error_csv_train,delta_error_filename_train)
+
+			# test file
+			delta_error_csv_test = app_path + '/temp_delta_error_test.csv'
+			delta_error_filename_test = app_path + '/delta_error_test.libsvm'
+			delta_error_file(tmp_test_file,delta_error_csv_test,best_alpha)
+			convert_csv_into_libsvm(delta_error_csv_test,delta_error_filename_test)
+
+			if recursive == True and transform_tech == 'logsinh':
+				command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path+'/'+tmp_dirt.replace('/',''), str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
+				# sys.argv = ['ml_moduel/gb_tree_regression_no_transform_no_recursive_logsinh_final_test.py','delta_error_train.libsvm','gbt_result.txt','0.5','0.1','/home/host0/Desktop/machine_learning_prms_accuracy/tmp_test_prms','0.0405','0.0305','delta_error_test.libsvm']
+			elif recursive == True and transform_tech == 'boxcox':
+				command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), app_path+'/'+tmp_dirt.replace('/',''), str(best_lambda), delta_error_filename_test, spark_config1, spark_config2]
+			else:
+				command = [spark_submit_location, exec_file_loc,delta_error_filename_train,result_file, str(window_per), str(best_alpha), str(best_a), str(best_b), delta_error_filename_test, spark_config1, spark_config2]
+			with open(log_path, 'wb') as process_out, open(log_path, 'rb', 1) as reader, open(err_log_path, 'wb') as err_out:
+				process = subprocess.Popen(
+					command, stdout=process_out, stderr=err_out, cwd=app_path)
+
+			# this waits the process finishes
+			process.wait()
+			print str(i)+'th part of the file is processing'
+			print str(loop_time-i-1)+'left for processed'
+
+			if os.path.isfile(bound_loc):
+				# if file exist
+				shutil.copyfile(bound_loc,app_path+'/'+tmp_dirt+'bound'+str(i)+'.csv')
+
+		print 'final rmse is: '+str(merge_bound_file(filename, app_path+'/'+tmp_dirt,loop_time))
+
+	return True
+
 def calculate_cor(filename, err_col='error', init_window_per=0.5):
 	'''
 	moving window based on cor values
@@ -713,4 +777,105 @@ def calculate_cor(filename, err_col='error', init_window_per=0.5):
 	plt.show()
 
 
+def calculate_window_size(filename, err_col='error', init_window=30, training_per=0.5, peak_buffer=60):
+	'''
+	moving window based on cor values
+	err_col: should be the error col name
+	init_window: inital window size
+	training_per: trainig data percentage
+	peak_buffer: if correlation value decrease, keep search for next peak_buffer point
+	'''
+	# use training dataset to find best window size
+	df = pd.read_csv(filename)
+	total_len = df.shape[0]
+	# start is the lower bound of training dataset
+	# start = 0
+	window_size = init_window
+	cur_df = df[:window_size]
+	# replace nan with 0 and convert all negative with abs value
+	cur_list = [0 if math.isnan(x) else abs(x) for x in cur_df.corr()[err_col]]
+	# abs value sum
+	cur_result = sum([i for i in cur_list])
+	# new_data_index is upper bound of training dataset
+	# new_data_index = start + window_size - 1
+	new_data_index = window_size - 1
+	tmp_max_result = 0
+	tmp_new_data_index = 0
+
+	while new_data_index < total_len*training_per:
+		flag_out = True
+		new_data_index = new_data_index + 1
+		cur_df = df[:new_data_index+1]
+		# replace nan with 0 and convert all negative with abs value
+		cur_list = [0 if math.isnan(x) else abs(x) for x in cur_df.corr()[err_col]]
+		# abs value sum
+		cur_result = sum([m for m in cur_list])
+		if tmp_max_result <= cur_result:
+			tmp_max_result = cur_result
+			flag_out = False
+			# print "new_data_index: "+str(new_data_index)
+		else:
+			for ii in range(peak_buffer):
+				tmp_new_data_index = new_data_index + ii
+				cur_df = df[:tmp_new_data_index]
+				# replace nan with 0 and convert all negative with abs value
+				cur_list = [0 if math.isnan(x) else abs(x) for x in cur_df.corr()[err_col]]
+				# abs value sum
+				# print "inner: "+str(ii)
+				cur_result = sum([m for m in cur_list])
+				if tmp_max_result <= cur_result:
+					tmp_max_result = cur_result
+					new_data_index = tmp_new_data_index
+					flag_out = False
+		if flag_out:
+			break
+
+	window_size = new_data_index + 1
+	print "total len is: "+str(window_size)+" for init window size: "+str(init_window)
+	return window_size
+
+def time_vs_window_size():
+	'''
+	this function draws initial window size vs final window size
+	'''
+	filename = 'delta_prms.csv'
+	err_col='error'
+	# one month
+	init_window=30
+	training_per = 0.5
+	peak_buffer = 30
+	window_size_list = []
+	month_list = []
+	window_size_list.append(calculate_window_size(filename, err_col, init_window, training_per, peak_buffer))
+	df = pd.read_csv(filename)
+	total_len = int(df.shape[0] * training_per)
+	i = 1
+	month_list.append(i)
+	while True:
+		i = i + 1
+		if init_window < total_len:
+			# init_window = init_window * i
+			init_window = init_window + 30
+			month_list.append(i)
+			window_size_list.append(calculate_window_size(filename, err_col, init_window, training_per, peak_buffer))
+		else:
+			break
+
+	time_list = []
+	start_year = 2002
+	# start_month is one less than real month
+	start_month = 9
+	for i in month_list:
+		tmp = str(start_year)+'--'+str(start_month+1)
+		time_list.append(datetime.strptime(tmp, '%Y--%m'))
+		start_year = start_year + (start_month+1)/12
+		start_month = (start_month + 1)%12
+		print str(start_year)+"--"+str(start_month+1)
+	fig, ax = plt.subplots()
+	ax.plot(time_list,window_size_list, '-',linewidth=2, label='new_data_vs_window_size')
+
+	plt.xlabel('start_window_size')
+	plt.ylabel('window_size')
+	plt.title('time_vs_window_size')
+	plt.show()
 
