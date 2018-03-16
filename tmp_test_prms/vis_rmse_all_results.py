@@ -173,16 +173,22 @@ def vis_original_truth_pred(original_file, smooth_file ,obs_name='runoff_obs',pr
 	time = convert_str_into_time(input_time_list)	
 
 	fig, ax = plt.subplots()
-	ax.plot(time,obs, ':',linewidth=2, label='truth')
-	ax.plot(time,pred, '-',linewidth=2, label='smooth_pred')
-	ax.plot(time,origin_pred, '--',linewidth=2, label='original_pred')
+	ax.plot(time,obs, '-',linewidth=5, label='truth')
+	ax.plot(time,pred, '-.',linewidth=5, label='smooth_pred')
+	ax.plot(time,origin_pred, ':',linewidth=5, label='original_pred')
 
-	legend = ax.legend(loc='upper right', shadow=True)
+	legend = ax.legend(loc='upper right', shadow=True, prop={'size': 25})
 	# legend = ax.legend(bbox_to_anchor=(0., 0.0, 1.0, .050), loc=3, ncol=1, mode="expand", borderaxespad=0.)
+		# change axis font size
+	for tick in ax.xaxis.get_major_ticks():
+		tick.label.set_fontsize(25)
+	
+	for tick in ax.yaxis.get_major_ticks():
+		tick.label.set_fontsize(25)
 
-	plt.xlabel('time')
-	plt.ylabel('value')
-	plt.title(fig_title)
+	plt.xlabel('time',fontsize=30)
+	plt.ylabel('value',fontsize=30)
+	# plt.title(fig_title)
 	plt.show()
 
 def smooth_origin_input_cse(input_file, output_file, threshold):
@@ -204,7 +210,7 @@ def smooth_origin_input_cse(input_file, output_file, threshold):
 
 
 
-def vis_bound_file(original_model_output, input_file, fig_title, output_file = 'improved_predict_vs_obs.csv'):
+def vis_bound_file(original_model_output, input_file, fig_title='', output_file = 'improved_predict_vs_obs.csv'):
 	'''
 	if bound file has everything then use this one
 	'''
@@ -228,17 +234,32 @@ def vis_bound_file(original_model_output, input_file, fig_title, output_file = '
 		fp.write(str(prediction[i])+','+str(truth[i])+'\n')
 	fp.close()
 
+	# tmp
+	# upper = [m - 11 for m in upper]
+
 	fig, ax = plt.subplots()
-	ax.plot(x_id,lower, '-',linewidth=2, label='lower_bound')
-	ax.plot(x_id,upper, '--',linewidth=2, label='upper_bound')
-	ax.plot(x_id,prediction, ':',linewidth=2, label='improved_prediction')
-	ax.plot(x_id,truth, 'r--',linewidth=2, label='ground_truth')
-	ax.plot(x_id,origin_pred, '-',linewidth=2, label='original_predication')
-	legend = ax.legend(loc='upper right', shadow=True)
+
+	# ax.plot(x_id,prediction, 's',linewidth=5, color='green', label='improved_prediction')
+	# ax.plot(x_id,truth, '-',linewidth=5, color='black', label='ground_truth')
+	# ax.plot(x_id,origin_pred, '>',linewidth=5, color='red',label='original_prediction')
+	ax.plot(x_id,prediction, ':',linewidth=5, color='green', label='improved_prediction')
+	ax.plot(x_id,truth, '-',linewidth=5, color='black', label='ground_truth')
+	ax.plot(x_id,origin_pred, '-.',linewidth=5, color='red',label='original_prediction')
+	# upper and lower bounds region
+	ax.fill_between(x_id, lower, upper, facecolor='lightgrey', alpha=0.5,
+                label='improved_prediction_range')
+	# 
+	legend = ax.legend(loc='upper right', shadow=True, prop={'size': 25})
+	# change axis font size
+	for tick in ax.xaxis.get_major_ticks():
+		tick.label.set_fontsize(25)
+	
+	for tick in ax.yaxis.get_major_ticks():
+		tick.label.set_fontsize(25)
 	# legend = ax.legend(bbox_to_anchor=(0., 0.0, 1.0, .050), loc=3, ncol=1, mode="expand", borderaxespad=0.)
 
-	plt.xlabel('time')
-	plt.ylabel('value')
+	plt.xlabel('time',fontsize=30)
+	plt.ylabel('value',fontsize=30)
 	plt.title(fig_title)
 	plt.show()
 
@@ -416,16 +437,19 @@ def vis_error_vs_time_vs_original(inputfile):
 #smooth_origin_input_cse('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', 100000000)
 #vis_original_truth_pred('data/tmp_cali.csv', 'data/smoothed_prms_input.csv', fig_title='smooth original prediction threshold 10')
 
-# smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 10)
+smooth_origin_input_cse('data/prms_input.csv', 'smoothed_prms_input.csv', 10)
 
-# vis_original_truth_pred('prms_input.csv', 'smoothed_prms_input.csv')
+vis_original_truth_pred('data/prms_input.csv', 'smoothed_prms_input.csv')
 
 
 # vis_measurement_metrix_bar_graph('data/prms_input.csv', '/home/host0/Desktop/05_09_threshold_20_sub_results/bound.csv')
 
-# vis_bound_file('data/tmp_cali.csv', 'sub_results/bound.csv','0.3 alpha, 0.5 window size decision tree boxcox_PI transform','05_logsinh_improved_predict_vs_obs.csv')
+# study case 1
+# vis_bound_file('data/prms_input.csv', 'sub_results/bound.csv','','05_logsinh_improved_predict_vs_obs.csv')
+# study case 2
+# vis_bound_file('data/tmp_cali.csv', 'sub_results/bound.csv','','05_logsinh_improved_predict_vs_obs.csv')
 
-vis_error_his('data/prms_input.csv')
+# vis_error_his('data/prms_input.csv')
 # vis_error_vs('data/prms_input.csv','time')
 # vis_error_vs('data/prms_input.csv','tmin')
 

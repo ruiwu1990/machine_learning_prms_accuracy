@@ -20,7 +20,7 @@ from util import obtain_total_row_num, get_root_mean_squared_error, original_csv
 from util import collect_corresponding_obs_pred, merge_bound_file, exec_regression_by_name, exec_regression
 
 app_path = os.path.dirname(os.path.abspath('__file__'))
-spark_submit_location = '/home/host0/Desktop/hadoop/spark-2.1.0/bin/spark-submit'
+spark_submit_location = '/home/rwu/Desktop/spark-2.3.0-bin-hadoop2.7/bin/spark-submit'
 spark_config1 = '--conf spark.executor.heartbeatInterval=10000000'
 spark_config2 = '--conf spark.network.timeout=10000000'
 
@@ -87,12 +87,10 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 	best_b = -1
 	best_lambda = -1
 	# change!!!!!!!!!!!!!!!
-	for alpha_count in range(5):
-	# for alpha_count in range(1):
-		alpha = 0.1*(alpha_count+1)
-		# change!!!!!!!!!!!!!!!
-		# alpha = test_cases[window_count][0]
-		# alpha = 0.3
+	#for alpha_count in range(5):
+	for alpha_count in range(2):
+		alpha = 0.1*(alpha_count+2)
+		#alpha = 0.1*(alpha_count+1)
 		
 		# clean previous generated results
 		if os.path.isfile(result_file):
@@ -107,15 +105,17 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 		convert_csv_into_libsvm(delta_error_csv,delta_error_filename)
 
 		if transform_tech == 'logsinh':
-			for a_count in range(10):
+			#for a_count in range(10):
 			# change!!!!!!!!!!!!!!!!!!!!
-			# for a_count in range(1):
-				tmp_a = 0.01*(a_count+1)+0.0005
+			for a_count in range(4):
+				tmp_a = 0.01*(a_count+2)+0.0005
+				#tmp_a = 0.01*(a_count+1)+0.0005
 
-				for b_count in range(10):
+				#for b_count in range(10):
 				# change!!!!!!!!!!!!!!!!!!!!11
-				# for b_count in range(1):
-					tmp_b = 0.01*(b_count+1)+0.0005
+				for b_count in range(4):
+					tmp_b = 0.01*(b_count+2)+0.0005
+					#tmp_b = 0.01*(b_count+1)+0.0005
 
 					# this command will work if source the spark-submit correctly
 					# no recursive for crossover validation
@@ -192,7 +192,8 @@ def real_crossover_exec_regression(filename, regression_technique, window_per=0.
 		# if file exist
 		os.remove(result_file)
 
-	exec_regression(filename, regression_technique, window_per, best_alpha,app_path, best_a, best_b, True, True, 500, transform_tech, best_lambda)
+	# change!!! need to recover
+	# exec_regression(filename, regression_technique, window_per, best_alpha,app_path, best_a, best_b, True, True, 500, transform_tech, best_lambda)
 
 	return True
 
@@ -325,6 +326,7 @@ def preprocess_input_csv(input_result, input_feature, cali_file='data/tmp_cali.c
 
 #merge_bound_file('smoothed_prms_input.csv', file_path,loop_time)
 
+# --------------------------recursive starts-------------------------------------------
 # create smooth version input file
 # smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 30)
 # real_crossover_exec_regression('smoothed_prms_input.csv','gb_tree',0.5)
@@ -333,11 +335,11 @@ def preprocess_input_csv(input_result, input_feature, cali_file='data/tmp_cali.c
 # smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 10)
 # exec_regression('smoothed_prms_input.csv', 'gb_tree',0.5, 0.9,app_path, 0.1005, 0.0705, True, True, 500)
 
-train_file = 'data/window_train.csv'
-test_file = 'data/window_test.csv'
-filename = 'data/train_input.csv'
-exec_regression_by_name(filename, train_file, test_file, 'gb_tree', 0.5, 0.9,app_path, 0.1005, 0.0705, True, True, 100)
-
+# train_file = 'data/window_train.csv'
+# test_file = 'data/window_test.csv'
+# filename = 'data/train_input.csv'
+# exec_regression_by_name(filename, train_file, test_file, 'gb_tree', 0.5, 0.9,app_path, 0.1005, 0.0705, True, True, 100)
+# --------------------------recursive ends-------------------------------------------
 
 # smooth_origin_input_cse('prms_input_without_calibrate.csv', 'smoothed_prms_input.csv', 10)
 # real_crossover_exec_regression('smoothed_prms_input.csv','gb_tree',0.5)
@@ -359,3 +361,21 @@ exec_regression_by_name(filename, train_file, test_file, 'gb_tree', 0.5, 0.9,app
 #smooth_origin_input_cse('data/tmp_uncali.csv', 'data/smoothed_prms_input.csv', 1000000000)
 #real_crossover_exec_regression('data/smoothed_prms_input.csv','decision_tree',0.55, transform_tech = 'boxcox')
 # exec_regression('data/smoothed_prms_input.csv', 'decision_tree',0.55, 0.4,app_path, 0.0405, 0.0305, True, True, 50, 'boxcox', 11.0)
+
+# --------------------------recursive starts-------------------------------------------
+# create smooth version input file
+# smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 30)
+#real_crossover_exec_regression('data/threshold_extreme_event.csv','gb_tree',0.5)
+#real_crossover_exec_regression('data/threshold_normal_event.csv','gb_tree',0.5)
+# real_crossover_exec_regression('data/label_extreme_event.csv','gb_tree',0.5)
+# real_crossover_exec_regression('data/label_normal_event.csv','gb_tree',0.5)
+exec_regression('data/threshold_extreme_event.csv', 'gb_tree',0.5, 0.2,app_path, 0.0405, 0.0305, True, True, 50)
+
+# smooth_origin_input_cse('prms_input.csv', 'smoothed_prms_input.csv', 10)
+# exec_regression('smoothed_prms_input.csv', 'gb_tree',0.5, 0.9,app_path, 0.1005, 0.0705, True, True, 500)
+
+# train_file = 'data/window_train.csv'
+# test_file = 'data/window_test.csv'
+# filename = 'data/train_input.csv'
+# exec_regression_by_name(filename, train_file, test_file, 'gb_tree', 0.5, 0.9,app_path, 0.1005, 0.0705, True, True, 100)
+# --------------------------recursive ends-------------------------------------------

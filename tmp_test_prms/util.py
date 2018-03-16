@@ -17,7 +17,7 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.mlab as mlab
 
 app_path = os.path.dirname(os.path.abspath('__file__'))
-spark_submit_location = '/home/host0/Desktop/hadoop/spark-2.1.0/bin/spark-submit'
+spark_submit_location = '/home/rwu/Desktop/spark-2.3.0-bin-hadoop2.7/bin/spark-submit'
 spark_config1 = '--conf spark.executor.heartbeatInterval=10000000'
 spark_config2 = '--conf spark.network.timeout=10000000'
 
